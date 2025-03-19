@@ -8,12 +8,14 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
 
@@ -260,43 +262,46 @@
         </div>
     </section>
 
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>Eventify</h3>
-                <p>Platform manajemen event terbaik untuk membantu Anda mengelola acara dengan mudah dan efisien.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Eventify</h3>
+                    <p>Platform manajemen event terbaik untuk membantu Anda mengelola acara dengan mudah dan efisien.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigasi</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-right"></i> Tentang</a></li>
+                        <li><a href="#team"><i class="fas fa-chevron-right"></i> Tim</a></li>
+                        <li><a href="#events"><i class="fas fa-chevron-right"></i> Event</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="contact">
+                    <h3>Kontak Kami</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Jendral Sudirman No. 123, Jakarta</a>
+                        </li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +62 21 1234 5678</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@Eventify.id</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="footer-column">
-                <h3>Navigasi</h3>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Beranda</a></li>
-                    <li><a href="#about"><i class="fas fa-chevron-right"></i> Tentang</a></li>
-                    <li><a href="#team"><i class="fas fa-chevron-right"></i> Tim</a></li>
-                    <li><a href="#events"><i class="fas fa-chevron-right"></i> Event</a></li>
-                    <li><a href="#contact"><i class="fas fa-chevron-right"></i> Kontak</a></li>
-                </ul>
-            </div>
-            <div class="footer-column" id="contact">
-                <h3>Kontak Kami</h3>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Jendral Sudirman No. 123, Jakarta</a></li>
-                    <li><a href="#"><i class="fas fa-phone"></i> +62 21 1234 5678</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> info@Eventify.id</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Eventify. All Rights Reserved.</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Eventify. All Rights Reserved.</p>
-        </div>
-    </div>
-</footer>
+    </footer>
+
 
     <!-- Back to top button -->
     <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
@@ -341,11 +346,11 @@
         });
 
         // Mobile menu toggle
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('active');
-            });
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
 
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('active');
