@@ -5,9 +5,9 @@ dashboard admin -> tasya
 dashboard user -> irfan
 profil user -> yuyun
 profil admin -> yuyun
-event -> nurul
-Management User ->
-Create Event ->
+detail event -> nurul
+Management User -> irfan
+Create Event -> tasya, nurul, yuyun
 
 poe.com
 claude.ai

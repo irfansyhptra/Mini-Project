@@ -1,12 +1,13 @@
 /* Style.css diperbarui agar sesuai dengan ref.html */
 :root {
-    --primary-red: #e53935;
+    --primary-red: #071739;
     --secondary-red: #b71c1c;
-    --light-red: #ff6f60;
-    --dark-red: #7f0000;
+    --light-red: #778899;
+    --dark-red: #4b6382;
     --white: #ffffff;
     --light-grey: #f5f5f5;
     --dark-grey: #333333;
+    --grey-blue : #c0c0c0;
 }
 
 * {
@@ -19,7 +20,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--light-grey);
     color: var(--dark-grey);
-    line-height: 1.6;
+    line-height: 1.6;   
 }
 
 .container {
@@ -31,7 +32,7 @@ body {
 
         /* Header styles */
         header {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red)) ;
             color: var(--white);
             padding: 20px 0;
             position: fixed;
