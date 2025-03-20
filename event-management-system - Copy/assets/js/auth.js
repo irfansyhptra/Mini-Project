@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Simulate successful login and redirect
             alert('Login successful! Redirecting to dashboard...');
-            window.location.href = '../pages/user/dashboardUser.html'; // Updated redirection
+            window.location.href = '../pages/user/dashboard.html';
         });
     }
 
