@@ -29,12 +29,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            const userRole = document.getElementById('userRole').value; // Get selected user role
             // Mock login - in a real application, you would send this to your backend
+            let redirectUrl;
+            if (userRole === 'mahasiswa') {
+                redirectUrl = '../pages/admin/dashboard.html'; // Redirect to admin dashboard
+            } else if (userRole === 'dosen') {
+                redirectUrl = '../pages/user/dashboardUser.html'; // Redirect to user dashboard
+            }
+
             console.log('Login attempt with:', { email, password });
             
             // Simulate successful login and redirect
-            alert('Login successful! Redirecting to dashboard...');
-            window.location.href = '../pages/user/dashboardUser.html'; // Updated redirection
+            alert('Login successful! Redirecting to dashboard...'); 
+            window.location.href = redirectUrl; // Redirect based on user role
+
         });
     }
 
