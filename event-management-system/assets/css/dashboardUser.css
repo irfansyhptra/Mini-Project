@@ -1,8 +1,8 @@
 :root {
-            --primary-red: #e53935;
-            --secondary-red: #b71c1c;
-            --light-red: #ff6f60;
-            --dark-red: #7f0000;
+            --primary-color: #071739;
+            --secondary-color: #b71c1c;
+            --light-color: #778899;
+            --dark-color: #4b6382;
             --white: #ffffff;
             --light-grey: #f5f5f5;
             --dark-grey: #333333;
@@ -31,7 +31,7 @@
         /* Sidebar styles */
         .sidebar {
             width: 260px;
-            background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
             color: var(--white);
             padding: 20px 0;
             position: fixed;
@@ -213,7 +213,7 @@
         }
 
         .search-box input:focus {
-            border-color: var(--primary-red);
+            border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
         }
@@ -256,7 +256,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            background-color: var(--primary-red);
+            background-color: var(--primary-color);
             color: var(--white);
             font-size: 12px;
             width: 18px;
@@ -367,7 +367,7 @@
         }
 
         .breadcrumb a {
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-decoration: none;
         }
 
@@ -448,13 +448,13 @@
 
         .view-all {
             font-size: 14px;
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-decoration: none;
             transition: all 0.3s;
         }
 
         .view-all:hover {
-            color: var(--dark-red);
+            color: var(--dark-color);
         }
 
         .card {
@@ -502,12 +502,12 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
             color: var(--white);
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
             box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
         }
 
@@ -639,7 +639,7 @@
         }
 
         .event-actions .btn-delete {
-            color: var(--primary-red);
+            color: var(--primary-color);
         }
 
         /* Discover Events section */
@@ -685,7 +685,7 @@
         .discover-event-date {
             display: inline-block;
             font-size: 12px;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 5px;
         }
 
@@ -744,7 +744,7 @@
             justify-content: center;
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
             color: var(--white);
             border-radius: 10px;
             margin-right: 15px;
@@ -802,7 +802,7 @@
             height: 40px;
             border-radius: 50%;
             background-color: rgba(229, 57, 53, 0.1);
-            color: var(--primary-red);
+            color: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -827,14 +827,14 @@
 
         .notification-actions {
             font-size: 12px;
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-decoration: none;
             margin-left: 10px;
             transition: all 0.3s;
         }
 
         .notification-actions:hover {
-            color: var(--dark-red);
+            color: var(--dark-color);
         }
 
         /* Create event modal */
@@ -922,7 +922,7 @@
         }
 
         .form-control:focus {
-            border-color: var(--primary-red);
+            border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
         }

@@ -1,9 +1,9 @@
 /* Style.css diperbarui agar sesuai dengan ref.html */
 :root {
-    --primary-red: #071739;
-    --secondary-red: #b71c1c;
-    --light-red: #778899;
-    --dark-red: #4b6382;
+    --primary-color: #071739;
+    --secondary-color: #1c08ca;
+    --light-color: #778899;
+    --dark-color: #4b6382;
     --white: #ffffff;
     --light-grey: #f5f5f5;
     --dark-grey: #333333;
@@ -32,7 +32,7 @@ body {
 
         /* Header styles */
         header {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red)) ;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color)) ;
             color: var(--white);
             padding: 20px 0;
             position: fixed;
@@ -72,7 +72,7 @@ body {
         }
 
         .nav-links a:hover {
-            color: var(--light-red);
+            color: var(--light-color);
         }
 
         .auth-buttons {
@@ -100,26 +100,26 @@ body {
 
         .btn-outline:hover {
             background: var(--white);
-            color: var(--primary-red);
+            color: var(--primary-color);
         }
 
         .btn-primary {
             background: var(--white);
-            color: var(--primary-red);
+            color: var(--primary-color);
         }
 
         .btn-primary:hover {
-            background: var(--light-red);
+            background: var(--light-color);
             color: var(--white);
         }
 
         .btn-secondary {
-            background: var(--light-red);
+            background: var(--light-color);
             color: var(--white);
         }
 
         .btn-secondary:hover {
-            background: var(--primary-red);
+            background: var(--primary-color);
         }
 
 
@@ -139,7 +139,7 @@ body {
     top: 80px;
     left: 0;
     width: 100%;
-    background: var(--primary-red);
+    background: var(--primary-color);
     padding: 20px;
     z-index: 999;
 }
@@ -184,7 +184,7 @@ footer {
     bottom: 0;
     width: 40px;
     height: 3px;
-    background: linear-gradient(to right, var(--primary-red), var(--light-red));
+    background: linear-gradient(to right, var(--primary-color), var(--light-color));
 }
 
 .footer-links li {
@@ -199,7 +199,7 @@ footer {
 }
 
 .footer-links a:hover {
-    color: var(--primary-red);
+    color: var(--primary-color);
 }
 
 .footer-bottom {

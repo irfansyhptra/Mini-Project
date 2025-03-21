@@ -1,8 +1,8 @@
 :root {
-    --primary-red: #e53935;
-    --secondary-red: #b71c1c;
-    --light-red: #ff6f60;
-    --dark-red: #7f0000;
+    --primary-color: #071739;
+    --secondary-color: #b71c1c;
+    --light-color: #778899;
+    --dark-color: #4b6382;
     --white: #ffffff;
     --light-grey: #f5f5f5;
     --dark-grey: #333333;
@@ -30,7 +30,7 @@ body {
 
 /* Navbar styles */
 .navbar {
-    background-color: var(--primary-red);
+    background-color: var(--primary-color);
     padding: 10px 20px;
 }
 
@@ -47,7 +47,7 @@ body {
 }
 
 .navbar-menu a:hover {
-    color: var(--light-red);
+    color: var(--light-color);
 }
 
 /* Mobile menu styles */
@@ -94,7 +94,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: var(--light-red);
+    color: var(--light-color);
 }
 
 .auth-buttons {
@@ -122,26 +122,26 @@ body {
 
 .btn-outline:hover {
     background: var(--white);
-    color: var(--primary-red);
+    color: var(--primary-color);
 }
 
 .btn-primary {
     background: var(--white);
-    color: var(--primary-red);
+    color: var(--primary-color);
 }
 
 .btn-primary:hover {
-    background: var(--light-red);
+    background: var(--light-color);
     color: var(--white);
 }
 
 .btn-secondary {
-    background: var(--light-red);
+    background: var(--light-color);
     color: var(--white);
 }
 
 .btn-secondary:hover {
-    background: var(--primary-red);
+    background: var(--primary-color);
 }
 
 /* Mobile menu */
@@ -160,7 +160,7 @@ body {
     top: 80px;
     left: 0;
     width: 100%;
-    background: var(--primary-red);
+    background: var(--primary-color);
     padding: 20px;
     z-index: 999;
 }
@@ -222,7 +222,7 @@ body {
     text-align: center;
     margin-bottom: 40px;
     font-size: 36px;
-    color: var(--dark-red);
+    color: var(--dark-color);
     position: relative;
 }
 
@@ -231,7 +231,7 @@ body {
     display: block;
     width: 80px;
     height: 4px;
-    background: linear-gradient(to right, var(--primary-red), var(--light-red));
+    background: linear-gradient(to right, var(--primary-color), var(--light-color));
     margin: 10px auto;
     border-radius: 2px;
 }
@@ -315,7 +315,7 @@ body {
 .team-card h3 {
     font-size: 18px;
     margin-bottom: 5px;
-    color: var(--dark-red);
+    color: var(--dark-color);
 }
 
 .team-card p {
@@ -337,7 +337,7 @@ body {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
     color: var(--white);
     font-size: 14px;
     transition: all 0.3s;
@@ -402,7 +402,7 @@ body {
 .event-date {
     display: inline-block;
     padding: 5px 10px;
-    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
     color: var(--white);
     border-radius: 20px;
     font-size: 12px;
@@ -412,7 +412,7 @@ body {
 .event-title {
     font-size: 18px;
     margin-bottom: 10px;
-    color: var(--dark-red);
+    color: var(--dark-color);
 }
 
 .event-location {
@@ -425,7 +425,7 @@ body {
 
 .event-location i {
     margin-right: 5px;
-    color: var(--primary-red);
+    color: var(--primary-color);
 }
 
 .event-description {
@@ -437,7 +437,7 @@ body {
 
 /* CTA section */
 .cta {
-    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
     color: var(--white);
     text-align: center;
     padding: 80px 0;
@@ -484,7 +484,7 @@ footer {
     bottom: 0;
     width: 40px;
     height: 3px;
-    background: linear-gradient(to right, var(--primary-red), var(--light-red));
+    background: linear-gradient(to right, var(--primary-color), var(--light-color));
 }
 
 .footer-column p {
@@ -511,11 +511,11 @@ footer {
 
 .footer-links a i {
     margin-right: 8px;
-    color: var(--primary-red);
+    color: var(--white);
 }
 
 .footer-links a:hover {
-    color: var(--primary-red);
+    color: var(--primary-color);
 }
 
 .social-links {
@@ -538,7 +538,7 @@ footer {
 }
 
 .social-links a:hover {
-    background: var(--primary-red);
+    background: var(--primary-color);
     transform: translateY(-3px);
 }
 
