@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Registration attempt with:', { firstName, lastName, email, password });
             
             // Simulate successful registration and redirect
-            alert('Registration successful! Redirecting to dashboard...');
-            window.location.href = '../pages/user/dashboard.html';
+            alert('Registration successful! Redirecting to login...');
+            window.location.href = 'login.html';
         });
     }
 
