@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Toggle password visibility
     const togglePasswordButtons = document.querySelectorAll('.toggle-password');
     togglePasswordButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const passwordField = this.previousElementSibling;
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
@@ -17,80 +17,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // Login form validation and submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
+            const userRole = document.getElementById('userRole').value; // Get selected user role
+
             // Simple validation
             if (!email || !password) {
                 alert('Please fill in all fields');
                 return;
             }
-            
-            const userRole = document.getElementById('userRole').value; // Get selected user role
-            // Mock login - in a real application, you would send this to your backend
+
             let redirectUrl;
-            if (userRole === 'mahasiswa') {
-                redirectUrl = '../pages/admin/dashboard.html'; // Redirect to admin dashboard
-            } else if (userRole === 'dosen') {
+            if (userRole === 'admin') {
+                redirectUrl = '../pages/admin/dashboardAdmin.html'; // Redirect to admin dashboard
+            } else if (userRole === 'pengguna') {
                 redirectUrl = '../pages/user/dashboardUser.html'; // Redirect to user dashboard
+
+                // Simpan user ke daftar di localStorage (hanya jika user baru)
+                let users = JSON.parse(localStorage.getItem("users")) || [];
+                if (!users.some(user => user.email === email)) {
+                    users.push({ email, role: "User" });
+                    localStorage.setItem("users", JSON.stringify(users));
+                }
             }
 
             console.log('Login attempt with:', { email, password });
-            
+
             // Simulate successful login and redirect
-            alert('Login successful! Redirecting to dashboard...'); 
+            alert('Login successful! Redirecting to dashboard...');
             window.location.href = redirectUrl; // Redirect based on user role
-
         });
     }
-
-    // Registration form validation and submission
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const terms = document.getElementById('terms').checked;
-            
-            // Simple validation
-            if (!firstName || !lastName || !email || !password || !confirmPassword) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            if (!terms) {
-                alert('You must agree to the terms and conditions');
-                return;
-            }
-            
-            // Mock registration - in a real application, you would send this to your backend
-            console.log('Registration attempt with:', { firstName, lastName, email, password });
-            
-            // Simulate successful registration and redirect
-            alert('Registration successful! Redirecting to login...');
-            window.location.href = 'login.html';
-        });
-    }
-
-    // Social login buttons
-    const socialButtons = document.querySelectorAll('.btn-social');
-    socialButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const provider = this.classList.contains('google') ? 'Google' : 'Facebook';
-            alert(`${provider} login is not implemented in this demo`);
-        });
-    });
 });
