@@ -1,237 +1,460 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Eventify</title>
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="../../assets/css/dashboard.css">
-    <link rel="stylesheet" href="../../assets/libs/fontawesome/css/all.min.css">
+    <title>Dashboard Admin | Eventory </title>
+    <link rel="stylesheet" href="/event-management-system/assets/css/dashboardAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">Eventify</div>
-                <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
-            </div>
-            <div class="user-info">
-                <div class="user-avatar">
-                    <img src="../../assets/img/team/user-profile.jpg" alt="User Profile">
-                </div>
-                <div class="user-details">
-                    <h3>John Doe</h3>
-                    <p>john.doe@email.com</p>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
+    <div class="container">
+        <!-- Sidebar Navigation -->
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="../../index.html" class="logo">
+            <i class="fas fa-calendar-check"></i>
+            <span>Eventory</span>
+        </a>
+    </div>
+            <nav class="sidebar-menu">
                 <ul>
-                    <li class="active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="my-events.html"><i class="fas fa-calendar-alt"></i> Event Saya</a></li>
-                    <li><a href="create-event.html"><i class="fas fa-plus-circle"></i> Buat Event</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Profil</a></li>
-                    <li><a href="#"><i class="fas fa-ticket-alt"></i> Tiket Saya</a></li>
-                    <li><a href="#"><i class="fas fa-bell"></i> Notifikasi</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Pengaturan</a></li>
-                    <li class="logout"><a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+                    <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#events"><i class="fas fa-calendar-alt"></i> Daftar Event</a></li>
+                    <li><a href="#users"><i class="fas fa-users"></i> Daftar User</a></li>
+                    <li><a href="#verify"><i class="fas fa-check-circle"></i> Verifikasi Event</a></li>
+                    <li><a href="#manage-users"><i class="fas fa-user-cog"></i> Kelola User</a></li>
                 </ul>
             </nav>
+            <div class="logout">
+                <a href="/event-management-system/index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="main-content">
-            <header class="dashboard-header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari event...">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="page-title">Dashboard</h2>
                 </div>
-                <div class="header-actions">
-                    <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
-                    <button class="messages-btn"><i class="fas fa-envelope"></i><span class="badge">5</span></button>
-                    <div class="user-dropdown">
-                        <button class="dropdown-btn">
-                            <img src="../../assets/img/team/user-profile.jpg" alt="User Profile">
-                            <span>John Doe</span>
+                <div class="header-right">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="admin-profile">
+                        <div class="profile-info">
+                            <span>Admin Name</span>
                             <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
-                            <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
-                            <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                        </div>
+                        <div class="profile-dropdown">
+                            <ul>
+                                <li><a href="#"><i class="fas fa-user"></i> Edit Profile</a></li>
+                                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <section class="dashboard-welcome">
-                <div class="welcome-card">
-                    <div class="welcome-text">
-                        <h1>Selamat Datang, John!</h1>
-                        <p>Semoga harimu menyenangkan. Berikut adalah ringkasan aktivitas dan event-event terbaru Anda.
-                        </p>
-                    </div>
-                    <div class="welcome-actions">
-                        <a href="create-event.html" class="btn-create-event"><i class="fas fa-plus"></i> Buat Event
-                            Baru</a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="stat-info">
-                        <h3>Event Aktif</h3>
-                        <div class="stat-value">5</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-info">
-                        <h3>Total Peserta</h3>
-                        <div class="stat-value">245</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
-                    <div class="stat-info">
-                        <h3>Tiket Terjual</h3>
-                        <div class="stat-value">189</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="stat-info">
-                        <h3>Pendapatan</h3>
-                        <div class="stat-value">Rp 12,5 Jt</div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="upcoming-events">
-                <div class="section-header">
-                    <h2>Event Mendatang</h2>
-                    <a href="my-events.html" class="view-all">Lihat Semua</a>
-                </div>
-                <div class="events-table-wrapper">
-                    <table class="events-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Event</th>
-                                <th>Tanggal</th>
-                                <th>Lokasi</th>
-                                <th>Status</th>
-                                <th>Peserta</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="event-name">
-                                        <img src="../../assets/img/events/tech-conference-small.jpg" alt="Event">
-                                        <span>Tech Conference 2025</span>
-                                    </div>
-                                </td>
-                                <td>25 Mar 2025</td>
-                                <td>Jakarta Convention Center</td>
-                                <td><span class="status published">Published</span></td>
-                                <td>120/500</td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="btn-action view"><i class="fas fa-eye"></i></button>
-                                        <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-action delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="event-name">
-                                        <img src="../../assets/img/events/digital-marketing-small.jpg" alt="Event">
-                                        <span>Digital Marketing Workshop</span>
-                                    </div>
-                                </td>
-                                <td>10 Apr 2025</td>
-                                <td>Bandung Creative Hub</td>
-                                <td><span class="status draft">Draft</span></td>
-                                <td>0/50</td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="btn-action view"><i class="fas fa-eye"></i></button>
-                                        <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-action delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="event-name">
-                                        <img src="../../assets/img/events/music-festival-small.jpg" alt="Event">
-                                        <span>Indonesia Music Festival</span>
-                                    </div>
-                                </td>
-                                <td>15 May 2025</td>
-                                <td>Gelora Bung Karno</td>
-                                <td><span class="status published">Published</span></td>
-                                <td>89/1000</td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="btn-action view"><i class="fas fa-eye"></i></button>
-                                        <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-action delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section class="activity-section">
-                <div class="section-header">
-                    <h2>Aktivitas Terbaru</h2>
-                    <a href="#" class="view-all">Lihat Semua</a>
-                </div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
-                        <div class="activity-content">
-                            <p><strong>10 peserta baru</strong> mendaftar untuk <a href="#">Tech Conference 2025</a></p>
-                            <span class="activity-time">2 jam yang lalu</span>
+            <!-- Content Pages -->
+            <div class="content-container">
+                <!-- Dashboard Page -->
+                <section id="dashboard-page" class="content-page active">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Event</h3>
+                                <p class="stat-number">15</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total User</h3>
+                                <p class="stat-number">20</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Event Menunggu Verifikasi</h3>
+                                <p class="stat-number">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Event Terverifikasi</h3>
+                                <p class="stat-number">10</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-comment"></i></div>
-                        <div class="activity-content">
-                            <p><strong>5 komentar baru</strong> pada <a href="#">Digital Marketing Workshop</a></p>
-                            <span class="activity-time">5 jam yang lalu</span>
+                    
+                    <div class="recent-activity">
+                        <h3>Aktivitas Terbaru</h3>
+                        <ul class="activity-list">
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-plus-circle"></i></div>
+                                <div class="activity-details">
+                                    <p>Event baru ditambahkan: <strong>Informatic Festival</strong></p>
+                                    <span class="time">2 jam yang lalu</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="activity-details">
+                                    <p>User baru terdaftar: <strong>Shafa Hildayana</strong></p>
+                                    <span class="time">4 jam yang lalu</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-check"></i></div>
+                                <div class="activity-details">
+                                    <p>Event diverifikasi: <strong>PIL MIPA USK</strong></p>
+                                    <span class="time">1 jam yang lalu</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- Daftar Event Page -->
+                <section id="events-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Daftar Event</h2>
+                        <div class="search-container">
+                            <input type="text" placeholder="Cari event...">
+                            <button><i class="fas fa-search"></i></button>
                         </div>
                     </div>
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-chart-line"></i></div>
-                        <div class="activity-content">
-                            <p><strong>Pengunjung meningkat 15%</strong> untuk <a href="#">Indonesia Music Festival</a>
-                            </p>
-                            <span class="activity-time">1 hari yang lalu</span>
+                    
+                    <div class="events-grid">
+                        <!-- Event Card 1 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event1.jpg" alt="Aceh Ramadhan Festival 2025">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Ramadhan Festival 2025</h3>
+                                <p><i class="fas fa-calendar"></i> 12 Mar 2025, 15:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(1)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 2 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event2.jpg" alt="Event Image">
+                                <span class="event-status pending">Menunggu Verifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Culinary Festival</h3>
+                                <p><i class="fas fa-calendar"></i> 10 Apr 2025, 10:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Taman Sulthanah Safiatuddin</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(2)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 3 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event3.jpg" alt="Event Image">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Indonesia Music Festival</h3>
+                                <p><i class="fas fa-calendar"></i>  10 May 2025, 20:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Gelora Bung Karno</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(3)">Detail</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-money-bill-wave"></i></div>
-                        <div class="activity-content">
-                            <p><strong>Pembayaran diterima</strong> dari <a href="#">User123</a> untuk <a href="#">Tech
-                                    Conference 2025</a></p>
-                            <span class="activity-time">2 hari yang lalu</span>
+                </section>
+                
+                <!-- Daftar User Page -->
+                <section id="users-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Daftar User</h2>
+                        <div class="actions">
+                            <div class="search-container">
+                                <input type="text" placeholder="Cari user...">
+                                <button><i class="fas fa-search"></i></button>
+                            </div>
+                            <button class="btn btn-primary" onclick="showAddUserForm()">
+                                <i class="fas fa-plus"></i> Tambah User
+                            </button>
                         </div>
                     </div>
-                </div>
-            </section>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama User</th>
+                                    <th>Email</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Jumlah Event Dibuat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>john.doe@example.com</td>
+                                    <td>10 Jan 2025</td>
+                                    <td>5</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(1)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>jane.smith@example.com</td>
+                                    <td>15 Feb 2025</td>
+                                    <td>3</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(2)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Miranda Kerr</td>
+                                    <td>miranda.k@example.com</td>
+                                    <td>20 Mar 2025</td>
+                                    <td>1</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(3)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(3)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Verifikasi Event Page -->
+                <section id="verify-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Verifikasi Event</h2>
+                        <div class="search-container">
+                            <input type="text" placeholder="Cari event...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Judul Event</th>
+                                    <th>Tanggal Event</th>
+                                    <th>Nama Pembuat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Seminar Digital Marketing</td>
+                                    <td>28 Mar 2025, 13:00</td>
+                                    <td>John Doe</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(1)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(1)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(1)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Webinar SEO Strategy</td>
+                                    <td>30 Mar 2025, 15:00</td>
+                                    <td>Jane Smith</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(2)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(2)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(2)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Networking Night</td>
+                                    <td>2 Apr 2025, 18:00</td>
+                                    <td>Miranda Kerr</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(3)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(3)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(3)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Kelola User Page -->
+                <section id="manage-user-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Kelola User</h2>
+                    </div>
+                    
+                    <div class="form-container">
+                        <form id="user-form">
+                            <div class="form-group">
+                                <label for="nama">Nama</label>
+                                <input type="text" id="nama" name="nama" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" required>
+                                <div class="password-strength">
+                                    <div class="strength-bar"></div>
+                                    <span class="strength-text">Password strength</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select id="role" name="role" required>
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
+    
+    <!-- Modals -->
+    <div id="event-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detail Event</h2>
+                <span class="close" onclick="closeModal('event-details-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="event-detail-content">
+                    <div class="event-image-large">
+                        <img src="/api/placeholder/500/300" alt="Event Image">
+                    </div>
+                    <div class="event-info">
+                        <h3 id="modal-event-title">Seminar Digital Marketing</h3>
+                        <p class="event-status" id="modal-event-status">Status: <span class="pending">Menunggu Verifikasi</span></p>
+                        <div class="event-details-list">
+                            <div class="detail-item">
+                                <span class="label">Tanggal & Waktu:</span>
+                                <span class="value" id="modal-event-datetime">28 Mar 2025, 13:00</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Lokasi:</span>
+                                <span class="value" id="modal-event-location">Grand Hyatt Hotel</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Kategori:</span>
+                                <span class="value" id="modal-event-category">Marketing</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Pembuat Event:</span>
+                                <span class="value" id="modal-event-creator">John Doe</span>
+                            </div>
+                        </div>
+                        <div class="event-description">
+                            <h4>Deskripsi Event</h4>
+                            <p id="modal-event-description">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisi vel tincidunt interdum, sem nisi aliquam nisi, eget consectetur nisi dolor ut nisi. Sed euismod, nisi vel tincidunt interdum, sem nisi aliquam nisi, eget consectetur nisi dolor ut nisi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="modal-event-actions">
+                <button class="btn btn-reject" onclick="rejectEvent(1)">Reject</button>
+                <button class="btn btn-approve" onclick="approveEvent(1)">Approve</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmation-title">Konfirmasi</h3>
+                <span class="close" onclick="closeModal('confirmation-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="confirmation-message">Apakah Anda yakin ingin menghapus user ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirmation-modal')">Batal</button>
+                <button id="confirm-action-btn" class="btn btn-primary">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="../../assets/js/main.js"></script>
-    <script src="../../assets/js/dashboard.js"></script>
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="notification-toast">
+        <div class="notification-content">
+            <i id="notification-icon" class="fas fa-check-circle"></i>
+            <div class="notification-message" id="notification-message">
+                User berhasil disimpan
+            </div>
+        </div>
+        <button class="close-notification" onclick="closeNotification()">&times;</button>
+    </div>
+    
+    <script src="/event-management-system/assets/js/dashboardAdmin.js"></script>
 </body>
-
 </html>
