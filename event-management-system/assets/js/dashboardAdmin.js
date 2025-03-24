@@ -77,73 +77,55 @@ const events = [
         image: "/event-management-system/assets/image/event7.jpg",
         status: "verified"
     }
-];
-
-// DOM Elements
-document.addEventListener('DOMContentLoaded', function () {
-    // Menu Navigation
-    const menuItems = document.querySelectorAll('.sidebar-menu ul li a');
-    const pageTitle = document.getElementById('page-title');
-    const contentPages = document.querySelectorAll('.content-page');
-
-    // Admin Profile Dropdown
-    const profileInfo = document.querySelector('.profile-info');
-    const profileDropdown = document.querySelector('.profile-dropdown');
-
-    // Password Strength
-    const passwordInput = document.getElementById('password');
-    const strengthBar = document.querySelector('.strength-bar');
-    const strengthText = document.querySelector('.strength-text');
-
-    // Form Submission
-    const userForm = document.getElementById('user-form');
-
-    // Initialize
+  ];
+  
+  // DOM Elements
+  document.addEventListener('DOMContentLoaded', function () {
     initNavigation();
+    initProfileDropdown();
     initPasswordStrength();
     initFormSubmission();
-    initProfileDropdown();
-
+  
     // Load events if on verify page
     if (window.location.hash === '#verify') {
         loadEvents();
     }
-});
-
-// Initialize navigation
-function initNavigation() {
+  });
+  
+  // Initialize navigation
+  function initNavigation() {
     const menuItems = document.querySelectorAll('.sidebar-menu ul li a');
     const contentPages = document.querySelectorAll('.content-page');
     const pageTitle = document.getElementById('page-title');
-
+  
     menuItems.forEach(item => {
         item.addEventListener('click', function (e) {
             e.preventDefault();
-
+  
             // Remove active class from all menu items
             menuItems.forEach(menuItem => {
                 menuItem.parentElement.classList.remove('active');
             });
-
+  
             // Add active class to clicked menu item
             this.parentElement.classList.add('active');
-
+  
             // Get the target page id from href attribute
             const targetId = this.getAttribute('href').substring(1);
-
+  
             // Update page title
             pageTitle.textContent = this.textContent.trim();
-
+  
             // Hide all pages
             contentPages.forEach(page => {
                 page.classList.remove('active');
             });
-
+  
             // Show target page
             const targetPage = document.getElementById(targetId + '-page');
             if (targetPage) {
                 targetPage.classList.add('active');
-
+  
                 // Load events if the target page is verify-page
                 if (targetId === 'verify') {
                     loadEvents();
@@ -151,13 +133,13 @@ function initNavigation() {
             }
         });
     });
-}
-
-// Load events into the verify page
-function loadEvents() {
+  }
+  
+  // Load events into the verify page
+  function loadEvents() {
     const tableBody = document.querySelector('#verify-page .data-table tbody');
     tableBody.innerHTML = '';
-
+  
     events.forEach(event => {
         if (event.status === 'pending') {
             const newRow = document.createElement('tr');
@@ -177,17 +159,17 @@ function loadEvents() {
             tableBody.appendChild(newRow);
         }
     });
-}
-
-// Show event details in modal
-function showEventDetails(eventId) {
+  }
+  
+  // Show event details in modal
+  function viewEventDetails(eventId) {
     const event = events.find(e => e.id === eventId);
-
+  
     if (!event) {
         showNotification('Event tidak ditemukan!', 'error');
         return;
     }
-
+  
     // Update modal content based on event
     document.getElementById('modal-event-title').textContent = event.title;
     document.getElementById('modal-event-status').innerHTML = `Status: <span class="${event.status === 'verified' ? 'verified' : 'pending'}">${event.status === 'verified' ? 'Terverifikasi' : 'Menunggu Verifikasi'}</span>`;
@@ -196,10 +178,10 @@ function showEventDetails(eventId) {
     document.getElementById('modal-event-category').textContent = event.category;
     document.getElementById('modal-event-creator').textContent = event.creator;
     document.getElementById('modal-event-description').textContent = event.description;
-
+  
     // Display event actions based on status
     const modalActions = document.getElementById('modal-event-actions');
-
+  
     if (event.status === 'pending') {
         modalActions.innerHTML = `
             <button class="btn btn-reject" onclick="rejectEvent(${event.id})">Reject</button>
@@ -208,133 +190,133 @@ function showEventDetails(eventId) {
     } else {
         modalActions.innerHTML = '';
     }
-
+  
     // Show the modal
     document.getElementById('event-details-modal').style.display = 'block';
-}
-
-// Approve event
-function approveEvent(eventId) {
+  }
+  
+  // Approve event
+  function approveEvent(eventId) {
     const event = events.find(e => e.id === eventId);
-
+  
     if (!event) {
         showNotification('Event tidak ditemukan!', 'error');
         return;
     }
-
+  
     // Show confirmation modal
     document.getElementById('confirmation-title').textContent = 'Konfirmasi Verifikasi';
     document.getElementById('confirmation-message').textContent = `Apakah Anda yakin ingin menyetujui event ini?`;
-
+  
     const confirmBtn = document.getElementById('confirm-action-btn');
     confirmBtn.textContent = 'Ya, Setujui';
     confirmBtn.className = 'btn btn-approve';
     confirmBtn.onclick = function () {
         // Update event status
         event.status = 'verified';
-
+  
         // Show notification
         showNotification('Event berhasil disetujui!', 'success');
         closeModal('confirmation-modal');
         closeModal('event-details-modal');
-
+  
         // Update the event status in the UI (demo only)
         if (document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`)) {
             document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`).remove();
         }
     };
-
+  
     document.getElementById('confirmation-modal').style.display = 'block';
-}
-
-// Reject event
-function rejectEvent(eventId) {
+  }
+  
+  // Reject event
+  function rejectEvent(eventId) {
     const event = events.find(e => e.id === eventId);
-
+  
     if (!event) {
         showNotification('Event tidak ditemukan!', 'error');
         return;
     }
-
+  
     // Show confirmation modal
     document.getElementById('confirmation-title').textContent = 'Konfirmasi Penolakan';
     document.getElementById('confirmation-message').textContent = `Apakah Anda yakin ingin menolak event ini?`;
-
+  
     const confirmBtn = document.getElementById('confirm-action-btn');
     confirmBtn.textContent = 'Ya, Tolak';
     confirmBtn.className = 'btn btn-reject';
     confirmBtn.onclick = function () {
         // Update event status
         event.status = 'rejected';
-
+  
         // Show notification
         showNotification('Event ditolak!', 'success');
         closeModal('confirmation-modal');
         closeModal('event-details-modal');
-
+  
         // Update the event status in the UI (demo only)
         if (document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`)) {
             document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`).remove();
         }
     };
-
+  
     document.getElementById('confirmation-modal').style.display = 'block';
-}
-
-// Close modal
-function closeModal(modalId) {
+  }
+  
+  // Close modal
+  function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
-}
-
-// Notification system
-function showNotification(message, type = 'success') {
+  }
+  
+  // Notification system
+  function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification-toast');
     const notificationIcon = document.getElementById('notification-icon');
     const notificationMessage = document.getElementById('notification-message');
-
+  
     // Set icon based on type
     if (type === 'success') {
         notificationIcon.className = 'fas fa-check-circle';
     } else {
         notificationIcon.className = 'fas fa-exclamation-circle';
     }
-
+  
     // Set message
     notificationMessage.textContent = message;
-
+  
     // Show notification
     notification.classList.add('show');
-
+  
     // Hide after 3 seconds
     setTimeout(() => {
         closeNotification();
     }, 3000);
-}
-
-function closeNotification() {
+  }
+  
+  function closeNotification() {
     const notification = document.getElementById('notification-toast');
     notification.classList.remove('show');
-}
-
-// Password strength checker
-function initPasswordStrength() {
+  }
+  
+  // Password strength checker
+  function initPasswordStrength() {
     const passwordInput = document.getElementById('password');
     const strengthBar = document.querySelector('.strength-bar');
     const strengthText = document.querySelector('.strength-text');
-
+  
     if (passwordInput) {
         passwordInput.addEventListener('input', function () {
             const password = this.value;
             let strength = 0;
-
+  
             if (password.length >= 8) strength += 25;
             if (password.match(/[a-z]+/)) strength += 25;
             if (password.match(/[A-Z]+/)) strength += 25;
             if (password.match(/[0-9]+/)) strength += 25;
-
+  
             // Update the strength bar
             strengthBar.style.width = strength + '%';
-
+  
             // Update color based on strength
             if (strength <= 25) {
                 strengthBar.style.backgroundColor = '#e74a3b';
@@ -351,37 +333,37 @@ function initPasswordStrength() {
             }
         });
     }
-}
-
-// Form submission
-function initFormSubmission() {
+  }
+  
+  // Form submission
+  function initFormSubmission() {
     const userForm = document.getElementById('user-form');
-
+  
     if (userForm) {
         userForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
+  
             // Basic form validation
             const nameInput = document.getElementById('nama');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
-
+  
             if (!nameInput.value.trim()) {
                 showNotification('Nama tidak boleh kosong!', 'error');
                 return;
             }
-
+  
             const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
             if (!emailPattern.test(emailInput.value)) {
                 showNotification('Format email tidak valid!', 'error');
                 return;
             }
-
+  
             if (passwordInput && passwordInput.value.length < 8) {
                 showNotification('Password minimal 8 karakter!', 'error');
                 return;
             }
-
+  
             // Create new user object
             const newUser = {
                 id: Date.now(), // Generate unique ID
@@ -391,25 +373,25 @@ function initFormSubmission() {
                 eventsCreated: 0,
                 role: document.getElementById('role').value
             };
-
+  
             // Add user to the table
             addUserToTable(newUser);
-
+  
             // Show success notification
             showNotification('User berhasil disimpan!', 'success');
-
+  
             // Reset form
             this.reset();
             document.querySelector('.strength-bar').style.width = '0%';
             document.querySelector('.strength-text').textContent = 'Password strength';
         });
     }
-}
-
-// Add user to the table
-function addUserToTable(user) {
+  }
+  
+  // Add user to the table
+  function addUserToTable(user) {
     const tableBody = document.querySelector('#users-page .data-table tbody');
-
+  
     // Create new row
     const newRow = document.createElement('tr');
     newRow.setAttribute('data-user-id', user.id); // Set unique ID for the row
@@ -427,22 +409,22 @@ function addUserToTable(user) {
             </button>
         </td>
     `;
-
+  
     // Append row to the table
     tableBody.appendChild(newRow);
-}
-
-// Initialize profile dropdown
-function initProfileDropdown() {
+  }
+  
+  // Initialize profile dropdown
+  function initProfileDropdown() {
     const profileInfo = document.querySelector('.profile-info');
     const profileDropdown = document.querySelector('.profile-dropdown');
-
+  
     if (profileInfo) {
         profileInfo.addEventListener('click', function () {
             profileDropdown.classList.toggle('show');
         });
     }
-
+  
     // Close dropdown when clicking outside
     window.addEventListener('click', function (e) {
         if (!e.target.matches('.profile-info')) {
@@ -451,4 +433,4 @@ function initProfileDropdown() {
             }
         }
     });
-}
+  }
