@@ -64,9 +64,4 @@ if (dashboardLink) {
         window.location.href = '../../index.html';
     });
 } else {
-    console.error('Dashboard link not found');
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 2f933d1 (finish)
+    console.error('Dashboard link not found'); }
