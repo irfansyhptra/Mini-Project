@@ -162,38 +162,42 @@ const events = [
   }
   
   // Show event details in modal
-  function viewEventDetails(eventId) {
-    const event = events.find(e => e.id === eventId);
-  
-    if (!event) {
-        showNotification('Event tidak ditemukan!', 'error');
-        return;
+  function showEventDetails(eventId) {
+    viewEventDetails(eventId);
+}
+
+    function viewEventDetails(eventId) {
+        const event = events.find(e => e.id === eventId);
+
+        if (!event) {
+            showNotification('Event tidak ditemukan!', 'error');
+            return;
+        }
+
+        // Update modal content based on event
+        document.getElementById('modal-event-title').textContent = event.title;
+        document.getElementById('modal-event-status').innerHTML = `Status: <span class="${event.status === 'verified' ? 'verified' : 'pending'}">${event.status === 'verified' ? 'Terverifikasi' : 'Menunggu Verifikasi'}</span>`;
+        document.getElementById('modal-event-datetime').textContent = event.date;
+        document.getElementById('modal-event-location').textContent = event.location;
+        document.getElementById('modal-event-category').textContent = event.category;
+        document.getElementById('modal-event-creator').textContent = event.creator;
+        document.getElementById('modal-event-description').textContent = event.description;
+
+        // Display event actions based on status
+        const modalActions = document.getElementById('modal-event-actions');
+
+        if (event.status === 'pending') {
+            modalActions.innerHTML = `
+                <button class="btn btn-reject" onclick="rejectEvent(${event.id})">Reject</button>
+                <button class="btn btn-approve" onclick="approveEvent(${event.id})">Approve</button>
+            `;
+        } else {
+            modalActions.innerHTML = '';
+        }
+
+        // Show the modal
+        document.getElementById('event-details-modal').style.display = 'block';
     }
-  
-    // Update modal content based on event
-    document.getElementById('modal-event-title').textContent = event.title;
-    document.getElementById('modal-event-status').innerHTML = `Status: <span class="${event.status === 'verified' ? 'verified' : 'pending'}">${event.status === 'verified' ? 'Terverifikasi' : 'Menunggu Verifikasi'}</span>`;
-    document.getElementById('modal-event-datetime').textContent = event.date;
-    document.getElementById('modal-event-location').textContent = event.location;
-    document.getElementById('modal-event-category').textContent = event.category;
-    document.getElementById('modal-event-creator').textContent = event.creator;
-    document.getElementById('modal-event-description').textContent = event.description;
-  
-    // Display event actions based on status
-    const modalActions = document.getElementById('modal-event-actions');
-  
-    if (event.status === 'pending') {
-        modalActions.innerHTML = `
-            <button class="btn btn-reject" onclick="rejectEvent(${event.id})">Reject</button>
-            <button class="btn btn-approve" onclick="approveEvent(${event.id})">Approve</button>
-        `;
-    } else {
-        modalActions.innerHTML = '';
-    }
-  
-    // Show the modal
-    document.getElementById('event-details-modal').style.display = 'block';
-  }
   
   // Approve event
   function approveEvent(eventId) {
