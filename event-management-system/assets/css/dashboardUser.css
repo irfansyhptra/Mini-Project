@@ -25,12 +25,16 @@
 
         .dashboard-container {
             display: flex;
+            flex-direction: column; /* Change to column for better stacking on small screens */
             min-height: 100vh;
         }
 
+
         /* Sidebar styles */
         .sidebar {
-            width: 260px;
+            width: 260px; 
+            transition: transform 0.3s; /* Add transition for smooth sidebar toggle */
+
             background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
             color: var(--white);
             padding: 20px 0;
@@ -170,7 +174,9 @@
         /* Main content styles */
         .main-content {
             flex: 1;
-            margin-left: 260px;
+            margin-left: 260px; 
+            transition: margin-left 0.3s; /* Add transition for smooth content shift */
+
             padding: 0;
             transition: all 0.3s;
         }
@@ -955,9 +961,14 @@
 
         @media (max-width: 992px) {
             .sidebar {
-                width: 80px;
+                width: 80px; 
                 padding: 15px 0;
+                transform: translateX(-100%); /* Hide sidebar off-screen */
             }
+            .sidebar.show {
+                transform: translateX(0); /* Show sidebar when active */
+            }
+
 
             .sidebar .logo span, .sidebar .user-details, .sidebar-menu .menu-text, .menu-label {
                 display: none;
@@ -978,7 +989,9 @@
             }
 
             .main-content {
-                margin-left: 80px;
+                margin-left: 0; /* Remove margin when sidebar is hidden */
+            }
+
             }
 
             .sidebar-footer {
@@ -1007,12 +1020,14 @@
             .stats-row {
                 grid-template-columns: repeat(2, 1fr);
             }
-        }
+        
 
         @media (max-width: 768px) {
             .menu-toggle {
-                display: block;
+                display: block; 
+                cursor: pointer; /* Ensure the toggle is clickable */
             }
+
 
             .sidebar {
                 left: -260px;
