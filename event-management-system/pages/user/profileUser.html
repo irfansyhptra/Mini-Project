@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna - Sistem Manajemen Event</title>
+    <link rel="stylesheet" href="../../assets/css/profileUser.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <div class="sidebar">
+                <div class="profile-header">
+                    <div class="avatar">
+                        <img id="profile-image" src="https://via.placeholder.com/100" alt="Foto Profil">
+                        <div class="upload-overlay">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" id="avatar-upload" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <h3 id="display-name">Nama Pengguna</h3>
+                        <p id="username">@username</p>
+                    </div>
+                </div>
+                <nav class="menu">
+                    <ul>
+                        <li class="active" data-target="informasi-akun">
+                            <i class="fas fa-user"></i>
+                            <span>Informasi Akun</span>
+                        </li>
+                        <li data-target="keamanan">
+                            <i class="fas fa-lock"></i>
+                            <span>Keamanan</span>
+                        </li>
+                        <li data-target="notifikasi">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifikasi</span>
+                        </li>
+                        <li data-target="pengaturan">
+                            <i class="fas fa-cog"></i>
+                            <span>Pengaturan</span>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="logout">
+                    <a href="../../index.html"></a>
+                    <button id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Keluar</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="content-section active" id="informasi-akun">
+                    <h2>Informasi Akun</h2>
+                    <div class="form-container">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nama-depan">Nama Depan</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="nama-depan" placeholder="Nama Depan" value="Budi">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama-belakang">Nama Belakang</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="nama-belakang" placeholder="Nama Belakang" value="Santoso">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" id="email" placeholder="Email" value="budi.santoso@example.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="telepon">Nomor Telepon</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" id="telepon" placeholder="Nomor Telepon" value="081234567890">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="bio">Bio</label>
+                                <textarea id="bio" placeholder="Ceritakan sedikit tentang diri Anda">Saya adalah event organizer yang berpengalaman lebih dari 5 tahun dalam mengelola berbagai acara mulai dari konferensi, pameran, hingga festival musik.</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="save-btn" id="save-profile-btn">Simpan Perubahan</button>
+                            <button class="cancel-btn">Batal</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section" id="keamanan">
+                    <h2>Keamanan</h2>
+                    <div class="form-container">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="password-lama">Kata Sandi Lama</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password-lama" placeholder="Kata Sandi Lama">
+                                    <button class="toggle-password"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="password-baru">Kata Sandi Baru</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password-baru" placeholder="Kata Sandi Baru">
+                                    <button class="toggle-password"><i class="fas fa-eye"></i></button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-progress" id="password-strength-bar"></div>
+                                    </div>
+                                    <span id="strength-text">Kekuatan kata sandi</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="konfirmasi-password">Konfirmasi Kata Sandi Baru</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="konfirmasi-password" placeholder="Konfirmasi Kata Sandi Baru">
+                                    <button class="toggle-password"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="save-btn" id="change-password-btn">Ubah Kata Sandi</button>
+                            <button class="cancel-btn">Batal</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section" id="notifikasi">
+                    <h2>Notifikasi</h2>
+                    <div class="notification-settings">
+                        <div class="notification-group">
+                            <h3>Email</h3>
+                            <div class="notification-item">
+                                <div class="notification-text">
+                                    <p>Pemberitahuan Pendaftaran Event</p>
+                                    <span>Dapatkan email ketika ada yang mendaftar ke event Anda</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-text">
+                                    <p>Pengingat Event</p>
+                                    <span>Dapatkan pengingat untuk event yang akan datang</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-text">
+                                    <p>Promosi & Newsletter</p>
+                                    <span>Dapatkan informasi tentang fitur baru dan penawaran spesial</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-group">
+                            <h3>SMS/WhatsApp</h3>
+                            <div class="notification-item">
+                                <div class="notification-text">
+                                    <p>Notifikasi Pembayaran</p>
+                                    <span>Dapatkan notifikasi ketika menerima pembayaran</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-text">
+                                    <p>Pengingat Event</p>
+                                    <span>Dapatkan pengingat untuk event yang akan datang</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="save-btn" id="save-notification-btn">Simpan Pengaturan</button>
+                        <button class="cancel-btn">Batal</button>
+                    </div>
+                </div>
+                
+                <div class="content-section" id="pengaturan">
+                    <h2>Pengaturan</h2>
+                    <div class="settings-container">
+                        <div class="settings-group">
+                            <h3>Tampilan</h3>
+                            <div class="settings-item">
+                                <div class="settings-text">
+                                    <p>Mode Gelap</p>
+                                    <span>Aktifkan tampilan mode gelap</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-group">
+                            <h3>Bahasa</h3>
+                            <div class="settings-item">
+                                <div class="settings-text">
+                                    <p>Pilih Bahasa</p>
+                                </div>
+                                <select id="language-select" class="settings-select">
+                                    <option value="id" selected>Bahasa Indonesia</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-group">
+                            <h3>Privasi</h3>
+                            <div class="settings-item">
+                                <div class="settings-text">
+                                    <p>Profil Publik</p>
+                                    <span>Izinkan orang lain melihat profil Anda</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-group danger-zone">
+                            <h3>Zona Berbahaya</h3>
+                            <div class="settings-item">
+                                <div class="settings-text">
+                                    <p>Nonaktifkan Akun</p>
+                                    <span>Menonaktifkan akun sementara</span>
+                                </div>
+                                <button class="action-btn deactivate-btn">Nonaktifkan</button>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-text">
+                                    <p>Hapus Akun</p>
+                                    <span>Menghapus akun secara permanen dan semua data terkait</span>
+                                </div>
+                                <button class="action-btn delete-btn">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../../assets/js/profileUser.js"></script>
+</body>
+</html>
