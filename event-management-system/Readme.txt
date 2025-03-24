@@ -8,6 +8,3 @@ profil admin -> yuyun
 detail event -> nurul
 Management User -> irfan
 Create Event -> tasya, nurul, yuyun
-
-poe.com
-claude.ai
