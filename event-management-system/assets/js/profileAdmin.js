@@ -65,4 +65,8 @@ if (dashboardLink) {
     });
 } else {
     console.error('Dashboard link not found');
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2f933d1 (finish)
