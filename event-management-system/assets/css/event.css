@@ -228,20 +228,22 @@
 .social-share {
     display: flex;
     justify-content: space-between;
+    gap: 2px;
     margin-top: 1rem;
+    padding: 0 10px;
 }
 
 .share-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     color: white;
     transition: var(--transition);
     text-decoration: none;
-    font-size: 20px;
+    font-size: 26px;
 }
 
 .share-btn.facebook {
