@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin | Eventory </title>
+    <title>Dashboard Admin | Eventory</title>
     <link rel="stylesheet" href="/event-management-system/assets/css/dashboardAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <!-- Sidebar Navigation -->
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <a href="/event-management-system/index.html" class="logo">
-            <i class="fas fa-calendar-check"></i>
-            <span>Eventory</span>
-        </a>
-    </div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/event-management-system/index.html" class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventory</span>
+                </a>
+            </div>
             <nav class="sidebar-menu">
                 <ul>
                     <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -131,115 +130,115 @@
                 </section>
                 
                 <!-- Daftar Event Page -->
-<section id="events-page" class="content-page">
-    <div class="page-header">
-        <h2>Daftar Event</h2>
-        <div class="search-container">
-            <input type="text" placeholder="Cari event...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-    </div>
-    
-    <div class="events-grid">
-        <!-- Event Card 1 - Aceh Ramadhan Festival 2025 -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/event1.jpg" alt="Aceh Ramadhan Festival 2025">
-                <span class="event-status verified">Terverifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>Aceh Ramadhan Festival 2025</h3>
-                <p><i class="fas fa-calendar"></i> 12 Mar 2025, 15:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh</p>
-                <button class="btn btn-primary" onclick="showEventDetails(1)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 2 - Aceh Culinary Festival -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/event2.jpg" alt="Aceh Culinary Festival">
-                <span class="event-status pending">Menunggu Verifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>Aceh Culinary Festival</h3>
-                <p><i class="fas fa-calendar"></i> 10 Apr 2025, 10:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Taman Sulthanah Safiatuddin</p>
-                <button class="btn btn-primary" onclick="showEventDetails(2)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 3 - Informatic Festival 2025 -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/infest.JPG" alt="Informatic Festival 2025">
-                <span class="event-status verified">Terverifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>Informatic Festival 2025</h3>
-                <p><i class="fas fa-calendar"></i> 15 May 2025, 09:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Universitas Syiah Kuala, Banda Aceh</p>
-                <button class="btn btn-primary" onclick="showEventDetails(3)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 4 - PILMIPA USK -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/PILM-2.jpg" alt="PILMIPA USK">
-                <span class="event-status verified">Terverifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>PILMIPA USK</h3>
-                <p><i class="fas fa-calendar"></i> 20 Jun 2025, 08:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
-                <button class="btn btn-primary" onclick="showEventDetails(4)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 5 - POM FMIPA USK -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/pom.JPG" alt="POM FMIPA USK">
-                <span class="event-status pending">Menunggu Verifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>POM FMIPA USK</h3>
-                <p><i class="fas fa-calendar"></i> 25 Jul 2025, 14:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
-                <button class="btn btn-primary" onclick="showEventDetails(5)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 6 - Festival Kupi -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/event4.jpeg" alt="Festival Kupi">
-                <span class="event-status verified">Terverifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>Festival Kupi</h3>
-                <p><i class="fas fa-calendar"></i> 30 Aug 2025, 10:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Banda Aceh, Aceh</p>
-                <button class="btn btn-primary" onclick="showEventDetails(6)">Detail</button>
-            </div>
-        </div>
-        
-        <!-- Event Card 7 - Peringatan Tsunami Aceh -->
-        <div class="event-card">
-            <div class="event-image">
-                <img src="/event-management-system/assets/image/event5.jpeg" alt="Peringatan Tsunami Aceh">
-                <span class="event-status verified">Terverifikasi</span>
-            </div>
-            <div class="event-details">
-                <h3>Peringatan Tsunami Aceh</h3>
-                <p><i class="fas fa-calendar"></i> 26 Dec 2025, 08:00</p>
-                <p><i class="fas fa-map-marker-alt"></i> Museum Tsunami Aceh, Banda Aceh</p>
-                <button class="btn btn-primary" onclick="showEventDetails(7)">Detail</button>
-            </div>
-        </div>
-    </div>
-</section>
+                <section id="events-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Daftar Event</h2>
+                        <div class="search-container">
+                            <input type="text" placeholder="Cari event...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="events-grid">
+                        <!-- Event Card 1 - Aceh Ramadhan Festival 2025 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event1.jpg" alt="Aceh Ramadhan Festival 2025">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Ramadhan Festival 2025</h3>
+                                <p><i class="fas fa-calendar"></i> 12 Mar 2025, 15:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(1)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 2 - Aceh Culinary Festival -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event2.jpg" alt="Aceh Culinary Festival">
+                                <span class="event-status pending">Menunggu Verifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Culinary Festival</h3>
+                                <p><i class="fas fa-calendar"></i> 10 Apr 2025, 10:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Taman Sulthanah Safiatuddin</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(2)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 3 - Informatic Festival 2025 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/infest.JPG" alt="Informatic Festival 2025">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Informatic Festival 2025</h3>
+                                <p><i class="fas fa-calendar"></i> 15 May 2025, 09:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Universitas Syiah Kuala, Banda Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(3)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 4 - PILMIPA USK -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/PILM-2.jpg" alt="PILMIPA USK">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>PILMIPA USK</h3>
+                                <p><i class="fas fa-calendar"></i> 20 Jun 2025, 08:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(4)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 5 - POM FMIPA USK -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/pom.JPG" alt="POM FMIPA USK">
+                                <span class="event-status pending">Menunggu Verifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>POM FMIPA USK</h3>
+                                <p><i class="fas fa-calendar"></i> 25 Jul 2025, 14:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(5)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 6 - Festival Kupi -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event4.jpeg" alt="Festival Kupi">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Festival Kupi</h3>
+                                <p><i class="fas fa-calendar"></i> 30 Aug 2025, 10:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Banda Aceh, Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(6)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 7 - Peringatan Tsunami Aceh -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="/event-management-system/assets/image/event5.jpeg" alt="Peringatan Tsunami Aceh">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Peringatan Tsunami Aceh</h3>
+                                <p><i class="fas fa-calendar"></i> 26 Dec 2025, 08:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Museum Tsunami Aceh, Banda Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(7)">Detail</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
   
                 <!-- Daftar User Page -->
                 <section id="users-page" class="content-page">
