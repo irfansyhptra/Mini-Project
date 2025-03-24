@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`;
             } else if (this.classList.contains('twitter')) {
                 shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${eventTitle}`)}&url=${encodeURIComponent(eventUrl)}`;
-            } else if (this.classList.contains('linkedin')) {
-                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`;
+            } else if (this.classList.contains('instagram')) {
+                shareUrl = `https://www.instagram.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`;
             } else if (this.classList.contains('whatsapp')) {
                 shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out ${eventTitle}: ${eventUrl}`)}`;
             }
