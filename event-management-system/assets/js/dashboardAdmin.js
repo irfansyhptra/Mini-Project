@@ -1,3 +1,84 @@
+// Data Event
+const events = [
+    {
+        id: 1,
+        title: "Aceh Ramadhan Festival 2025",
+        date: "12 Mar 2025, 15:00",
+        location: "Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh",
+        category: "Festival",
+        creator: "Dinas Kebudayaan dan Pariwisata Aceh",
+        description: "2019, Pemerintah Aceh melalui Dinas Kebudayaan dan Pariwisata Aceh telah menyelenggarakan festival ini sebagai landmark event untuk menarik wisatawan, terutama para Muslim traveler. Pada 2025, festival ini hadir dengan konsep baru untuk memperkenalkan Aceh sebagai World's Best Halal Cultural Destination.",
+        image: "/event-management-system/assets/image/event1.jpg",
+        status: "verified"
+    },
+    {
+        id: 2,
+        title: "Aceh Culinary Festival",
+        date: "10 Apr 2025, 10:00",
+        location: "Taman Sulthanah Safiatuddin",
+        category: "Kuliner",
+        creator: "Dinas Pariwisata Aceh",
+        description: "Festival kuliner yang menampilkan berbagai makanan khas Aceh.",
+        image: "/event-management-system/assets/image/event2.jpg",
+        status: "pending"
+    },
+    {
+        id: 3,
+        title: "Informatic Festival 2025",
+        date: "15 May 2025, 09:00",
+        location: "Universitas Syiah Kuala, Banda Aceh",
+        category: "Teknologi",
+        creator: "Fakultas Ilmu Komputer USK",
+        description: "Festival tahunan yang menampilkan inovasi teknologi terbaru dari mahasiswa.",
+        image: "/event-management-system/assets/image/event3.jpg",
+        status: "verified"
+    },
+    {
+        id: 4,
+        title: "PILMIPA USK",
+        date: "20 Jun 2025, 08:00",
+        location: "Fakultas MIPA, Universitas Syiah Kuala",
+        category: "Olimpiade",
+        creator: "Fakultas MIPA USK",
+        description: "Olimpiade sains tingkat nasional yang diadakan oleh Fakultas MIPA USK.",
+        image: "/event-management-system/assets/image/event4.jpg",
+        status: "verified"
+    },
+    {
+        id: 5,
+        title: "POM FMIPA USK",
+        date: "25 Jul 2025, 14:00",
+        location: "Fakultas MIPA, Universitas Syiah Kuala",
+        category: "Olahraga",
+        creator: "Fakultas MIPA USK",
+        description: "Pekan Olahraga Mahasiswa FMIPA USK.",
+        image: "/event-management-system/assets/image/event5.jpg",
+        status: "pending"
+    },
+    {
+        id: 6,
+        title: "Festival Kupi",
+        date: "30 Aug 2025, 10:00",
+        location: "Banda Aceh, Aceh",
+        category: "Festival",
+        creator: "Komunitas Kopi Aceh",
+        description: "Festival kopi yang menampilkan berbagai varian kopi khas Aceh.",
+        image: "/event-management-system/assets/image/event6.jpg",
+        status: "verified"
+    },
+    {
+        id: 7,
+        title: "Peringatan Tsunami Aceh",
+        date: "26 Dec 2025, 08:00",
+        location: "Museum Tsunami Aceh, Banda Aceh",
+        category: "Peringatan",
+        creator: "Pemerintah Aceh",
+        description: "Acara peringatan tsunami Aceh untuk mengenang korban dan meningkatkan kesadaran bencana.",
+        image: "/event-management-system/assets/image/event7.jpg",
+        status: "verified"
+    }
+];
+
 // DOM Elements
 document.addEventListener('DOMContentLoaded', function () {
     // Menu Navigation
@@ -23,187 +104,106 @@ document.addEventListener('DOMContentLoaded', function () {
     initFormSubmission();
     initProfileDropdown();
 
-    // Initialize navigation
-    function initNavigation() {
-        menuItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                // Remove active class from all menu items
-                menuItems.forEach(menuItem => {
-                    menuItem.parentElement.classList.remove('active');
-                });
-
-                // Add active class to clicked menu item
-                this.parentElement.classList.add('active');
-
-                // Get the target page id from href attribute
-                const targetId = this.getAttribute('href').substring(1);
-
-                // Update page title
-                pageTitle.textContent = this.textContent.trim();
-
-                // Hide all pages
-                contentPages.forEach(page => {
-                    page.classList.remove('active');
-                });
-
-                // Show target page
-                const targetPage = document.getElementById(targetId + '-page');
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                }
-            });
-        });
-    }
-
-    // Password strength checker
-    function initPasswordStrength() {
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function () {
-                const password = this.value;
-                let strength = 0;
-
-                if (password.length >= 8) strength += 25;
-                if (password.match(/[a-z]+/)) strength += 25;
-                if (password.match(/[A-Z]+/)) strength += 25;
-                if (password.match(/[0-9]+/)) strength += 25;
-
-                // Update the strength bar
-                strengthBar.style.width = strength + '%';
-
-                // Update color based on strength
-                if (strength <= 25) {
-                    strengthBar.style.backgroundColor = '#e74a3b';
-                    strengthText.textContent = 'Weak';
-                } else if (strength <= 50) {
-                    strengthBar.style.backgroundColor = '#f6c23e';
-                    strengthText.textContent = 'Medium';
-                } else if (strength <= 75) {
-                    strengthBar.style.backgroundColor = '#36b9cc';
-                    strengthText.textContent = 'Good';
-                } else {
-                    strengthBar.style.backgroundColor = '#1cc88a';
-                    strengthText.textContent = 'Strong';
-                }
-            });
-        }
-    }
-
-    // Form submission
-    function initFormSubmission() {
-        if (userForm) {
-            userForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                // Basic form validation
-                const nameInput = document.getElementById('nama');
-                const emailInput = document.getElementById('email');
-
-                if (!nameInput.value.trim()) {
-                    showNotification('Nama tidak boleh kosong!', 'error');
-                    return;
-                }
-
-                const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-                if (!emailPattern.test(emailInput.value)) {
-                    showNotification('Format email tidak valid!', 'error');
-                    return;
-                }
-
-                if (passwordInput && passwordInput.value.length < 8) {
-                    showNotification('Password minimal 8 karakter!', 'error');
-                    return;
-                }
-
-                // Create new user object
-                const newUser = {
-                    id: Date.now(), // Generate unique ID
-                    name: nameInput.value.trim(),
-                    email: emailInput.value.trim(),
-                    registrationDate: new Date().toLocaleDateString(),
-                    eventsCreated: 0,
-                    role: document.getElementById('role').value
-                };
-
-                // Add user to the table
-                addUserToTable(newUser);
-
-                // Show success notification
-                showNotification('User berhasil disimpan!', 'success');
-
-                // Reset form
-                this.reset();
-                strengthBar.style.width = '0%';
-                strengthText.textContent = 'Password strength';
-            });
-        }
-    }
-
-    // Add user to the table
-    function addUserToTable(user) {
-        const tableBody = document.querySelector('#users-page .data-table tbody');
-
-        // Create new row
-        const newRow = document.createElement('tr');
-        newRow.setAttribute('data-user-id', user.id); // Set unique ID for the row
-        newRow.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.registrationDate}</td>
-            <td>${user.eventsCreated}</td>
-            <td>
-                <button class="btn btn-small btn-edit" onclick="editUser(${user.id})">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-small btn-delete" onclick="deleteUser(${user.id})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        `;
-
-        // Append row to the table
-        tableBody.appendChild(newRow);
-    }
-
-    // Initialize profile dropdown
-    function initProfileDropdown() {
-        if (profileInfo) {
-            profileInfo.addEventListener('click', function () {
-                profileDropdown.classList.toggle('show');
-            });
-        }
-
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function (e) {
-            if (!e.target.matches('.profile-info')) {
-                if (profileDropdown.classList.contains('show')) {
-                    profileDropdown.classList.remove('show');
-                }
-            }
-        });
+    // Load events if on verify page
+    if (window.location.hash === '#verify') {
+        loadEvents();
     }
 });
 
-// Event Details Modal
+// Initialize navigation
+function initNavigation() {
+    const menuItems = document.querySelectorAll('.sidebar-menu ul li a');
+    const contentPages = document.querySelectorAll('.content-page');
+    const pageTitle = document.getElementById('page-title');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Remove active class from all menu items
+            menuItems.forEach(menuItem => {
+                menuItem.parentElement.classList.remove('active');
+            });
+
+            // Add active class to clicked menu item
+            this.parentElement.classList.add('active');
+
+            // Get the target page id from href attribute
+            const targetId = this.getAttribute('href').substring(1);
+
+            // Update page title
+            pageTitle.textContent = this.textContent.trim();
+
+            // Hide all pages
+            contentPages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show target page
+            const targetPage = document.getElementById(targetId + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+
+                // Load events if the target page is verify-page
+                if (targetId === 'verify') {
+                    loadEvents();
+                }
+            }
+        });
+    });
+}
+
+// Load events into the verify page
+function loadEvents() {
+    const tableBody = document.querySelector('#verify-page .data-table tbody');
+    tableBody.innerHTML = '';
+
+    events.forEach(event => {
+        if (event.status === 'pending') {
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-event-id', event.id);
+            newRow.innerHTML = `
+                <td>${event.title}</td>
+                <td>${event.date}</td>
+                <td>${event.location}</td>
+                <td>${event.category}</td>
+                <td>${event.creator}</td>
+                <td>
+                    <button class="btn btn-small btn-view" onclick="viewEventDetails(${event.id})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+    });
+}
+
+// Show event details in modal
 function showEventDetails(eventId) {
-    // Update modal content based on eventId
-    document.getElementById('modal-event-title').textContent = getEventTitle(eventId);
-    document.getElementById('modal-event-status').innerHTML = getEventStatus(eventId);
-    document.getElementById('modal-event-datetime').textContent = getEventDateTime(eventId);
-    document.getElementById('modal-event-location').textContent = getEventLocation(eventId);
-    document.getElementById('modal-event-category').textContent = getEventCategory(eventId);
-    document.getElementById('modal-event-creator').textContent = getEventCreator(eventId);
-    document.getElementById('modal-event-description').textContent = getEventDescription(eventId);
+    const event = events.find(e => e.id === eventId);
+
+    if (!event) {
+        showNotification('Event tidak ditemukan!', 'error');
+        return;
+    }
+
+    // Update modal content based on event
+    document.getElementById('modal-event-title').textContent = event.title;
+    document.getElementById('modal-event-status').innerHTML = `Status: <span class="${event.status === 'verified' ? 'verified' : 'pending'}">${event.status === 'verified' ? 'Terverifikasi' : 'Menunggu Verifikasi'}</span>`;
+    document.getElementById('modal-event-datetime').textContent = event.date;
+    document.getElementById('modal-event-location').textContent = event.location;
+    document.getElementById('modal-event-category').textContent = event.category;
+    document.getElementById('modal-event-creator').textContent = event.creator;
+    document.getElementById('modal-event-description').textContent = event.description;
 
     // Display event actions based on status
-    const eventStatus = getEventStatus(eventId);
     const modalActions = document.getElementById('modal-event-actions');
 
-    if (eventStatus.includes('Menunggu')) {
+    if (event.status === 'pending') {
         modalActions.innerHTML = `
-            <button class="btn btn-reject" onclick="rejectEvent(${eventId})">Reject</button>
-            <button class="btn btn-approve" onclick="approveEvent(${eventId})">Approve</button>
+            <button class="btn btn-reject" onclick="rejectEvent(${event.id})">Reject</button>
+            <button class="btn btn-approve" onclick="approveEvent(${event.id})">Approve</button>
         `;
     } else {
         modalActions.innerHTML = '';
@@ -213,148 +213,15 @@ function showEventDetails(eventId) {
     document.getElementById('event-details-modal').style.display = 'block';
 }
 
-// Mock data functions
-function getEventTitle(eventId) {
-    const titles = {
-        1: 'Workshop UX Design',
-        2: 'Seminar Digital Marketing',
-        3: 'Tech Conference 2025'
-    };
-    return titles[eventId] || 'Event Title';
-}
-
-function getEventStatus(eventId) {
-    const statuses = {
-        1: 'Status: <span class="verified">Terverifikasi</span>',
-        2: 'Status: <span class="pending">Menunggu Verifikasi</span>',
-        3: 'Status: <span class="verified">Terverifikasi</span>'
-    };
-    return statuses[eventId] || 'Status: <span class="pending">Menunggu Verifikasi</span>';
-}
-
-function getEventDateTime(eventId) {
-    const dateTimes = {
-        1: '25 Mar 2025, 09:00',
-        2: '28 Mar 2025, 13:00',
-        3: '2 Apr 2025, 10:00'
-    };
-    return dateTimes[eventId] || '1 Jan 2025, 00:00';
-}
-
-function getEventLocation(eventId) {
-    const locations = {
-        1: 'Jakarta Convention Center',
-        2: 'Grand Hyatt Hotel',
-        3: 'ICE BSD City'
-    };
-    return locations[eventId] || 'Location';
-}
-
-function getEventCategory(eventId) {
-    const categories = {
-        1: 'Design',
-        2: 'Marketing',
-        3: 'Technology'
-    };
-    return categories[eventId] || 'Category';
-}
-
-function getEventCreator(eventId) {
-    const creators = {
-        1: 'John Doe',
-        2: 'Jane Smith',
-        3: 'Miranda Kerr'
-    };
-    return creators[eventId] || 'User Name';
-}
-
-function getEventDescription(eventId) {
-    return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisi vel tincidunt interdum, sem nisi aliquam nisi, eget consectetur nisi dolor ut nisi. Sed euismod, nisi vel tincidunt interdum, sem nisi aliquam nisi, eget consectetur nisi dolor ut nisi.';
-}
-
-// Close modal
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
-
-// User functions
-function showAddUserForm() {
-    // Navigate to manage user page
-    document.getElementById('page-title').textContent = 'Kelola User';
-    document.querySelectorAll('.content-page').forEach(page => {
-        page.classList.remove('active');
-    });
-    document.getElementById('manage-user-page').classList.add('active');
-
-    // Reset form
-    document.getElementById('user-form').reset();
-
-    // Update sidebar active state
-    document.querySelectorAll('.sidebar-menu ul li').forEach(item => {
-        item.classList.remove('active');
-    });
-    document.querySelector('.sidebar-menu ul li a[href="#manage-users"]').parentElement.classList.add('active');
-}
-
-function editUser(userId) {
-    // Normally would fetch user data from server
-    // For demo, populate form with mock data
-    const mockUsers = {
-        1: { name: 'John Doe', email: 'john.doe@example.com', role: 'user' },
-        2: { name: 'Jane Smith', email: 'jane.smith@example.com', role: 'user' },
-        3: { name: 'Miranda Kerr', email: 'miranda.k@example.com', role: 'admin' }
-    };
-
-    const user = mockUsers[userId];
-
-    // Navigate to manage user page
-    document.getElementById('page-title').textContent = 'Edit User';
-    document.querySelectorAll('.content-page').forEach(page => {
-        page.classList.remove('active');
-    });
-    document.getElementById('manage-user-page').classList.add('active');
-
-    // Populate form
-    document.getElementById('nama').value = user.name;
-    document.getElementById('email').value = user.email;
-    document.getElementById('role').value = user.role;
-
-    // Update sidebar active state
-    document.querySelectorAll('.sidebar-menu ul li').forEach(item => {
-        item.classList.remove('active');
-    });
-    document.querySelector('.sidebar-menu ul li a[href="#manage-users"]').parentElement.classList.add('active');
-}
-
-function deleteUser(userId) {
-    // Show confirmation modal
-    document.getElementById('confirmation-title').textContent = 'Konfirmasi Hapus User';
-    document.getElementById('confirmation-message').textContent = `Apakah Anda yakin ingin menghapus user ini?`;
-
-    const confirmBtn = document.getElementById('confirm-action-btn');
-    confirmBtn.textContent = 'Ya, Hapus';
-    confirmBtn.className = 'btn btn-danger';
-    confirmBtn.onclick = function () {
-        // Remove the user row from the table
-        const userRow = document.querySelector(`#users-page tbody tr[data-user-id="${userId}"]`);
-        if (userRow) {
-            userRow.remove();
-        }
-
-        // Show notification
-        showNotification('User berhasil dihapus!', 'success');
-        closeModal('confirmation-modal');
-    };
-
-    document.getElementById('confirmation-modal').style.display = 'block';
-}
-
-// Event verification functions
-function viewEventDetails(eventId) {
-    showEventDetails(eventId);
-}
-
+// Approve event
 function approveEvent(eventId) {
+    const event = events.find(e => e.id === eventId);
+
+    if (!event) {
+        showNotification('Event tidak ditemukan!', 'error');
+        return;
+    }
+
     // Show confirmation modal
     document.getElementById('confirmation-title').textContent = 'Konfirmasi Verifikasi';
     document.getElementById('confirmation-message').textContent = `Apakah Anda yakin ingin menyetujui event ini?`;
@@ -363,21 +230,32 @@ function approveEvent(eventId) {
     confirmBtn.textContent = 'Ya, Setujui';
     confirmBtn.className = 'btn btn-approve';
     confirmBtn.onclick = function () {
-        // In a real app, would send approve request to server
+        // Update event status
+        event.status = 'verified';
+
+        // Show notification
         showNotification('Event berhasil disetujui!', 'success');
         closeModal('confirmation-modal');
         closeModal('event-details-modal');
 
         // Update the event status in the UI (demo only)
-        if (document.querySelector(`#verify-page tbody tr:nth-child(${eventId})`)) {
-            document.querySelector(`#verify-page tbody tr:nth-child(${eventId})`).remove();
+        if (document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`)) {
+            document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`).remove();
         }
     };
 
     document.getElementById('confirmation-modal').style.display = 'block';
 }
 
+// Reject event
 function rejectEvent(eventId) {
+    const event = events.find(e => e.id === eventId);
+
+    if (!event) {
+        showNotification('Event tidak ditemukan!', 'error');
+        return;
+    }
+
     // Show confirmation modal
     document.getElementById('confirmation-title').textContent = 'Konfirmasi Penolakan';
     document.getElementById('confirmation-message').textContent = `Apakah Anda yakin ingin menolak event ini?`;
@@ -386,27 +264,26 @@ function rejectEvent(eventId) {
     confirmBtn.textContent = 'Ya, Tolak';
     confirmBtn.className = 'btn btn-reject';
     confirmBtn.onclick = function () {
-        // In a real app, would send reject request to server
+        // Update event status
+        event.status = 'rejected';
+
+        // Show notification
         showNotification('Event ditolak!', 'success');
         closeModal('confirmation-modal');
         closeModal('event-details-modal');
 
         // Update the event status in the UI (demo only)
-        if (document.querySelector(`#verify-page tbody tr:nth-child(${eventId})`)) {
-            document.querySelector(`#verify-page tbody tr:nth-child(${eventId})`).remove();
+        if (document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`)) {
+            document.querySelector(`#verify-page tbody tr[data-event-id="${eventId}"]`).remove();
         }
     };
 
     document.getElementById('confirmation-modal').style.display = 'block';
 }
 
-// Form utility functions
-function resetForm() {
-    document.getElementById('user-form').reset();
-
-    // Reset password strength indicator
-    document.querySelector('.strength-bar').style.width = '0%';
-    document.querySelector('.strength-text').textContent = 'Password strength';
+// Close modal
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
 }
 
 // Notification system
@@ -439,16 +316,139 @@ function closeNotification() {
     notification.classList.remove('show');
 }
 
-// When clicking outside the modal, close it
-window.addEventListener('click', function (event) {
-    const eventModal = document.getElementById('event-details-modal');
-    const confirmModal = document.getElementById('confirmation-modal');
+// Password strength checker
+function initPasswordStrength() {
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.querySelector('.strength-bar');
+    const strengthText = document.querySelector('.strength-text');
 
-    if (event.target === eventModal) {
-        closeModal('event-details-modal');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function () {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]+/)) strength += 25;
+            if (password.match(/[A-Z]+/)) strength += 25;
+            if (password.match(/[0-9]+/)) strength += 25;
+
+            // Update the strength bar
+            strengthBar.style.width = strength + '%';
+
+            // Update color based on strength
+            if (strength <= 25) {
+                strengthBar.style.backgroundColor = '#e74a3b';
+                strengthText.textContent = 'Weak';
+            } else if (strength <= 50) {
+                strengthBar.style.backgroundColor = '#f6c23e';
+                strengthText.textContent = 'Medium';
+            } else if (strength <= 75) {
+                strengthBar.style.backgroundColor = '#36b9cc';
+                strengthText.textContent = 'Good';
+            } else {
+                strengthBar.style.backgroundColor = '#1cc88a';
+                strengthText.textContent = 'Strong';
+            }
+        });
+    }
+}
+
+// Form submission
+function initFormSubmission() {
+    const userForm = document.getElementById('user-form');
+
+    if (userForm) {
+        userForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Basic form validation
+            const nameInput = document.getElementById('nama');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!nameInput.value.trim()) {
+                showNotification('Nama tidak boleh kosong!', 'error');
+                return;
+            }
+
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!emailPattern.test(emailInput.value)) {
+                showNotification('Format email tidak valid!', 'error');
+                return;
+            }
+
+            if (passwordInput && passwordInput.value.length < 8) {
+                showNotification('Password minimal 8 karakter!', 'error');
+                return;
+            }
+
+            // Create new user object
+            const newUser = {
+                id: Date.now(), // Generate unique ID
+                name: nameInput.value.trim(),
+                email: emailInput.value.trim(),
+                registrationDate: new Date().toLocaleDateString(),
+                eventsCreated: 0,
+                role: document.getElementById('role').value
+            };
+
+            // Add user to the table
+            addUserToTable(newUser);
+
+            // Show success notification
+            showNotification('User berhasil disimpan!', 'success');
+
+            // Reset form
+            this.reset();
+            document.querySelector('.strength-bar').style.width = '0%';
+            document.querySelector('.strength-text').textContent = 'Password strength';
+        });
+    }
+}
+
+// Add user to the table
+function addUserToTable(user) {
+    const tableBody = document.querySelector('#users-page .data-table tbody');
+
+    // Create new row
+    const newRow = document.createElement('tr');
+    newRow.setAttribute('data-user-id', user.id); // Set unique ID for the row
+    newRow.innerHTML = `
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${user.registrationDate}</td>
+        <td>${user.eventsCreated}</td>
+        <td>
+            <button class="btn btn-small btn-edit" onclick="editUser(${user.id})">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-small btn-delete" onclick="deleteUser(${user.id})">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    `;
+
+    // Append row to the table
+    tableBody.appendChild(newRow);
+}
+
+// Initialize profile dropdown
+function initProfileDropdown() {
+    const profileInfo = document.querySelector('.profile-info');
+    const profileDropdown = document.querySelector('.profile-dropdown');
+
+    if (profileInfo) {
+        profileInfo.addEventListener('click', function () {
+            profileDropdown.classList.toggle('show');
+        });
     }
 
-    if (event.target === confirmModal) {
-        closeModal('confirmation-modal');
-    }
-});
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function (e) {
+        if (!e.target.matches('.profile-info')) {
+            if (profileDropdown.classList.contains('show')) {
+                profileDropdown.classList.remove('show');
+            }
+        }
+    });
+}
