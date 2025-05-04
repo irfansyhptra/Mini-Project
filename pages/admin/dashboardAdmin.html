@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Eventory</title>
+    <link rel="stylesheet" href="../../assets/css/dashboardAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventory</span>
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#events"><i class="fas fa-calendar-alt"></i> Daftar Event</a></li>
+                    <li><a href="#users"><i class="fas fa-users"></i> Daftar User</a></li>
+                    <li><a href="#verify"><i class="fas fa-check-circle"></i> Verifikasi Event</a></li>
+                    <li><a href="#manage-users"><i class="fas fa-user-cog"></i> Kelola User</a></li>
+                </ul>
+            </nav>
+            <div class="logout">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="admin-profile">
+                        <div class="profile-info">
+                            <span>Tasya Zahrani</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="profile-dropdown">
+                            <ul>
+                                <li><a href="../../pages/admin/profileAdmin.html"><i class="fas fa-user"></i> Edit Profile</a></li>
+                                <li><a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Pages -->
+            <div class="content-container">
+                <!-- Dashboard Page -->
+                <section id="dashboard-page" class="content-page active">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Event</h3>
+                                <p class="stat-number">15</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total User</h3>
+                                <p class="stat-number">20</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Event Menunggu Verifikasi</h3>
+                                <p class="stat-number">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Event Terverifikasi</h3>
+                                <p class="stat-number">10</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity">
+                        <h3>Aktivitas Terbaru</h3>
+                        <ul class="activity-list">
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-plus-circle"></i></div>
+                                <div class="activity-details">
+                                    <p>Event baru ditambahkan: <strong>Informatic Festival</strong></p>
+                                    <span class="time">2 jam yang lalu</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="activity-details">
+                                    <p>User baru terdaftar: <strong>Shafa Hildayana</strong></p>
+                                    <span class="time">4 jam yang lalu</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="activity-icon"><i class="fas fa-check"></i></div>
+                                <div class="activity-details">
+                                    <p>Event diverifikasi: <strong>PIL MIPA USK</strong></p>
+                                    <span class="time">1 jam yang lalu</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- Daftar Event Page -->
+                <section id="events-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Daftar Event</h2>
+                        <div class="search-container">
+                            <input type="text" placeholder="Cari event...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="events-grid">
+                        <!-- Event Card 1 - Aceh Ramadhan Festival 2025 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/event1.jpg" alt="Aceh Ramadhan Festival 2025">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Ramadhan Festival 2025</h3>
+                                <p><i class="fas fa-calendar"></i> 12 Mar 2025, 15:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(1)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 2 - Aceh Culinary Festival -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/event2.jpg" alt="Aceh Culinary Festival">
+                                <span class="event-status pending">Menunggu Verifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Aceh Culinary Festival</h3>
+                                <p><i class="fas fa-calendar"></i> 10 Apr 2025, 10:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Taman Sulthanah Safiatuddin</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(2)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 3 - Informatic Festival 2025 -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/infest.JPG" alt="Informatic Festival 2025">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Informatic Festival 2025</h3>
+                                <p><i class="fas fa-calendar"></i> 15 May 2025, 09:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Universitas Syiah Kuala, Banda Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(3)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 4 - PILMIPA USK -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/PILM-2.jpg" alt="PILMIPA USK">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>PILMIPA USK</h3>
+                                <p><i class="fas fa-calendar"></i> 20 Jun 2025, 08:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(4)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 5 - POM FMIPA USK -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/pom.JPG" alt="POM FMIPA USK">
+                                <span class="event-status pending">Menunggu Verifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>POM FMIPA USK</h3>
+                                <p><i class="fas fa-calendar"></i> 25 Jul 2025, 14:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Fakultas MIPA, Universitas Syiah Kuala</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(5)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 6 - Festival Kupi -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/event4.jpeg" alt="Festival Kupi">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Festival Kupi</h3>
+                                <p><i class="fas fa-calendar"></i> 30 Aug 2025, 10:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Banda Aceh, Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(6)">Detail</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Card 7 - Peringatan Tsunami Aceh -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="../../assets/image/event5.jpeg" alt="Peringatan Tsunami Aceh">
+                                <span class="event-status verified">Terverifikasi</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Peringatan Tsunami Aceh</h3>
+                                <p><i class="fas fa-calendar"></i> 26 Dec 2025, 08:00</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Museum Tsunami Aceh, Banda Aceh</p>
+                                <button class="btn btn-primary" onclick="showEventDetails(7)">Detail</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+  
+                <!-- Daftar User Page -->
+                <section id="users-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Daftar User</h2>
+                        <div class="actions">
+                            <div class="search-container">
+                                <input type="text" placeholder="Cari user...">
+                                <button><i class="fas fa-search"></i></button>
+                            </div>
+                            <button class="btn btn-primary" onclick="showAddUserForm()">
+                                <i class="fas fa-plus"></i> Tambah User
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama User</th>
+                                    <th>Email</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Jumlah Event Dibuat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>john.doe@example.com</td>
+                                    <td>10 Jan 2025</td>
+                                    <td>5</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(1)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>jane.smith@example.com</td>
+                                    <td>15 Feb 2025</td>
+                                    <td>3</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(2)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Miranda Kerr</td>
+                                    <td>miranda.k@example.com</td>
+                                    <td>20 Mar 2025</td>
+                                    <td>1</td>
+                                    <td>
+                                        <button class="btn btn-small btn-edit" onclick="editUser(3)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-delete" onclick="deleteUser(3)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Verifikasi Event Page -->
+                <section id="verify-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Verifikasi Event</h2>
+                        <div class="search-container">
+                            <input type="text" placeholder="Cari event...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Judul Event</th>
+                                    <th>Tanggal Event</th>
+                                    <th>Nama Pembuat</th>
+                                    <th>Kategori</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Seminar Digital Marketing</td>
+                                    <td>28 Mar 2025, 13:00</td>
+                                    <td>John Doe</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(1)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(1)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(1)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Webinar SEO Strategy</td>
+                                    <td>30 Mar 2025, 15:00</td>
+                                    <td>Jane Smith</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(2)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(2)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(2)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Networking Night</td>
+                                    <td>2 Apr 2025, 18:00</td>
+                                    <td>Miranda Kerr</td>
+                                    <td>
+                                        <button class="btn btn-small btn-view" onclick="viewEventDetails(3)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-approve" onclick="approveEvent(3)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-small btn-reject" onclick="rejectEvent(3)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Kelola User Page -->
+                <section id="manage-user-page" class="content-page">
+                    <div class="page-header">
+                        <h2>Kelola User</h2>
+                    </div>
+                    
+                    <div class="form-container">
+                        <form id="user-form">
+                            <div class="form-group">
+                                <label for="nama">Nama</label>
+                                <input type="text" id="nama" name="nama" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" required>
+                                <div class="password-strength">
+                                    <div class="strength-bar"></div>
+                                    <span class="strength-text">Password strength</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select id="role" name="role" required>
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modals -->
+    <div id="event-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detail Event</h2>
+                <span class="close" onclick="closeModal('event-details-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="event-detail-content">
+                    <div class="event-image-large">
+                        <img src="../../assets/image/event1.jpg" alt="Event Image">
+                    </div>
+                    <div class="event-info">
+                        <h3 id="modal-event-title">Aceh Ramadhan Festival 2025</h3>
+                        <p class="event-status" id="modal-event-status">Status: <span class="verified">Terverifikasi</span></p>
+                        <div class="event-details-list">
+                            <div class="detail-item">
+                                <span class="label">Tanggal & Waktu:</span>
+                                <span class="value" id="modal-event-datetime">12 Mar 2025, 15:00</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Lokasi:</span>
+                                <span class="value" id="modal-event-location">Jl. Moh. Jam No.1, Kp. Baru, Kec. Baiturrahman, Kota Banda Aceh, Aceh</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Kategori:</span>
+                                <span class="value" id="modal-event-category">Festival</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Pembuat Event:</span>
+                                <span class="value" id="modal-event-creator">Dinas Kebudayaan dan Pariwisata Aceh</span>
+                            </div>
+                        </div>
+                        <div class="event-description">
+                            <h4>Deskripsi Event</h4>
+                            <p id="modal-event-description">
+                                2019, Pemerintah Aceh melalui Dinas Kebudayaan dan Pariwisata Aceh telah menyelenggarakan 
+                                festival ini sebagai landmark event untuk menarik wisatawan, terutama para Muslim traveler. 
+                                Pada 2025, festival ini hadir dengan konsep baru untuk memperkenalkan Aceh sebagai World's 
+                                Best Halal Cultural Destination.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="modal-event-actions">
+                <!-- Actions will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="notification-toast">
+        <div class="notification-content">
+            <i id="notification-icon" class="fas fa-check-circle"></i>
+            <div class="notification-message" id="notification-message">
+                User berhasil disimpan
+            </div>
+        </div>
+        <button class="close-notification" onclick="closeNotification()">&times;</button>
+    </div>
+    
+    <script src="../../assets/js/dashboardAdmin.js"></script>
+</body>
+</html>

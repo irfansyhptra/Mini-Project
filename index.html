@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventory - Sistem Manajemen Event</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo"><i class="fas fa-calendar-check"></i> Eventory</a>
+            <nav class="nav-links">
+                <a href="#about">Tentang</a>
+                <a href="#team">Tim</a>
+                <a href="#events">Event</a>
+                <a href="#contact">Kontak</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="pages/login.html" class="btn btn-outline">Masuk</a>
+                <a href="pages/register.html" class="btn btn-primary">Daftar</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#about">Tentang</a>
+            <a href="#team">Tim</a>
+            <a href="#events">Event</a>
+            <a href="#contact">Kontak</a>
+            <a href="login.html">Masuk</a>
+            <a href="register.html">Daftar</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content" data-aos="fade-up">
+            <h1>Kelola Event Anda Dengan Mudah</h1>
+            <p>Eventory adalah platform manajemen event yang lengkap untuk membantu Anda merencanakan, mempublikasikan,
+                dan mengikuti berbagai jenis acara. Dengan fitur-fitur yang intuitif, Eventory menjadikan manajemen
+                acara lebih efisien dan menyenangkan.</p>
+            <div class="hero-buttons">
+            <a href="pages/login.html" class="btn btn-primary">Mulai Sekarang</a>
+
+                <a href="#about" class="btn btn-outline">Pelajari Lebih Lanjut</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Tentang Eventory</h2>
+            <div class="about-content">
+                <div class="about-text" data-aos="fade-right">
+                    <p>Eventory adalah sistem manajemen event komprehensif yang dirancang untuk membantu individu,
+                        organisasi, dan perusahaan mengelola acara mereka dengan efektif. Platform ini menyediakan semua
+                        alat yang Anda butuhkan untuk membuat, mempromosikan, dan mengelola event dari awal hingga
+                        akhir.</p>
+                    <p>Dengan antarmuka yang intuitif dan fitur-fitur canggih, Eventory memudahkan pengguna untuk:</p>
+                    <ul>
+                        <li>Membuat dan mempublikasikan event baru</li>
+                        <li>Mengelola pendaftaran peserta</li>
+                        <li>Memantau statistik event</li>
+                        <li>Mengikuti event-event menarik</li>
+                        <li>Berinteraksi dengan penyelenggara dan peserta lain</li>
+                    </ul>
+                    <p>Eventory cocok untuk berbagai jenis acara, mulai dari konferensi besar hingga pertemuan komunitas
+                        kecil, workshop, seminar, dan masih banyak lagi.</p>
+                </div>
+                <div class="about-image" data-aos="fade-left">
+                    <img src="assets/image/tentang.png" alt="Event Management">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section team" id="team">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Tim Pengembang</h2>
+            <div class="team-cards">
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-card-img">
+                        <img src="assets/image/dev1.jpg" alt="Developer A">
+                    </div>
+                    <div class="team-card-content">
+                        <h3>Irfan Syahputra</h3>
+                        <p>Landing Page, Dashboard User Page & Create Event</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-card-img">
+                        <img src="assets/image/dev2.jpg" alt="Developer B">
+                    </div>
+                    <div class="team-card-content">
+                        <h3>Nurul Izzati</h3>
+                        <p>Register & Detail Event</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="team-card-img">
+                        <img src="assets/image/tasya.jpg" alt="tasya">
+                    </div>
+                    <div class="team-card-content">
+                        <h3>Tasya Zahrani</h3>
+                        <p>Dashboard Admin & Login</p>
+                        <div class="team-social">
+                            <a href="https://github.com/tasyazahrani"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/tasya-zahrani-176b8b28a/"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="team-card-img">
+                        <img src="assets/image/dev4.jpg" alt="Developer D">
+                    </div>
+                    <div class="team-card-content">
+                        <h3>Yuyun Nailufar</h3>
+                        <p>Profile Admin & User</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="section events" id="events">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Event Terbaru</h2>
+
+            <!-- Swiper -->
+            <div class="swiper mySwiper" data-aos="fade-up">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="event-card">
+                            <div class="event-img">
+                                <img src="assets/image/event1.jpg" alt="Event 1">
+                            </div>
+                            <div class="event-content">
+                                <span class="event-date"><i class="far fa-calendar-alt"></i> 12-17 Maret 2025</span>
+                                <h3 class="event-title">Aceh Ramadhan Festival 2025</h3>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i>Pelataran Masjid Raya Baiturrahman</p>
+                                <p class="event-description"> Pameran kaligrafi dan pembagian bubur kanji khas Aceh secara gratis.</p>
+                                <a href="pages/detail-event1.html" class="btn btn-secondary">Detail Event</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="event-card">
+                            <div class="event-img">
+                                <img src="assets/image/event2.jpg" alt="Event 2">
+                            </div>
+                            <div class="event-content">
+                                <span class="event-date"><i class="far fa-calendar-alt"></i> 10 April 2025</span>
+                                <h3 class="event-title">Aceh Culinary Festival</h3>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i>Taman Sulthanah Safiatuddin</p>
+                                <p class="event-description">Festival ini menawarkan ribuan cita rasa tradisional dari berbagai daerah di Aceh.</p>
+                                <a href="pages/detail-event2.html" class="btn btn-secondary">Detail Event</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="event-card">
+                            <div class="event-img">
+                                <img src="assets/image/event3.jpg" alt="Event 3">
+                            </div>
+                            <div class="event-content">
+                                <span class="event-date"><i class="far fa-calendar-alt"></i> 15 Mei 2025</span>
+                                <h3 class="event-title">Indonesia Music Festival</h3>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i>Gelora Bung Karno</p>
+                                <p class="event-description">Festival musik terbesar dengan penampilan artis lokal dan
+                                    internasional terpopuler.</p>
+                                <a href="pages/detail-event3.html" class="btn btn-secondary">Detail Event</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="event-card">
+                            <div class="event-img">
+                                <img src="assets/image/event4.jpeg" alt="Event 4">
+                            </div>
+                            <div class="event-content">
+                                <span class="event-date"><i class="far fa-calendar-alt"></i> 5 Juni 2025</span>
+                                <h3 class="event-title">Festival Kupi</h3>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i>Taman Sulthanah Safiatuddin</p>
+                                <p class="event-description">Merayakan budaya kopi Aceh dan menampilkan berbagai jenis kopi lokal.</p>
+                                <a href="pages/detail-event4.html" class="btn btn-secondary">Detail Event</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="event-card">
+                            <div class="event-img">
+                                <img src="assets/image/event5.jpeg" alt="Event 5">
+                            </div>
+                            <div class="event-content">
+                                <span class="event-date"><i class="far fa-calendar-alt"></i> 26 Desember 2024</span>
+                                <h3 class="event-title">Peringatan Tsunami Aceh</h3>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i> Museum Tsunami</p>
+                                <p class="event-description">Mengadakan peringatan untuk mengenang tragedi tsunami 2004.</p>
+                                <a href="pages/detail-event5.html" class="btn btn-secondary">Detail Event</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container" data-aos="fade-up">
+            <h2>Siap Memulai Perjalanan Event Anda?</h2>
+            <p>Bergabunglah dengan ribuan pengguna lain yang telah menemukan cara lebih baik untuk mengelola event
+                mereka. Daftar sekarang dan nikmati semua fitur yang ditawarkan oleh Eventory.</p>
+            <div class="hero-buttons">
+                <a href="pages/register.html" class="btn btn-primary">Daftar Sekarang</a>
+                <a href="pages/login.html" class="btn btn-outline">Sudah Punya Akun? Masuk</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Eventify</h3>
+                    <p>Platform manajemen event terbaik untuk membantu Anda mengelola acara dengan mudah dan efisien.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigasi</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-right"></i> Tentang</a></li>
+                        <li><a href="#team"><i class="fas fa-chevron-right"></i> Tim</a></li>
+                        <li><a href="#events"><i class="fas fa-chevron-right"></i> Event</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="contact">
+                    <h3>Kontak Kami</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Jendral Sudirman No. 123, Jakarta</a>
+                        </li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +62 21 1234 5678</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@Eventify.id</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Eventify. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+
+        // Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+            },
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

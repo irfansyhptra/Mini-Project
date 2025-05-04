@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard User | Eventory</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
+
+
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventory</span>
+                </a>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="../../assets/image/dev1.jpg" alt="user-avatar">
+
+                </div>
+                <div class="user-details">
+                    <div class="user-name">Irfan</div>
+                    <div class="user-role">Pengguna</div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label">Menu Utama</div>
+                <ul>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#event-saya">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="menu-text">Event Saya</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Jelajahi-Event">
+                            <i class="fas fa-compass"></i>
+                            <span class="menu-text">Jelajahi Event</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">Tiket Saya</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="menu-label">Lainnya</div>
+                <ul>
+                    <li>
+                        <a href="../../pages/user/profileUser.html">
+                            <i class="fas fa-user"></i>
+                            <span class="menu-text">Profil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">Pengaturan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="menu-text">Bantuan</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="../../index.html">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari event...">
+                </div>
+
+                <div class="header-actions">
+                    <button>
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+
+                    <div class="user-dropdown">
+                        <div class="dropdown-toggle" id="user-dropdown-toggle">
+                            <img src="../../assets/image/dev1.jpg" alt="User Avatar">
+                            <span>Irfan Syahputra</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+
+                        <div class="dropdown-menu" id="user-dropdown-menu">
+                            <a href="../../pages/user/profileUser.html">
+                                <i class="fas fa-user"></i> Profil Saya
+
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a> / <span>Dashboard</span>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon icon-events">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>5</h3>
+                        <p>Event Diikuti</p>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon icon-participants">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>3</h3>
+                        <p>Event Dibuat</p>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon icon-upcoming">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <h3>2</h3>
+                        <p>Event Mendatang</p>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-icon icon-completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>7</h3>
+                        <p>Event Selesai</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Sections -->
+                <div class="dashboard-sections" id="event-saya">
+                    <!-- Left Column -->
+                    <div class="left-column">
+                        <!-- My Events Section -->
+                        <div class="card" data-aos="fade-up">
+                            <div class="card-header">
+                                <h2 class="card-title">Event Saya</h2>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">
+                                        <i class="fas fa-filter"></i> Filter
+                                    </button>
+                                    <button class="btn btn-primary" id="create-event-btn">
+                                        <i class="fas fa-plus"></i> Buat Event
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="event-list" class="event-container"></div>
+
+                            </div>
+
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="#" class="view-all">Lihat Semua Event Saya</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Discover Events Section -->
+                        <div class="card" data-aos="fade-up" id="Jelajahi-Event">
+                            <div class="card-header">
+                                <h2 class="card-title">Jelajahi Event</h2>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">
+                                        <i class="fas fa-filter"></i> Filter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="discover-events">
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event1.jpg" alt="Indonesia Music Festival">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">12-17 Mar 2025</span>
+                                            <h3 class="discover-event-title">Aceh Ramadhan Festival 2025</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festival
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event2.jpg" alt="Art Exhibition">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">10 Apr 2025</span>
+                                            <h3 class="discover-event-title">Aceh Culinary Festival</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Kuliner
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event4.jpeg" alt="Food Festival">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">8 Jun 2025</span>
+                                            <h3 class="discover-event-title"> Festival Kupi</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Kuliner
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event5.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">26 Desember 2024</span>
+                                            <h3 class="discover-event-title">Peringatan Tsunami Aceh</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event6.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">18 Juni 2025</span>
+                                            <h3 class="discover-event-title">HMM Fest 2025</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event7.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">20 Feb - 20 Mar 2025</span>
+                                            <h3 class="discover-event-title">Duta Kebudayan Aceh 2025</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event8.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date"> Maret 2025</span>
+                                            <h3 class="discover-event-title">VOICE: Victims of Injustice Challenging
+                                                Equality</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Kompetisi
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event9.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">3 Maret 2025</span>
+                                            <h3 class="discover-event-title">Blue Fest 2025</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event10.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">17 Mei 2025</span>
+                                            <h3 class="discover-event-title">S.O.S Sound of Soul</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event11.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">21-23 Maret 2025</span>
+                                            <h3 class="discover-event-title">Fest Memulian Bulan Emas</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event12.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">2-23 Maret 2025</span>
+                                            <h3 class="discover-event-title">Content Creator QRIS Challange</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Online
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Challange
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="discover-event-card">
+                                        <div class="discover-event-img">
+                                            <img src="../../assets/image/event13.jpeg" alt="Marathon">
+                                        </div>
+                                        <div class="discover-event-content">
+                                            <span class="discover-event-date">12 Februari 2024</span>
+                                            <h3 class="discover-event-title">Car Free Day</h3>
+                                            <div class="discover-event-footer">
+                                                <div class="discover-event-location">
+                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
+                                                </div>
+                                                <div class="discover-event-category">
+                                                    Festifal
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="#" class="view-all">Jelajahi Lebih Banyak Event</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="right-column">
+                        <!-- Upcoming Events Section -->
+                        <div class="card" data-aos="fade-up">
+                            <div class="card-header">
+                                <h2 class="card-title">Event Mendatang</h2>
+                                <a href="#" class="view-all">Lihat Semua</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="upcoming-event">
+                                    <div class="upcoming-event-date">
+                                        <span class="upcoming-event-day">8</span>
+                                        <span class="upcoming-event-month">Jun</span>
+                                    </div>
+                                    <div class="upcoming-event-info">
+                                        <h3 class="upcoming-event-title">Festival Kupi 2025</h3>
+                                        <div class="upcoming-event-time">
+                                            <i class="far fa-clock"></i> 09:00 - 17:00
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="upcoming-event">
+                                    <div class="upcoming-event-date">
+                                        <span class="upcoming-event-day">10</span>
+                                        <span class="upcoming-event-month">Apr</span>
+                                    </div>
+                                    <div class="upcoming-event-info">
+                                        <h3 class="upcoming-event-title">Digital Marketing Workshop</h3>
+                                        <div class="upcoming-event-time">
+                                            <i class="far fa-clock"></i> 13:00 - 16:00
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="upcoming-event">
+                                    <div class="upcoming-event-date">
+                                        <span class="upcoming-event-day">15</span>
+                                        <span class="upcoming-event-month">May</span>
+                                    </div>
+                                    <div class="upcoming-event-info">
+                                        <h3 class="upcoming-event-title">Indonesia Music Festival</h3>
+                                        <div class="upcoming-event-time">
+                                            <i class="far fa-clock"></i> 14:00 - 23:00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications Section -->
+                        <div class="card" data-aos="fade-up">
+                            <div class="card-header">
+                                <h2 class="card-title">Notifikasi</h2>
+                                <a href="#" class="view-all">Tandai Semua Dibaca</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="notification">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-text">
+                                            <strong>Event Baru:</strong> Informatic Festival 2025 telah ditambahkan.
+                                        </div>
+                                        <div class="notification-time">5 menit yang lalu</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-text">
+                                            <strong>Pengingat:</strong> Festival Kupi akan dimulai dalam 45 hari.
+                                        </div>
+                                        <div class="notification-time">1 jam yang lalu</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-text">
+                                            <strong>Pendaftaran:</strong> 5 peserta baru mendaftar di event Informatics
+                                            Festival Anda.
+                                        </div>
+                                        <div class="notification-time">2 jam yang lalu</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="card" data-aos="fade-up">
+                            <div class="card-header">
+                                <h2 class="card-title">Aksi Cepat</h2>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <button class="btn btn-outline" style="width: 100%;">
+                                        <i class="fas fa-plus"></i> Buat Event
+                                    </button>
+                                    <button class="btn btn-outline" style="width: 100%;">
+                                        <i class="fas fa-search"></i> Jelajahi
+                                    </button>
+                                    <button class="btn btn-outline" style="width: 100%;">
+                                        <i class="fas fa-ticket-alt"></i> Tiket Saya
+                                    </button>
+                                    <button class="btn btn-outline" style="width: 100%;">
+                                        <i class="fas fa-chart-bar"></i> Statistik
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div class="modal" id="create-event-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Buat Event Baru</h2>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="create-event-form">
+                    <div class="form-group">
+                        <label class="form-label" for="event-name">Nama Event</label>
+                        <input type="text" id="event-name" class="form-control" placeholder="Masukkan nama event">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event-description">Deskripsi Event</label>
+                        <textarea id="event-description" class="form-control"
+                            placeholder="Masukkan deskripsi event"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="event-date">Tanggal</label>
+                            <input type="date" id="event-date" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="event-time">Waktu</label>
+                            <input type="time" id="event-time" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="event-location">Lokasi</label>
+                            <input type="text" id="event-location" class="form-control"
+                                placeholder="Masukkan lokasi event">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="event-category">Kategori</label>
+                                <select id="event-category" class="form-control">
+                                    <option value="">Pilih kategori</option>
+                                    <option value="conference">Konferensi</option>
+                                    <option value="workshop">Workshop</option>
+                                    <option value="seminar">Seminar</option>
+                                    <option value="exhibition">Pameran</option>
+                                    <option value="concert">Konser</option>
+                                    <option value="festival">Festival</option>
+                                    <option value="sports">Olahraga</option>
+                                    <option value="networking">Networking</option>
+                                    <option value="other">Lainnya</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="event-capacity">Kapasitas</label>
+                                <input type="number" id="event-capacity" class="form-control"
+                                    placeholder="Jumlah peserta maksimal">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="event-image">Gambar Event</label>
+                            <input type="file" id="event-image" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="event-tickets">Apakah event berbayar?</label>
+                            <select id="event-tickets" class="form-control">
+                                <option value="free">Gratis</option>
+                                <option value="paid">Berbayar</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="ticket-price-group" style="display: none;">
+                            <label class="form-label" for="ticket-price">Harga Tiket (Rp)</label>
+                            <input type="number" id="ticket-price" class="form-control"
+                                placeholder="Masukkan harga tiket">
+                        </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-event">Batal</button>
+                <button class="btn btn-primary" id="save-event">Simpan Event</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script src="../../assets/js/dashboardUser.js"></script>
+
+
+</body>
+
+</html>

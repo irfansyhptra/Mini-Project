@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - Eventory</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-form-wrapper">
+            <h1>Buat Akun Baru</h1>     
+                <form id="registerForm" class="register-form">
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="firstName">Nama Depan</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Masukkan nama depan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nama Belakang</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Masukkan nama belakang" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nama Pengguna</label>
+                    <input type="text" id="username" name="username" placeholder="Masukkan nama pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Nomor Telepon</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Masukkan nomor telepon" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Pilih masuk sebagai</label>
+                    <select id="userRole" name="userRole" required>
+                        <option value="" disabled selected>Pilih masuk sebagai</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">Pengguna</option>
+                    </select>
+                </div>
+                <div class="form-group password-field">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                    <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
+                </div>
+                <div class="form-group password-field">
+                    <label for="confirmPassword">Konfirmasi Kata Sandi</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Ulangi kata sandi" required>
+                    <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
+                </div>
+                <div class="form-group-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        Saya menyetujui
+                        <a href="#" class="highlighted-link">Syarat dan Ketentuan</a> serta
+                        <a href="#" class="highlighted-link">Kebijakan Privasi</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn-register">Daftar</button>
+            </form>
+            <div class="register-footer">
+                <p>Sudah punya akun? <a href="login.html" class="highlighted-link">Masuk</a></p>
+                <p>Atau daftar dengan</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-google"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-apple"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="register-image">
+            <img src="../assets/image/bgregister.jpg" alt="Register Background">
+        </div>
+    </div>
+
+    <script src="../assets/js/auth.js" defer></script>
+</body>
+
+</html>

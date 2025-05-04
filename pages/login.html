@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Eventory</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+    <link rel="stylesheet" href="../assets/libs/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-form-wrapper">
+            <h1>Masuk</h1>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                </div>
+                <div class="form-group">
+                    <label for="email">Nama Pengguna</label>
+                    <input type="text" id="username" name="username" placeholder="Masukkan nama pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                    <span class="toggle-password"><i class="far fa-eye"></i></span>
+                </div>
+                <a href="#" class="forgot-password">Lupa kata sandi?</a>
+                <button type="submit" class="btn-login">Masuk</button>
+            </form>
+            <div class="login-footer">
+                <p>Belum mempunyai akun? <a href="register.html">Daftar di sini</a></p>
+            </div>
+        </div>
+        <div class="login-image">
+            <img src="../assets/image/bglogin.png" alt="Login Background">
+        </div>
+    </div>
+
+    <script src="../assets/js/auth.js"></script>
+</body>
+
+</html>
