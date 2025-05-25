@@ -5,7 +5,7 @@ function isValidEmail(email) {
 
 // Fungsi validasi password
 function isValidPassword(password) {
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  return password.length >= 6; // Simplified password validation
 }
 
 // Fungsi validasi NIK

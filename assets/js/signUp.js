@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Validasi dengan RegExp yang dioptimalkan
   const validators = {
     email: email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-    password: password => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password),
+    password: password => password.length >= 6, // Simplified password validation
     phone: phone => /^[0-9]{10,13}$/.test(phone),
     username: username => /^[a-zA-Z0-9_]{3,}$/.test(username)
   };
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
           password: elements.password.value,
           confirmPassword: elements.confirmPassword.value,
           phone: elements.phone.value.trim(),
-          role: "true"
+          role: "true" // Ensure role is sent as string "true"
         };
 
         console.log("Form validation successful");
@@ -133,15 +133,12 @@ document.addEventListener("DOMContentLoaded", function () {
           submitButton.disabled = true;
           submitButton.textContent = "Mendaftar...";
 
-          // Coba menggunakan fetch dengan konfigurasi CORS yang tepat
           const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Accept": "application/json"
             },
-            mode: "cors",
-            credentials: "omit",
             body: JSON.stringify(formData)
           });
 

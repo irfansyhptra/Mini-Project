@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Validation patterns
   const patterns = {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+    password: password => password.length >= 6, // Simplified password validation
     phone: /^[0-9]{10,13}$/
   };
 
@@ -81,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const value = this.value.trim();
     if (!value) {
       removeError(this);
-    } else if (!patterns.password.test(value)) {
-      setError(this, "Password minimal 8 karakter dan mengandung huruf & angka");
+    } else if (!patterns.password(value)) {
+      setError(this, "Password minimal 6 karakter");
     } else {
       removeError(this);
     }
@@ -192,8 +192,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!elements.password.value.trim()) {
       setError(elements.password, "Password tidak boleh kosong");
       isValid = false;
-    } else if (!patterns.password.test(elements.password.value.trim())) {
-      setError(elements.password, "Password minimal 8 karakter dan mengandung huruf & angka");
+    } else if (!patterns.password(elements.password.value.trim())) {
+      setError(elements.password, "Password minimal 6 karakter");
       isValid = false;
     }
 
@@ -219,12 +219,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function prepareUserData() {
     return {
       fullName: elements.name.value.trim(),
-      username: elements.username.value.trim(),
+      userName: elements.username.value.trim(),
       email: elements.email.value.trim().toLowerCase(),
       password: elements.password.value,
       confirmPassword: elements.confirmPassword.value,
       phoneNumber: elements.phone.value.trim(),
-      role: "user"
+      role: "true" // Ensure role is sent as string "true"
     };
   }
 
