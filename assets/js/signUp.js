@@ -1,3 +1,17 @@
+// Import validation utilities
+const {
+    API_BASE_URL,
+    logApiRequest,
+    logApiResponse,
+    logApiError,
+    showLoading,
+    hideLoading,
+    showError,
+    showSuccess,
+    handleApiError,
+    validateSignupForm
+} = window.ValidationUtils;
+
 document.addEventListener("DOMContentLoaded", function () {
   const signupForm = document.getElementById("signup-form");
   const nameInput = document.getElementById("fullName");
@@ -27,32 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (signupForm) {
-    signupForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      let isValid = true;
-
-      // Clear previous error messages
-      document.querySelectorAll(".error-message").forEach((el) => {
-        el.textContent = "";
-        el.style.display = "none";
-      });
-
-      // Validate all fields
-      isValid = validateName(nameInput) && isValid;
-      isValid = validateUsername(userName) && isValid;
-      isValid = validateEmailField(emailInput) && isValid;
-      isValid = validatePhone(NumberPhone) && isValid;
-      isValid = validatePasswordField(passwordInput) && isValid;
-      isValid = validateConfirmPassword(confirmPasswordInput, passwordInput) && isValid;
-      isValid = validateTerms(agreeTermsCheckbox) && isValid;
-
-      if (isValid) {
-        // Here you would typically make an API call to register the user
-        alert("Pendaftaran berhasil!");
-        window.location.href = "login.html";
-      }
-    });
+    signupForm.addEventListener("submit", handleSignup);
   }
 
   // Toggle Password
@@ -192,5 +181,53 @@ document.addEventListener("DOMContentLoaded", function () {
   function validatePassword(password) {
     // Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  }
+
+  // Handle signup form submission
+  async function handleSignup(event) {
+    event.preventDefault();
+    
+    if (!validateSignupForm()) {
+        return;
+    }
+
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    showLoading(submitButton);
+
+    try {
+        const formData = {
+            fullName: document.getElementById('fullName').value.trim(),
+            userName: document.getElementById('userName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value,
+            phone: document.getElementById('phone').value.trim(),
+            role: "true"
+        };
+
+        logApiRequest('/register', formData);
+
+        const response = await fetch(`${API_BASE_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        logApiResponse(response, data);
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Registration failed');
+        }
+
+        showSuccess('Registration successful! Please login.');
+        window.location.href = '/login.html';
+    } catch (error) {
+        logApiError(error, 'Signup');
+        showError(handleApiError(error));
+    } finally {
+        hideLoading(submitButton);
+    }
   }
 });
