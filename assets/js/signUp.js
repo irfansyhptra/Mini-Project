@@ -37,14 +37,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
+        // Format request data according to API requirements
         const requestData = {
-          fullName: document.getElementById('fullName').value.trim(),
-          userName: document.getElementById('userName').value.trim(),
-          email: document.getElementById('email').value.trim(),
-          password: document.getElementById('password').value,
-          phone: document.getElementById('phone').value.trim(),
+          fullName: document.getElementById('fullName')?.value?.trim() || '',
+          userName: document.getElementById('userName')?.value?.trim() || '',
+          email: document.getElementById('email')?.value?.trim()?.toLowerCase() || '',
+          password: document.getElementById('password')?.value || '',
+          phone: document.getElementById('phone')?.value?.trim() || '',
           role: true
         };
+
+        // Validate required fields
+        const requiredFields = ['fullName', 'userName', 'email', 'password', 'phone'];
+        const missingFields = requiredFields.filter(field => !requestData[field]);
+        
+        if (missingFields.length > 0) {
+          throw new Error(`Mohon lengkapi field: ${missingFields.join(', ')}`);
+        }
 
         console.log('🌐 API Request:', {
           endpoint: API_URL,
@@ -63,15 +72,25 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify(requestData)
           });
 
+          const responseData = await response.json();
+
           if (!response.ok) {
+            // Handle specific error messages
+            if (response.status === 400) {
+              if (responseData.message) {
+                throw new Error(responseData.message);
+              } else if (responseData.errors) {
+                const errorMessages = Object.values(responseData.errors).flat();
+                throw new Error(errorMessages.join(', '));
+              }
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          const data = await response.json();
           console.log('✅ API Response:', {
             status: response.status,
             statusText: response.statusText,
-            data: data
+            data: responseData
           });
 
           alert('Registration successful! Please login.');
@@ -91,12 +110,21 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify(requestData)
           });
 
+          const proxyData = await proxyResponse.json();
+
           if (!proxyResponse.ok) {
-            const errorData = await proxyResponse.json().catch(() => ({}));
-            throw new Error(errorData.message || `HTTP error! status: ${proxyResponse.status}`);
+            // Handle specific error messages
+            if (proxyResponse.status === 400) {
+              if (proxyData.message) {
+                throw new Error(proxyData.message);
+              } else if (proxyData.errors) {
+                const errorMessages = Object.values(proxyData.errors).flat();
+                throw new Error(errorMessages.join(', '));
+              }
+            }
+            throw new Error(proxyData.message || `HTTP error! status: ${proxyResponse.status}`);
           }
 
-          const proxyData = await proxyResponse.json();
           console.log('✅ Proxy API Response:', {
             status: proxyResponse.status,
             statusText: proxyResponse.statusText,
