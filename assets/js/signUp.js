@@ -1,90 +1,155 @@
 // Import validation utilities
 const Validation = window.ValidationUtils;
 
-// Handle signup form submission
-async function handleSignup(event) {
-    event.preventDefault();
-    
-    const formData = Validation.validateSignupForm();
-    if (!formData) {
+document.addEventListener("DOMContentLoaded", function () {
+  const signupForm = document.getElementById("signup-form");
+  const nameInput = document.getElementById("signup-name");
+  const emailInput = document.getElementById("signup-email");
+  const passwordInput = document.getElementById("signup-password");
+  const confirmPasswordInput = document.getElementById(
+    "signup-confirm-password"
+  );
+  const agreeTermsCheckbox = document.getElementById("agree-terms");
+  const passwordToggles = document.querySelectorAll(".toggle-password");
+
+  if (signupForm) {
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      if (!Validation.validateSignupForm()) {
         return;
-    }
+      }
 
-    const submitButton = event.target.querySelector('button[type="submit"]');
-    if (submitButton) {
-        Validation.showLoading(submitButton);
-    }
+      const submitButton = this.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Memproses...';
+      }
 
-    try {
-        // Format the request data according to API requirements
+      try {
         const requestData = {
-            fullName: formData.fullName,
-            userName: formData.userName,
-            email: formData.email,
-            password: formData.password,
-            phone: formData.phone,
-            role: true // Convert to boolean as required by API
+          fullName: document.getElementById('fullName').value.trim(),
+          userName: document.getElementById('userName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+          phone: document.getElementById('phone').value.trim(),
+          role: true
         };
 
         console.log('🌐 API Request:', {
-            endpoint: 'https://back-end-eventory.vercel.app/api/Users/register',
-            method: 'POST',
-            data: requestData
+          endpoint: 'https://back-end-eventory.vercel.app/api/Users/register',
+          method: 'POST',
+          data: requestData
         });
 
         const response = await fetch('https://back-end-eventory.vercel.app/api/Users/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify(requestData)
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          mode: 'cors',
+          body: JSON.stringify(requestData)
         });
 
         const data = await response.json();
         console.log('✅ API Response:', {
-            status: response.status,
-            statusText: response.statusText,
-            data: data
+          status: response.status,
+          statusText: response.statusText,
+          data: data
         });
 
         if (!response.ok) {
-            throw new Error(data.message || 'Registration failed');
+          throw new Error(data.message || 'Registration failed');
         }
 
         alert('Registration successful! Please login.');
         window.location.href = 'login.html';
-    } catch (error) {
+      } catch (error) {
         console.error('❌ API Error:', {
-            context: 'Signup',
-            error: error
+          context: 'Signup',
+          error: error
         });
         alert(error.message || 'Registration failed. Please try again.');
-    } finally {
+      } finally {
         if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = submitButton.dataset.originalText;
+          submitButton.disabled = false;
+          submitButton.textContent = 'Daftar';
         }
-    }
-}
-
-// Add event listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const signupForm = document.getElementById('signup-form');
-    if (signupForm) {
-        signupForm.addEventListener('submit', handleSignup);
-    }
-
-    // Add password toggle functionality
-    const passwordToggles = document.querySelectorAll('.toggle-password');
-    passwordToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            const input = this.previousElementSibling;
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
+      }
     });
+  }
+
+  // Toggle Password
+  passwordToggles.forEach((toggle) => {
+    toggle.addEventListener("click", function () {
+      const input = this.previousElementSibling;
+      const type =
+        input.getAttribute("type") === "password" ? "text" : "password";
+      input.setAttribute("type", type);
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+  });
+
+  // Validasi Realtime Password
+  passwordInput.addEventListener("input", function () {
+    if (this.value.trim() === "") {
+      Validation.removeError(this);
+    } else if (!Validation.validatePassword(this.value.trim())) {
+      Validation.setError(
+        this,
+        "Password minimal 8 karakter dan mengandung huruf & angka"
+      );
+    } else {
+      Validation.removeError(this);
+    }
+  });
+
+  confirmPasswordInput.addEventListener("input", function () {
+    if (this.value.trim() === "") {
+      Validation.removeError(this);
+    } else if (this.value.trim() !== passwordInput.value.trim()) {
+      Validation.setError(this, "Konfirmasi password tidak cocok");
+    } else {
+      Validation.removeError(this);
+    }
+  });
+
+  function setError(input, message) {
+    const formGroup = input.closest(".form-group");
+    if (!formGroup) return;
+
+    let error = formGroup.querySelector(".error-message");
+    if (!error) {
+      error = document.createElement("div");
+      error.className = "error-message";
+      formGroup.appendChild(error);
+    }
+
+    error.textContent = message;
+    error.style.color = "white";
+    error.style.fontSize = "12px";
+    error.style.marginTop = "8px";
+    error.style.display = "block";
+  }
+
+  function removeError(input) {
+    const formGroup = input.closest(".form-group");
+    if (!formGroup) return;
+
+    const error = formGroup.querySelector(".error-message");
+    if (error) {
+      error.textContent = "";
+      error.style.display = "none";
+    }
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function validatePassword(password) {
+    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  }
 });

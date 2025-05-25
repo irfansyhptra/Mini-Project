@@ -1,177 +1,177 @@
 // Constants
-const API_ENDPOINTS = {
-    REGISTER: 'https://back-end-eventory.vercel.app/api/Users/register',
-    LOGIN: 'https://back-end-eventory.vercel.app/api/Users/login'
-};
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'currentUser';
 
-// Console logging utility
-const logApiRequest = (endpoint, data) => {
-    console.group('🌐 API Request');
-    console.log('Endpoint:', endpoint);
-    console.log('Method:', 'POST');
-    console.log('Request Data:', data);
-    console.groupEnd();
-};
-
-const logApiResponse = (response, data) => {
-    console.group('✅ API Response');
-    console.log('Status:', response.status);
-    console.log('Status Text:', response.statusText);
-    console.log('Response Data:', data);
-    console.groupEnd();
-};
-
-const logApiError = (error, context) => {
-    console.group('❌ API Error');
-    console.log('Context:', context);
-    console.log('Error:', error);
-    if (error.response) {
-        console.log('Response Status:', error.response.status);
-        console.log('Response Data:', error.response.data);
-    }
-    console.groupEnd();
-};
-
 // Utility functions
-const showLoading = (button) => {
-    button.disabled = true;
-    button.dataset.originalText = button.textContent;
-    button.textContent = 'Memproses...';
-};
+function setError(input, message) {
+    const formGroup = input.closest('.form-group');
+    if (!formGroup) return;
 
-const hideLoading = (button) => {
-    button.disabled = false;
-    button.textContent = button.dataset.originalText;
-};
-
-const showError = (message) => {
-    console.error('❌ Error:', message);
-    alert(message);
-};
-
-const showSuccess = (message) => {
-    console.log('✅ Success:', message);
-    alert(message);
-};
-
-const handleApiError = (error) => {
-    console.error('API Error:', error);
-    if (error.response) {
-        return error.response.data?.message || 'Terjadi kesalahan pada server';
+    let error = formGroup.querySelector('.error-message');
+    if (!error) {
+        error = document.createElement('div');
+        error.className = 'error-message';
+        formGroup.appendChild(error);
     }
-    if (error.message) {
-        return error.message;
+
+    error.textContent = message;
+    error.style.color = '#ff4444';
+    error.style.fontSize = '12px';
+    error.style.marginTop = '8px';
+    error.style.display = 'block';
+}
+
+function removeError(input) {
+    const formGroup = input.closest('.form-group');
+    if (!formGroup) return;
+
+    const error = formGroup.querySelector('.error-message');
+    if (error) {
+        error.textContent = '';
+        error.style.display = 'none';
     }
-    return 'Terjadi kesalahan koneksi ke server';
-};
+}
 
 // Validation functions
-const validateEmail = (email) => {
+function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+}
 
-const validatePhone = (phone) => {
+function validatePhone(phone) {
     return /^[0-9]{10,13}$/.test(phone);
-};
+}
 
-const validatePassword = (password) => {
-    return password.length >= 6;
-};
+function validatePassword(password) {
+    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+}
 
-const validateUsername = (username) => {
-    return username.length >= 4;
-};
+function validateUsername(username) {
+    return /^[a-zA-Z0-9_]{4,}$/.test(username);
+}
 
-const validateName = (name) => {
-    return name.length >= 3;
-};
+function validateName(name) {
+    return /^[a-zA-Z\s]{3,}$/.test(name);
+}
 
 // Form validation functions
 function validateLoginForm() {
-    const usernameOrEmail = document.getElementById('username')?.value?.trim();
-    const password = document.getElementById('password')?.value;
+    const usernameOrEmail = document.getElementById('username');
+    const password = document.getElementById('password');
+    let isValid = true;
 
-    if (!usernameOrEmail || !password) {
-        showError('Mohon masukkan username/email dan password.');
-        return false;
+    if (!usernameOrEmail.value.trim()) {
+        setError(usernameOrEmail, 'Username/Email tidak boleh kosong');
+        isValid = false;
+    } else {
+        removeError(usernameOrEmail);
     }
 
-    return true;
+    if (!password.value.trim()) {
+        setError(password, 'Password tidak boleh kosong');
+        isValid = false;
+    } else if (password.value.length < 6) {
+        setError(password, 'Password minimal 6 karakter');
+        isValid = false;
+    } else {
+        removeError(password);
+    }
+
+    return isValid;
 }
 
 function validateSignupForm() {
-    const formData = {
-        fullName: document.getElementById('fullName')?.value?.trim(),
-        userName: document.getElementById('userName')?.value?.trim(),
-        email: document.getElementById('email')?.value?.trim(),
-        password: document.getElementById('password')?.value,
-        confirmPassword: document.getElementById('confirmPassword')?.value,
-        phone: document.getElementById('phone')?.value?.trim()
-    };
+    const fullName = document.getElementById('fullName');
+    const userName = document.getElementById('userName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const terms = document.getElementById('terms');
+    let isValid = true;
 
-    // Validate required fields
-    const requiredFields = ['fullName', 'userName', 'email', 'password', 'confirmPassword', 'phone'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
-        showError('Mohon lengkapi semua field yang diperlukan.');
-        return false;
-    }
-
-    // Validate name
-    if (!validateName(formData.fullName)) {
-        showError('Nama harus minimal 3 karakter.');
-        return false;
+    // Validate full name
+    if (!fullName.value.trim()) {
+        setError(fullName, 'Nama tidak boleh kosong');
+        isValid = false;
+    } else if (!validateName(fullName.value.trim())) {
+        setError(fullName, 'Nama harus minimal 3 karakter dan hanya mengandung huruf');
+        isValid = false;
+    } else {
+        removeError(fullName);
     }
 
     // Validate username
-    if (!validateUsername(formData.userName)) {
-        showError('Username harus minimal 4 karakter.');
-        return false;
+    if (!userName.value.trim()) {
+        setError(userName, 'Username tidak boleh kosong');
+        isValid = false;
+    } else if (!validateUsername(userName.value.trim())) {
+        setError(userName, 'Username harus minimal 4 karakter dan hanya mengandung huruf, angka, dan underscore');
+        isValid = false;
+    } else {
+        removeError(userName);
     }
 
     // Validate email
-    if (!validateEmail(formData.email)) {
-        showError('Format email tidak valid.');
-        return false;
+    if (!email.value.trim()) {
+        setError(email, 'Email tidak boleh kosong');
+        isValid = false;
+    } else if (!validateEmail(email.value.trim())) {
+        setError(email, 'Format email tidak valid');
+        isValid = false;
+    } else {
+        removeError(email);
     }
 
     // Validate phone
-    if (!validatePhone(formData.phone)) {
-        showError('Nomor telepon harus 10-13 digit angka.');
-        return false;
+    if (!phone.value.trim()) {
+        setError(phone, 'Nomor telepon tidak boleh kosong');
+        isValid = false;
+    } else if (!validatePhone(phone.value.trim())) {
+        setError(phone, 'Nomor telepon harus 10-13 digit angka');
+        isValid = false;
+    } else {
+        removeError(phone);
     }
 
     // Validate password
-    if (!validatePassword(formData.password)) {
-        showError('Password harus minimal 6 karakter.');
-        return false;
+    if (!password.value.trim()) {
+        setError(password, 'Password tidak boleh kosong');
+        isValid = false;
+    } else if (!validatePassword(password.value.trim())) {
+        setError(password, 'Password harus minimal 8 karakter dan mengandung huruf & angka');
+        isValid = false;
+    } else {
+        removeError(password);
     }
 
-    // Validate password match
-    if (formData.password !== formData.confirmPassword) {
-        showError('Kata sandi tidak cocok.');
-        return false;
+    // Validate confirm password
+    if (!confirmPassword.value.trim()) {
+        setError(confirmPassword, 'Konfirmasi password tidak boleh kosong');
+        isValid = false;
+    } else if (confirmPassword.value.trim() !== password.value.trim()) {
+        setError(confirmPassword, 'Konfirmasi password tidak cocok');
+        isValid = false;
+    } else {
+        removeError(confirmPassword);
     }
 
-    return formData;
+    // Validate terms
+    if (!terms.checked) {
+        setError(terms, 'Harus menyetujui syarat & ketentuan');
+        isValid = false;
+    } else {
+        removeError(terms);
+    }
+
+    return isValid;
 }
 
-// Export functions and constants
+// Export functions
 window.ValidationUtils = {
-    API_ENDPOINTS,
     TOKEN_KEY,
     USER_KEY,
-    logApiRequest,
-    logApiResponse,
-    logApiError,
-    showLoading,
-    hideLoading,
-    showError,
-    showSuccess,
-    handleApiError,
+    setError,
+    removeError,
     validateEmail,
     validatePhone,
     validatePassword,
