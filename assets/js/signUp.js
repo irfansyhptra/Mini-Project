@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
           phoneNumber: phone.value.trim(),
           password: passwordInput.value,
           confirmPassword: confirmPasswordInput.value,
-          role: "user"
+          role: true
         };
 
         console.log("Form validation successful");
