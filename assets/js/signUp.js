@@ -197,18 +197,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       } else {
         console.log("Form validation failed");
-        console.log("Detail validasi yang gagal:", validationStatus);
         
-        // Menampilkan field yang gagal validasi
-        const failedFields = Object.entries(validationStatus)
+        // Filter hanya field yang gagal validasi
+        const failedValidations = Object.entries(validationStatus)
           .filter(([_, status]) => !status.isValid)
-          .map(([field, status]) => ({
-            field,
-            value: status.value,
-            error: status.error
-          }));
-        
-        console.log("Field yang gagal validasi:", failedFields);
+          .reduce((acc, [field, status]) => {
+            acc[field] = {
+              value: field.includes('password') ? '********' : status.value,
+              error: status.error
+            };
+            return acc;
+          }, {});
+
+        if (Object.keys(failedValidations).length > 0) {
+          console.log("Validasi yang gagal:", failedValidations);
+        }
       }
     });
   }
