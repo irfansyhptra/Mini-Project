@@ -111,12 +111,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (isValid) {
         const formData = {
           fullName: elements.fullName.value.trim(),
-          username: elements.userName.value.trim(),
+          userName: elements.userName.value.trim(),
           email: elements.email.value.trim(),
-          phoneNumber: elements.phone.value.trim(),
           password: elements.password.value,
           confirmPassword: elements.confirmPassword.value,
-          role: true
+          phone: elements.phone.value.trim(),
+          role: "true"
         };
 
         console.log("Form validation successful");
