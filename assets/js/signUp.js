@@ -5,7 +5,8 @@ const Validation = window.ValidationUtils;
 async function handleSignup(event) {
     event.preventDefault();
     
-    if (!Validation.validateSignupForm()) {
+    const formData = Validation.validateSignupForm();
+    if (!formData) {
         return;
     }
 
@@ -15,23 +16,24 @@ async function handleSignup(event) {
     }
 
     try {
-        const formData = {
-            fullName: document.getElementById('fullName').value.trim(),
-            userName: document.getElementById('userName').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            password: document.getElementById('password').value,
-            phone: document.getElementById('phone').value.trim(),
-            role: "true"
+        // Format the request data according to API requirements
+        const requestData = {
+            fullName: formData.fullName,
+            userName: formData.userName,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
+            role: true // Convert to boolean as required by API
         };
 
-        Validation.logApiRequest('/register', formData);
+        Validation.logApiRequest('/register', requestData);
 
         const response = await fetch(`${Validation.API_BASE_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(requestData)
         });
 
         const data = await response.json();

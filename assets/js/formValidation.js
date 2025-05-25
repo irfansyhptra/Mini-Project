@@ -58,6 +58,9 @@ const handleApiError = (error) => {
     if (error.response) {
         return error.response.data?.message || 'Terjadi kesalahan pada server';
     }
+    if (error.message) {
+        return error.message;
+    }
     return 'Terjadi kesalahan koneksi ke server';
 };
 
@@ -102,8 +105,7 @@ function validateSignupForm() {
         email: document.getElementById('email')?.value?.trim(),
         password: document.getElementById('password')?.value,
         confirmPassword: document.getElementById('confirmPassword')?.value,
-        phone: document.getElementById('phone')?.value?.trim(),
-        role: "true"
+        phone: document.getElementById('phone')?.value?.trim()
     };
 
     // Validate required fields
@@ -151,7 +153,7 @@ function validateSignupForm() {
         return false;
     }
 
-    return true;
+    return formData;
 }
 
 // Export functions and constants
