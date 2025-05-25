@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
     signupForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
+      // Clear previous error messages
+      document.querySelectorAll('.error-message').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+      });
+
       if (!Validation.validateSignupForm()) {
         return;
       }
@@ -70,7 +76,16 @@ document.addEventListener("DOMContentLoaded", function () {
           context: 'Signup',
           error: error
         });
-        alert(error.message || 'Registration failed. Please try again.');
+        
+        // Handle specific error messages
+        let errorMessage = 'Registration failed. Please try again.';
+        if (error.message.includes('semua kolom harus di isii')) {
+          errorMessage = 'Mohon lengkapi semua field yang diperlukan.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        alert(errorMessage);
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
@@ -81,16 +96,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Toggle Password
-  passwordToggles.forEach((toggle) => {
-    toggle.addEventListener("click", function () {
-      const input = this.previousElementSibling;
-      const type =
-        input.getAttribute("type") === "password" ? "text" : "password";
-      input.setAttribute("type", type);
-      this.querySelector('i').classList.toggle('fa-eye');
-      this.querySelector('i').classList.toggle('fa-eye-slash');
+  if (passwordToggles.length > 0) {
+    passwordToggles.forEach((toggle) => {
+      toggle.addEventListener("click", function () {
+        const input = this.previousElementSibling;
+        if (input) {
+          const type =
+            input.getAttribute("type") === "password" ? "text" : "password";
+          input.setAttribute("type", type);
+          const icon = this.querySelector('i');
+          if (icon) {
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+          }
+        }
+      });
     });
-  });
+  }
 
   // Validasi Realtime Password
   passwordInput.addEventListener("input", function () {
@@ -152,4 +174,28 @@ document.addEventListener("DOMContentLoaded", function () {
   function validatePassword(password) {
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   }
+
+  // Add real-time validation
+  const inputs = {
+    fullName: Validation.validateName,
+    userName: Validation.validateUsername,
+    email: Validation.validateEmail,
+    phone: Validation.validatePhone,
+    password: Validation.validatePassword
+  };
+
+  Object.entries(inputs).forEach(([id, validator]) => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function() {
+        if (!this.value.trim()) {
+          Validation.removeError(this);
+        } else if (!validator(this.value.trim())) {
+          Validation.setError(this, `Format ${this.name} tidak valid`);
+        } else {
+          Validation.removeError(this);
+        }
+      });
+    }
+  });
 });
