@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const signupForm = document.getElementById("signup-form");
   const nameInput = document.getElementById("fullName");
+  const userName = document.getElementById("userName");
   const emailInput = document.getElementById("email");
+  const phone = document.getElementById("phone");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirmPassword");
   const agreeTermsCheckbox = document.getElementById("terms");
@@ -15,20 +17,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Bersihkan pesan error
       document.querySelectorAll(".error-message").forEach((el) => {
-        if (el) {
-          el.textContent = "";
-          el.style.display = "none";
-        }
+        el.textContent = "";
+        el.style.display = "none";
       });
 
       // Validasi Nama
-      if (!nameInput || !nameInput.value.trim()) {
+      if (!nameInput.value.trim()) {
         setError(nameInput, "Nama lengkap tidak boleh kosong");
         isValid = false;
       }
 
+      // Validasi Username
+      if (!userName.value.trim()) {
+        setError(userName, "Username tidak boleh kosong");
+        isValid = false;
+      } else if (userName.value.trim().length < 3) {
+        setError(userName, "Username minimal 3 karakter");
+        isValid = false;
+      } else if (!/^[a-zA-Z0-9_]+$/.test(userName.value.trim())) {
+        setError(userName, "Username hanya boleh mengandung huruf, angka, dan underscore");
+        isValid = false;
+      }
+
       // Validasi Email
-      if (!emailInput || !emailInput.value.trim()) {
+      if (!emailInput.value.trim()) {
         setError(emailInput, "Email tidak boleh kosong");
         isValid = false;
       } else if (!validateEmail(emailInput.value.trim())) {
@@ -36,8 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       }
 
+      // Validasi Nomor Telepon
+      if (!phone.value.trim()) {
+        setError(phone, "Nomor telepon tidak boleh kosong");
+        isValid = false;
+      } else if (!validatePhone(phone.value.trim())) {
+        setError(phone, "Format nomor telepon tidak valid (10-13 digit)");
+        isValid = false;
+      }
+
       // Validasi Password
-      if (!passwordInput || !passwordInput.value.trim()) {
+      if (!passwordInput.value.trim()) {
         setError(passwordInput, "Password tidak boleh kosong");
         isValid = false;
       } else if (!validatePassword(passwordInput.value.trim())) {
@@ -49,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Validasi Konfirmasi Password
-      if (!confirmPasswordInput || !confirmPasswordInput.value.trim()) {
+      if (!confirmPasswordInput.value.trim()) {
         setError(
           confirmPasswordInput,
           "Konfirmasi password tidak boleh kosong"
@@ -63,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Validasi Persetujuan Syarat
-      if (!agreeTermsCheckbox || !agreeTermsCheckbox.checked) {
+      if (!agreeTermsCheckbox.checked) {
         setError(agreeTermsCheckbox, "Harus menyetujui syarat & ketentuan");
         isValid = false;
       }
@@ -79,45 +100,65 @@ document.addEventListener("DOMContentLoaded", function () {
   passwordToggles.forEach((toggle) => {
     toggle.addEventListener("click", function () {
       const input = this.previousElementSibling;
-      if (input) {
-        const type = input.getAttribute("type") === "password" ? "text" : "password";
-        input.setAttribute("type", type);
-        this.classList.toggle("visible");
-      }
+      const type =
+        input.getAttribute("type") === "password" ? "text" : "password";
+      input.setAttribute("type", type);
+      this.classList.toggle("visible");
     });
   });
 
-  // Validasi Realtime Password
-  if (passwordInput) {
-    passwordInput.addEventListener("input", function () {
-      if (this.value.trim() === "") {
-        removeError(this);
-      } else if (!validatePassword(this.value.trim())) {
-        setError(
-          this,
-          "Password minimal 8 karakter dan mengandung huruf & angka"
-        );
-      } else {
-        removeError(this);
-      }
-    });
-  }
+  // Validasi Realtime Username
+  userName.addEventListener("input", function() {
+    if (this.value.trim() === "") {
+      removeError(this);
+    } else if (this.value.trim().length < 3) {
+      setError(this, "Username minimal 3 karakter");
+    } else if (!/^[a-zA-Z0-9_]+$/.test(this.value.trim())) {
+      setError(this, "Username hanya boleh mengandung huruf, angka, dan underscore");
+    } else {
+      removeError(this);
+    }
+  });
 
-  if (confirmPasswordInput) {
-    confirmPasswordInput.addEventListener("input", function () {
-      if (this.value.trim() === "") {
-        removeError(this);
-      } else if (this.value.trim() !== passwordInput.value.trim()) {
-        setError(this, "Konfirmasi password tidak cocok");
-      } else {
-        removeError(this);
-      }
-    });
-  }
+  // Validasi Realtime Nomor Telepon
+  phone.addEventListener("input", function() {
+    // Hanya mengizinkan input angka
+    this.value = this.value.replace(/[^0-9]/g, "");
+    
+    if (this.value.trim() === "") {
+      removeError(this);
+    } else if (!validatePhone(this.value.trim())) {
+      setError(this, "Format nomor telepon tidak valid (10-13 digit)");
+    } else {
+      removeError(this);
+    }
+  });
+
+  // Validasi Realtime Password
+  passwordInput.addEventListener("input", function () {
+    if (this.value.trim() === "") {
+      removeError(this);
+    } else if (!validatePassword(this.value.trim())) {
+      setError(
+        this,
+        "Password minimal 8 karakter dan mengandung huruf & angka"
+      );
+    } else {
+      removeError(this);
+    }
+  });
+
+  confirmPasswordInput.addEventListener("input", function () {
+    if (this.value.trim() === "") {
+      removeError(this);
+    } else if (this.value.trim() !== passwordInput.value.trim()) {
+      setError(this, "Konfirmasi password tidak cocok");
+    } else {
+      removeError(this);
+    }
+  });
 
   function setError(input, message) {
-    if (!input) return;
-
     const formGroup = input.closest(".form-group");
     if (!formGroup) return;
 
@@ -136,8 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function removeError(input) {
-    if (!input) return;
-
     const formGroup = input.closest(".form-group");
     if (!formGroup) return;
 
@@ -154,5 +193,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validatePassword(password) {
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  }
+
+  function validatePhone(phone) {
+    return /^[0-9]{10,13}$/.test(phone);
   }
 });
