@@ -162,10 +162,32 @@ document.addEventListener("DOMContentLoaded", function () {
           role: true
         };
 
+        // Validasi tambahan untuk memastikan semua field terisi
+        const emptyFields = Object.entries(formData)
+          .filter(([key, value]) => !value && key !== 'role')
+          .map(([key]) => key);
+
+        if (emptyFields.length > 0) {
+          console.log("Form validation failed: Ada field yang kosong");
+          console.log("Field yang kosong:", emptyFields);
+          
+          emptyFields.forEach(field => {
+            const inputElement = document.getElementById(field === 'fullName' ? 'fullName' : 
+                                                      field === 'phoneNumber' ? 'phone' : 
+                                                      field === 'confirmPassword' ? 'confirmPassword' : 
+                                                      field);
+            if (inputElement) {
+              setError(inputElement, "Field ini harus diisi");
+            }
+          });
+          
+          return;
+        }
+
         console.log("Form validation successful");
         console.log("Data yang akan dikirim:", {
           ...formData,
-          password: "********", // Menyembunyikan password di console
+          password: "********",
           confirmPassword: "********"
         });
 
@@ -180,6 +202,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => {
           console.log("Response status:", response.status);
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || "Terjadi kesalahan saat pendaftaran");
+            });
+          }
           return response.json();
         })
         .then(data => {
