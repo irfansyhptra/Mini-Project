@@ -83,15 +83,15 @@ document.addEventListener('DOMContentLoaded', function () {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Get form data with the new format
+            // Get form data with the exact format required by the API
             const formData = {
-                fullName: document.getElementById('fullName')?.value,
-                userName: document.getElementById('userName')?.value,
-                email: document.getElementById('email')?.value,
+                fullName: document.getElementById('fullName')?.value?.trim(),
+                userName: document.getElementById('userName')?.value?.trim(),
+                email: document.getElementById('email')?.value?.trim(),
                 password: document.getElementById('password')?.value,
                 confirmPassword: document.getElementById('confirmPassword')?.value,
-                phone: document.getElementById('phone')?.value,
-                role: document.getElementById('userRole')?.value || 'true'
+                phone: document.getElementById('phone')?.value?.trim(),
+                role: "true" // Default to regular user (true)
             };
 
             console.log('📝 Registration Form Data:', formData);
@@ -113,6 +113,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                console.warn('⚠️ Invalid Email Format');
+                showError('Format email tidak valid.');
+                return;
+            }
+
+            // Validate phone format (10-13 digits)
+            const phoneRegex = /^[0-9]{10,13}$/;
+            if (!phoneRegex.test(formData.phone)) {
+                console.warn('⚠️ Invalid Phone Format');
+                showError('Nomor telepon harus 10-13 digit angka.');
+                return;
+            }
+
             const submitButton = registerForm.querySelector('button[type="submit"]');
             try {
                 showLoading(submitButton);
@@ -122,7 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Origin': window.location.origin
                     },
                     body: JSON.stringify(formData)
                 });
@@ -152,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             // Get login credentials (username/email and password)
-            const usernameOrEmail = document.getElementById('username')?.value;
+            const usernameOrEmail = document.getElementById('username')?.value?.trim();
             const password = document.getElementById('password')?.value;
 
             console.log('🔑 Login Attempt:', { usernameOrEmail });
@@ -213,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     showSuccess('Login berhasil!');
 
                     // Redirect based on role
-                    const redirectPath = result.data.role === 'admin' 
+                    const redirectPath = result.data.role === false 
                         ? '/pages/admin/dashboardAdmin.html'
                         : '/pages/user/dashboardUser.html';
                     
