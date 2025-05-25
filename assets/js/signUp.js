@@ -32,11 +32,9 @@ async function handleSignup(event) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Origin': window.location.origin
+                'Accept': 'application/json'
             },
             mode: 'cors',
-            credentials: 'include',
             body: JSON.stringify(requestData)
         });
 
