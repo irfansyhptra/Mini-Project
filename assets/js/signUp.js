@@ -26,6 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let isValid = true;
       console.log("Form submission started");
+      
+      // Object untuk menyimpan status validasi
+      const validationStatus = {
+        fullName: { isValid: true, value: nameInput.value.trim(), error: null },
+        username: { isValid: true, value: userName.value.trim(), error: null },
+        email: { isValid: true, value: emailInput.value.trim(), error: null },
+        phone: { isValid: true, value: phone.value.trim(), error: null },
+        password: { isValid: true, value: "********", error: null },
+        confirmPassword: { isValid: true, value: "********", error: null },
+        terms: { isValid: true, value: agreeTermsCheckbox.checked, error: null }
+      };
 
       // Bersihkan pesan error
       document.querySelectorAll(".error-message").forEach((el) => {
@@ -38,6 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Nama kosong");
         setError(nameInput, "Nama lengkap tidak boleh kosong");
         isValid = false;
+        validationStatus.fullName.isValid = false;
+        validationStatus.fullName.error = "Nama lengkap tidak boleh kosong";
       }
 
       // Validasi Username
@@ -45,14 +58,20 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Username kosong");
         setError(userName, "Username tidak boleh kosong");
         isValid = false;
+        validationStatus.username.isValid = false;
+        validationStatus.username.error = "Username tidak boleh kosong";
       } else if (userName.value.trim().length < 3) {
         console.log("Validation failed: Username terlalu pendek");
         setError(userName, "Username minimal 3 karakter");
         isValid = false;
+        validationStatus.username.isValid = false;
+        validationStatus.username.error = "Username minimal 3 karakter";
       } else if (!/^[a-zA-Z0-9_]+$/.test(userName.value.trim())) {
         console.log("Validation failed: Username mengandung karakter tidak valid");
         setError(userName, "Username hanya boleh mengandung huruf, angka, dan underscore");
         isValid = false;
+        validationStatus.username.isValid = false;
+        validationStatus.username.error = "Username hanya boleh mengandung huruf, angka, dan underscore";
       }
 
       // Validasi Email
@@ -60,10 +79,14 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Email kosong");
         setError(emailInput, "Email tidak boleh kosong");
         isValid = false;
+        validationStatus.email.isValid = false;
+        validationStatus.email.error = "Email tidak boleh kosong";
       } else if (!validateEmail(emailInput.value.trim())) {
         console.log("Validation failed: Format email tidak valid");
         setError(emailInput, "Format email tidak valid");
         isValid = false;
+        validationStatus.email.isValid = false;
+        validationStatus.email.error = "Format email tidak valid";
       }
 
       // Validasi Nomor Telepon
@@ -71,10 +94,14 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Nomor telepon kosong");
         setError(phone, "Nomor telepon tidak boleh kosong");
         isValid = false;
+        validationStatus.phone.isValid = false;
+        validationStatus.phone.error = "Nomor telepon tidak boleh kosong";
       } else if (!validatePhone(phone.value.trim())) {
         console.log("Validation failed: Format nomor telepon tidak valid");
         setError(phone, "Format nomor telepon tidak valid (10-13 digit)");
         isValid = false;
+        validationStatus.phone.isValid = false;
+        validationStatus.phone.error = "Format nomor telepon tidak valid (10-13 digit)";
       }
 
       // Validasi Password
@@ -82,6 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Password kosong");
         setError(passwordInput, "Password tidak boleh kosong");
         isValid = false;
+        validationStatus.password.isValid = false;
+        validationStatus.password.error = "Password tidak boleh kosong";
       } else if (!validatePassword(passwordInput.value.trim())) {
         console.log("Validation failed: Format password tidak valid");
         setError(
@@ -89,6 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
           "Password minimal 8 karakter dan mengandung huruf & angka"
         );
         isValid = false;
+        validationStatus.password.isValid = false;
+        validationStatus.password.error = "Password minimal 8 karakter dan mengandung huruf & angka";
       }
 
       // Validasi Konfirmasi Password
@@ -99,12 +130,16 @@ document.addEventListener("DOMContentLoaded", function () {
           "Konfirmasi password tidak boleh kosong"
         );
         isValid = false;
+        validationStatus.confirmPassword.isValid = false;
+        validationStatus.confirmPassword.error = "Konfirmasi password tidak boleh kosong";
       } else if (
         confirmPasswordInput.value.trim() !== passwordInput.value.trim()
       ) {
         console.log("Validation failed: Password tidak cocok");
         setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
         isValid = false;
+        validationStatus.confirmPassword.isValid = false;
+        validationStatus.confirmPassword.error = "Konfirmasi password tidak cocok";
       }
 
       // Validasi Persetujuan Syarat
@@ -112,6 +147,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Validation failed: Syarat dan ketentuan belum disetujui");
         setError(agreeTermsCheckbox, "Harus menyetujui syarat & ketentuan");
         isValid = false;
+        validationStatus.terms.isValid = false;
+        validationStatus.terms.error = "Harus menyetujui syarat & ketentuan";
       }
 
       if (isValid) {
@@ -160,6 +197,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       } else {
         console.log("Form validation failed");
+        console.log("Detail validasi yang gagal:", validationStatus);
+        
+        // Menampilkan field yang gagal validasi
+        const failedFields = Object.entries(validationStatus)
+          .filter(([_, status]) => !status.isValid)
+          .map(([field, status]) => ({
+            field,
+            value: status.value,
+            error: status.error
+          }));
+        
+        console.log("Field yang gagal validasi:", failedFields);
       }
     });
   }
