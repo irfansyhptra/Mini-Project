@@ -2,13 +2,7 @@
 const Validation = window.ValidationUtils;
 
 // API Configuration
-const API_CONFIG = {
-    BASE_URL: 'https://back-end-eventory.vercel.app/api',
-    ENDPOINTS: {
-        REGISTER: '/Users/register'
-    },
-    PROXY_URL: 'https://corsproxy.io/?'
-};
+const API_URL = 'https://back-end-eventory.vercel.app/api/Users/register';
 
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signup-form');
@@ -55,48 +49,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(`Mohon lengkapi field: ${missingFields.join(', ')}`);
                 }
 
-                const apiUrl = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.REGISTER}`;
                 console.log('🌐 API Request:', {
-                    endpoint: apiUrl,
+                    endpoint: API_URL,
                     method: 'POST',
                     data: requestData
                 });
 
-                // Try with CORS proxy
-                const proxyUrl = `${API_CONFIG.PROXY_URL}${encodeURIComponent(apiUrl)}`;
-                const proxyResponse = await fetch(proxyUrl, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(requestData)
                 });
 
-                let responseData;
-                try {
-                    responseData = await proxyResponse.json();
-                } catch (jsonError) {
-                    console.error('Failed to parse JSON response:', jsonError);
-                    throw new Error('Invalid response from server');
-                }
+                const responseData = await response.json();
 
-                if (!proxyResponse.ok) {
-                    // Handle specific error messages
-                    if (proxyResponse.status === 400) {
-                        if (responseData.message) {
-                            throw new Error(responseData.message);
-                        } else if (responseData.errors) {
-                            const errorMessages = Object.values(responseData.errors).flat();
-                            throw new Error(errorMessages.join(', '));
-                        }
-                    }
-                    throw new Error(`HTTP error! status: ${proxyResponse.status}`);
+                if (!response.ok) {
+                    throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
                 }
 
                 console.log('✅ API Response:', {
-                    status: proxyResponse.status,
-                    statusText: proxyResponse.statusText,
+                    status: response.status,
+                    statusText: response.statusText,
                     data: responseData
                 });
 
@@ -114,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorMessage = 'Mohon lengkapi semua field yang diperlukan.';
                 } else if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
                     errorMessage = 'Terjadi masalah koneksi. Silakan coba lagi nanti.';
-                } else if (error.message.includes('Invalid response')) {
-                    errorMessage = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
