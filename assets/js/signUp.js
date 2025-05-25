@@ -4,23 +4,115 @@ const Validation = window.ValidationUtils;
 // API Configuration
 const API_URL = 'https://back-end-eventory.vercel.app/api/Users/register';
 
+// Validation functions
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPassword(password) {
+    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+}
+
+function isValidPhone(phone) {
+    return /^[0-9]{10,13}$/.test(phone);
+}
+
+function isValidUsername(username) {
+    return /^[a-zA-Z0-9_]{4,}$/.test(username);
+}
+
+function isValidName(name) {
+    return /^[a-zA-Z\s]{3,}$/.test(name);
+}
+
+// Form validation function
+function validateSignupForm() {
+    const fullName = document.getElementById('fullName');
+    const userName = document.getElementById('userName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    let isValid = true;
+
+    // Validate full name
+    if (!fullName.value.trim()) {
+        fullName.nextElementSibling.textContent = 'Nama tidak boleh kosong';
+        isValid = false;
+    } else if (!isValidName(fullName.value.trim())) {
+        fullName.nextElementSibling.textContent = 'Nama harus minimal 3 karakter dan hanya mengandung huruf';
+        isValid = false;
+    } else {
+        fullName.nextElementSibling.textContent = '';
+    }
+
+    // Validate username
+    if (!userName.value.trim()) {
+        userName.nextElementSibling.textContent = 'Username tidak boleh kosong';
+        isValid = false;
+    } else if (!isValidUsername(userName.value.trim())) {
+        userName.nextElementSibling.textContent = 'Username harus minimal 4 karakter dan hanya mengandung huruf, angka, dan underscore';
+        isValid = false;
+    } else {
+        userName.nextElementSibling.textContent = '';
+    }
+
+    // Validate email
+    if (!email.value.trim()) {
+        email.nextElementSibling.textContent = 'Email tidak boleh kosong';
+        isValid = false;
+    } else if (!isValidEmail(email.value.trim())) {
+        email.nextElementSibling.textContent = 'Email tidak valid';
+        isValid = false;
+    } else {
+        email.nextElementSibling.textContent = '';
+    }
+
+    // Validate phone
+    if (!phone.value.trim()) {
+        phone.nextElementSibling.textContent = 'Nomor telepon tidak boleh kosong';
+        isValid = false;
+    } else if (!isValidPhone(phone.value.trim())) {
+        phone.nextElementSibling.textContent = 'Nomor telepon harus 10-13 digit angka';
+        isValid = false;
+    } else {
+        phone.nextElementSibling.textContent = '';
+    }
+
+    // Validate password
+    if (!password.value.trim()) {
+        password.nextElementSibling.textContent = 'Password tidak boleh kosong';
+        isValid = false;
+    } else if (!isValidPassword(password.value.trim())) {
+        password.nextElementSibling.textContent = 'Password minimal 8 karakter dan mengandung huruf & angka';
+        isValid = false;
+    } else {
+        password.nextElementSibling.textContent = '';
+    }
+
+    // Validate confirm password
+    if (!confirmPassword.value.trim()) {
+        confirmPassword.nextElementSibling.textContent = 'Konfirmasi password tidak boleh kosong';
+        isValid = false;
+    } else if (confirmPassword.value.trim() !== password.value.trim()) {
+        confirmPassword.nextElementSibling.textContent = 'Konfirmasi password tidak cocok';
+        isValid = false;
+    } else {
+        confirmPassword.nextElementSibling.textContent = '';
+    }
+
+    return isValid;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signup-form');
     const passwordToggles = document.querySelectorAll('.toggle-password');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
 
     if (signupForm) {
         signupForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Clear previous error messages
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.textContent = '';
-                el.style.display = 'none';
-            });
-
-            if (!Validation.validateSignupForm()) {
+            if (!validateSignupForm()) {
                 return;
             }
 
@@ -31,23 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                // Format request data according to API requirements
                 const requestData = {
-                    fullName: document.getElementById('fullName')?.value?.trim() || '',
-                    userName: document.getElementById('userName')?.value?.trim() || '',
-                    email: document.getElementById('email')?.value?.trim()?.toLowerCase() || '',
-                    password: document.getElementById('password')?.value || '',
-                    phone: document.getElementById('phone')?.value?.trim() || '',
+                    fullName: document.getElementById('fullName').value.trim(),
+                    userName: document.getElementById('userName').value.trim(),
+                    email: document.getElementById('email').value.trim().toLowerCase(),
+                    password: document.getElementById('password').value,
+                    phone: document.getElementById('phone').value.trim(),
                     role: true
                 };
-
-                // Validate required fields
-                const requiredFields = ['fullName', 'userName', 'email', 'password', 'phone'];
-                const missingFields = requiredFields.filter(field => !requestData[field]);
-                
-                if (missingFields.length > 0) {
-                    throw new Error(`Mohon lengkapi field: ${missingFields.join(', ')}`);
-                }
 
                 console.log('🌐 API Request:', {
                     endpoint: API_URL,
@@ -83,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     error: error
                 });
                 
-                // Handle specific error messages
                 let errorMessage = 'Registration failed. Please try again.';
                 if (error.message.includes('semua kolom harus di isii')) {
                     errorMessage = 'Mohon lengkapi semua field yang diperlukan.';
@@ -121,47 +203,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add real-time validation for password
-    if (passwordInput) {
-        passwordInput.addEventListener('input', function() {
-            if (!this.value.trim()) {
-                Validation.removeError(this);
-            } else if (!Validation.validatePassword(this.value.trim())) {
-                Validation.setError(this, 'Password minimal 8 karakter dan mengandung huruf & angka');
-            } else {
-                Validation.removeError(this);
-            }
-
-            // Check confirm password if it exists and has content
-            if (confirmPasswordInput && confirmPasswordInput.value.trim()) {
-                if (confirmPasswordInput.value.trim() !== this.value.trim()) {
-                    Validation.setError(confirmPasswordInput, 'Konfirmasi password tidak cocok');
-                } else {
-                    Validation.removeError(confirmPasswordInput);
-                }
-            }
-        });
-    }
-
-    // Add real-time validation for confirm password
-    if (confirmPasswordInput && passwordInput) {
-        confirmPasswordInput.addEventListener('input', function() {
-            if (!this.value.trim()) {
-                Validation.removeError(this);
-            } else if (this.value.trim() !== passwordInput.value.trim()) {
-                Validation.setError(this, 'Konfirmasi password tidak cocok');
-            } else {
-                Validation.removeError(this);
-            }
-        });
-    }
-
-    // Add real-time validation for other fields
+    // Add real-time validation
     const inputs = {
-        fullName: Validation.validateName,
-        userName: Validation.validateUsername,
-        email: Validation.validateEmail,
-        phone: Validation.validatePhone
+        fullName: isValidName,
+        userName: isValidUsername,
+        email: isValidEmail,
+        phone: isValidPhone,
+        password: isValidPassword
     };
 
     Object.entries(inputs).forEach(([id, validator]) => {
@@ -169,13 +217,29 @@ document.addEventListener('DOMContentLoaded', function() {
         if (input) {
             input.addEventListener('input', function() {
                 if (!this.value.trim()) {
-                    Validation.removeError(this);
+                    this.nextElementSibling.textContent = '';
                 } else if (!validator(this.value.trim())) {
-                    Validation.setError(this, `Format ${this.name || id} tidak valid`);
+                    this.nextElementSibling.textContent = `Format ${this.name || id} tidak valid`;
                 } else {
-                    Validation.removeError(this);
+                    this.nextElementSibling.textContent = '';
                 }
             });
         }
     });
+
+    // Add real-time confirm password validation
+    const confirmPassword = document.getElementById('confirmPassword');
+    const password = document.getElementById('password');
+    
+    if (confirmPassword && password) {
+        confirmPassword.addEventListener('input', function() {
+            if (!this.value.trim()) {
+                this.nextElementSibling.textContent = '';
+            } else if (this.value.trim() !== password.value.trim()) {
+                this.nextElementSibling.textContent = 'Konfirmasi password tidak cocok';
+            } else {
+                this.nextElementSibling.textContent = '';
+            }
+        });
+    }
 });
