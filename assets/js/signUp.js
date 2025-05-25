@@ -26,9 +26,9 @@ async function handleSignup(event) {
             role: true // Convert to boolean as required by API
         };
 
-        Validation.logApiRequest('/register', requestData);
+        Validation.logApiRequest(Validation.API_ENDPOINTS.REGISTER, requestData);
 
-        const response = await fetch(`${Validation.API_BASE_URL}/register`, {
+        const response = await fetch(Validation.API_ENDPOINTS.REGISTER, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

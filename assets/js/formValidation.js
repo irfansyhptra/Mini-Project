@@ -1,12 +1,15 @@
 // Constants
-const API_BASE_URL = 'https://back-end-eventory.vercel.app/api/Users';
+const API_ENDPOINTS = {
+    REGISTER: 'https://back-end-eventory.vercel.app/api/Users/register',
+    LOGIN: 'https://back-end-eventory.vercel.app/api/Users/login'
+};
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'currentUser';
 
 // Console logging utility
 const logApiRequest = (endpoint, data) => {
     console.group('🌐 API Request');
-    console.log('Endpoint:', `${API_BASE_URL}${endpoint}`);
+    console.log('Endpoint:', endpoint);
     console.log('Method:', 'POST');
     console.log('Request Data:', data);
     console.groupEnd();
@@ -158,7 +161,7 @@ function validateSignupForm() {
 
 // Export functions and constants
 window.ValidationUtils = {
-    API_BASE_URL,
+    API_ENDPOINTS,
     TOKEN_KEY,
     USER_KEY,
     logApiRequest,
