@@ -4,6 +4,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const TOKEN_KEY = 'auth_token';
     const USER_KEY = 'currentUser';
 
+    // Console logging utility
+    const logApiRequest = (endpoint, data) => {
+        console.group('🌐 API Request');
+        console.log('Endpoint:', `${API_BASE_URL}${endpoint}`);
+        console.log('Method:', 'POST');
+        console.log('Request Data:', data);
+        console.groupEnd();
+    };
+
+    const logApiResponse = (response, data) => {
+        console.group('✅ API Response');
+        console.log('Status:', response.status);
+        console.log('Status Text:', response.statusText);
+        console.log('Response Data:', data);
+        console.groupEnd();
+    };
+
+    const logApiError = (error, context) => {
+        console.group('❌ API Error');
+        console.log('Context:', context);
+        console.log('Error:', error);
+        if (error.response) {
+            console.log('Response Status:', error.response.status);
+            console.log('Response Data:', error.response.data);
+        }
+        console.groupEnd();
+    };
+
     // Toggle password visibility
     const togglePasswordButtons = document.querySelectorAll('.toggle-password');
     togglePasswordButtons.forEach(button => {
@@ -32,10 +60,12 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const showError = (message) => {
+        console.error('❌ Error:', message);
         alert(message);
     };
 
     const showSuccess = (message) => {
+        console.log('✅ Success:', message);
         alert(message);
     };
 
@@ -61,20 +91,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 password: document.getElementById('password')?.value,
                 confirmPassword: document.getElementById('confirmPassword')?.value,
                 phone: document.getElementById('phone')?.value,
-                role: document.getElementById('userRole')?.value || 'true' // Default to true for regular users
+                role: document.getElementById('userRole')?.value || 'true'
             };
+
+            console.log('📝 Registration Form Data:', formData);
 
             // Validate required fields
             const requiredFields = ['fullName', 'userName', 'email', 'password', 'confirmPassword', 'phone'];
             const missingFields = requiredFields.filter(field => !formData[field]);
             
             if (missingFields.length > 0) {
+                console.warn('⚠️ Missing Required Fields:', missingFields);
                 showError('Mohon lengkapi semua field yang diperlukan.');
                 return;
             }
 
             // Validate password match
             if (formData.password !== formData.confirmPassword) {
+                console.warn('⚠️ Password Mismatch');
                 showError('Kata sandi tidak cocok.');
                 return;
             }
@@ -82,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const submitButton = registerForm.querySelector('button[type="submit"]');
             try {
                 showLoading(submitButton);
+                logApiRequest('/register', formData);
 
                 const response = await fetch(`${API_BASE_URL}/register`, {
                     method: 'POST',
@@ -93,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const result = await response.json();
+                logApiResponse(response, result);
 
                 if (response.ok) {
                     showSuccess('Registrasi berhasil! Silahkan login.');
@@ -101,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     showError(result.message || 'Registrasi gagal. Silahkan coba lagi.');
                 }
             } catch (error) {
+                logApiError(error, 'Registration');
                 showError(handleApiError(error));
             } finally {
                 hideLoading(submitButton);
@@ -118,8 +155,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const usernameOrEmail = document.getElementById('username')?.value;
             const password = document.getElementById('password')?.value;
 
+            console.log('🔑 Login Attempt:', { usernameOrEmail });
+
             // Validate fields
             if (!usernameOrEmail || !password) {
+                console.warn('⚠️ Missing Login Credentials');
                 showError('Mohon masukkan username/email dan password.');
                 return;
             }
@@ -131,9 +171,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 password: password
             };
 
+            console.log('📝 Login Form Data:', formData);
+
             const submitButton = loginForm.querySelector('button[type="submit"]');
             try {
                 showLoading(submitButton);
+                logApiRequest('/login', formData);
 
                 const response = await fetch(`${API_BASE_URL}/login`, {
                     method: 'POST',
@@ -146,11 +189,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const result = await response.json();
+                logApiResponse(response, result);
 
                 if (response.ok && result.data) {
                     // Store auth token
                     if (result.token) {
                         localStorage.setItem(TOKEN_KEY, result.token);
+                        console.log('🔐 Token Stored');
                     }
 
                     // Store user data
@@ -163,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         role: result.data.role
                     };
                     localStorage.setItem(USER_KEY, JSON.stringify(userData));
+                    console.log('👤 User Data Stored:', userData);
 
                     showSuccess('Login berhasil!');
 
@@ -171,11 +217,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         ? '/pages/admin/dashboardAdmin.html'
                         : '/pages/user/dashboardUser.html';
                     
+                    console.log('🔄 Redirecting to:', redirectPath);
                     window.location.href = redirectPath;
                 } else {
                     showError(result.message || 'Login gagal. Cek kembali username/email dan password.');
                 }
             } catch (error) {
+                logApiError(error, 'Login');
                 showError(handleApiError(error));
             } finally {
                 hideLoading(submitButton);
@@ -185,8 +233,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Logout function
     window.logout = function() {
+        console.log('🚪 Logging out user');
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_KEY);
+        console.log('🧹 Cleared user data and token');
         window.location.href = '/pages/login.html';
     };
 
@@ -194,12 +244,16 @@ document.addEventListener('DOMContentLoaded', function () {
     window.checkAuth = function() {
         const token = localStorage.getItem(TOKEN_KEY);
         const user = localStorage.getItem(USER_KEY);
-        return !!(token && user);
+        const isAuthenticated = !!(token && user);
+        console.log('🔒 Auth Status:', isAuthenticated);
+        return isAuthenticated;
     };
 
     // Get current user
     window.getCurrentUser = function() {
         const userStr = localStorage.getItem(USER_KEY);
-        return userStr ? JSON.parse(userStr) : null;
+        const user = userStr ? JSON.parse(userStr) : null;
+        console.log('👤 Current User:', user);
+        return user;
     };
 });
