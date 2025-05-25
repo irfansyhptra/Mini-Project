@@ -196,8 +196,13 @@ document.addEventListener("DOMContentLoaded", function () {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization"
           },
+          mode: "cors",
+          credentials: "include",
           body: JSON.stringify(formData)
         })
         .then(response => {
@@ -220,7 +225,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
           console.error("Error during registration:", error);
-          alert("Terjadi kesalahan saat pendaftaran: " + error.message);
+          if (error.message.includes("CORS")) {
+            alert("Terjadi kesalahan koneksi ke server. Silakan coba lagi nanti.");
+          } else {
+            alert("Terjadi kesalahan saat pendaftaran: " + error.message);
+          }
         });
       } else {
         console.log("Form validation failed");
