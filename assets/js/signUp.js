@@ -7,7 +7,7 @@ const API_CONFIG = {
     ENDPOINTS: {
         REGISTER: '/Users/register'
     },
-    PROXY_URL: 'https://api.allorigins.win/raw?url='
+    PROXY_URL: 'https://corsproxy.io/?'
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -62,72 +62,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     data: requestData
                 });
 
-                // Try with CORS proxy first
+                // Try with CORS proxy
+                const proxyUrl = `${API_CONFIG.PROXY_URL}${encodeURIComponent(apiUrl)}`;
+                const proxyResponse = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let responseData;
                 try {
-                    const proxyUrl = `${API_CONFIG.PROXY_URL}${encodeURIComponent(apiUrl)}`;
-                    const proxyResponse = await fetch(proxyUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-
-                    if (!proxyResponse.ok) {
-                        throw new Error(`Proxy request failed: ${proxyResponse.status}`);
-                    }
-
-                    const proxyData = await proxyResponse.json();
-                    console.log('✅ Proxy API Response:', {
-                        status: proxyResponse.status,
-                        statusText: proxyResponse.statusText,
-                        data: proxyData
-                    });
-
-                    if (proxyData.error) {
-                        throw new Error(proxyData.error);
-                    }
-
-                    alert('Registration successful! Please login.');
-                    window.location.href = 'login.html';
-                } catch (proxyError) {
-                    console.log('Proxy request failed, trying direct API call...', proxyError);
-                    
-                    // If proxy fails, try direct API call
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-
-                    const responseData = await response.json();
-
-                    if (!response.ok) {
-                        // Handle specific error messages
-                        if (response.status === 400) {
-                            if (responseData.message) {
-                                throw new Error(responseData.message);
-                            } else if (responseData.errors) {
-                                const errorMessages = Object.values(responseData.errors).flat();
-                                throw new Error(errorMessages.join(', '));
-                            }
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    console.log('✅ Direct API Response:', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        data: responseData
-                    });
-
-                    alert('Registration successful! Please login.');
-                    window.location.href = 'login.html';
+                    responseData = await proxyResponse.json();
+                } catch (jsonError) {
+                    console.error('Failed to parse JSON response:', jsonError);
+                    throw new Error('Invalid response from server');
                 }
+
+                if (!proxyResponse.ok) {
+                    // Handle specific error messages
+                    if (proxyResponse.status === 400) {
+                        if (responseData.message) {
+                            throw new Error(responseData.message);
+                        } else if (responseData.errors) {
+                            const errorMessages = Object.values(responseData.errors).flat();
+                            throw new Error(errorMessages.join(', '));
+                        }
+                    }
+                    throw new Error(`HTTP error! status: ${proxyResponse.status}`);
+                }
+
+                console.log('✅ API Response:', {
+                    status: proxyResponse.status,
+                    statusText: proxyResponse.statusText,
+                    data: responseData
+                });
+
+                alert('Registration successful! Please login.');
+                window.location.href = 'login.html';
             } catch (error) {
                 console.error('❌ API Error:', {
                     context: 'Signup',
@@ -140,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorMessage = 'Mohon lengkapi semua field yang diperlukan.';
                 } else if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
                     errorMessage = 'Terjadi masalah koneksi. Silakan coba lagi nanti.';
+                } else if (error.message.includes('Invalid response')) {
+                    errorMessage = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
