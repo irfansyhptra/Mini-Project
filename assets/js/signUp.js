@@ -163,6 +163,15 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       Validation.removeError(this);
     }
+
+    // Check confirm password if it exists and has content
+    if (confirmPasswordInput && confirmPasswordInput.value.trim()) {
+      if (confirmPasswordInput.value.trim() !== this.value.trim()) {
+        Validation.setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
+      } else {
+        Validation.removeError(confirmPasswordInput);
+      }
+    }
   });
 
   confirmPasswordInput.addEventListener("input", function () {
@@ -217,8 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fullName: Validation.validateName,
     userName: Validation.validateUsername,
     email: Validation.validateEmail,
-    phone: Validation.validatePhone,
-    password: Validation.validatePassword
+    phone: Validation.validatePhone
   };
 
   Object.entries(inputs).forEach(([id, validator]) => {
@@ -228,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!this.value.trim()) {
           Validation.removeError(this);
         } else if (!validator(this.value.trim())) {
-          Validation.setError(this, `Format ${this.name} tidak valid`);
+          Validation.setError(this, `Format ${this.name || id} tidak valid`);
         } else {
           Validation.removeError(this);
         }
