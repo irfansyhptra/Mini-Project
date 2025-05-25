@@ -26,9 +26,13 @@ async function handleSignup(event) {
             role: true // Convert to boolean as required by API
         };
 
-        Validation.logApiRequest(Validation.API_ENDPOINTS.REGISTER, requestData);
+        console.log('🌐 API Request:', {
+            endpoint: 'https://back-end-eventory.vercel.app/api/Users/register',
+            method: 'POST',
+            data: requestData
+        });
 
-        const response = await fetch(Validation.API_ENDPOINTS.REGISTER, {
+        const response = await fetch('https://back-end-eventory.vercel.app/api/Users/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,20 +43,28 @@ async function handleSignup(event) {
         });
 
         const data = await response.json();
-        Validation.logApiResponse(response, data);
+        console.log('✅ API Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            data: data
+        });
 
         if (!response.ok) {
             throw new Error(data.message || 'Registration failed');
         }
 
-        Validation.showSuccess('Registration successful! Please login.');
+        alert('Registration successful! Please login.');
         window.location.href = 'login.html';
     } catch (error) {
-        Validation.logApiError(error, 'Signup');
-        Validation.showError(Validation.handleApiError(error));
+        console.error('❌ API Error:', {
+            context: 'Signup',
+            error: error
+        });
+        alert(error.message || 'Registration failed. Please try again.');
     } finally {
         if (submitButton) {
-            Validation.hideLoading(submitButton);
+            submitButton.disabled = false;
+            submitButton.textContent = submitButton.dataset.originalText;
         }
     }
 }
