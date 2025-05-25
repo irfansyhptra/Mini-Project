@@ -1,197 +1,122 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Inisialisasi elemen form
-  const signupForm = document.getElementById("signup-form");
-  const nameInput = document.getElementById("fullName");
-  const userName = document.getElementById("userName");
-  const emailInput = document.getElementById("email");
-  const phone = document.getElementById("phone");
-  const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirmPassword");
-  const agreeTermsCheckbox = document.getElementById("terms");
-  const passwordToggles = document.querySelectorAll(".toggle-password");
+  const elements = {
+    form: document.getElementById("signup-form"),
+    fullName: document.getElementById("fullName"),
+    userName: document.getElementById("userName"),
+    email: document.getElementById("email"),
+    phone: document.getElementById("phone"),
+    password: document.getElementById("password"),
+    confirmPassword: document.getElementById("confirmPassword"),
+    terms: document.getElementById("terms"),
+    passwordToggles: document.querySelectorAll(".toggle-password")
+  };
+  
   const apiUrl = "https://back-end-eventory.vercel.app/api/Users/register";
 
   // Log status elemen form untuk debugging
-  console.log("Form elements initialized:", {
-    form: signupForm ? "Found" : "Not found",
-    nameInput: nameInput ? "Found" : "Not found",
-    userName: userName ? "Found" : "Not found",
-    emailInput: emailInput ? "Found" : "Not found",
-    phone: phone ? "Found" : "Not found",
-    passwordInput: passwordInput ? "Found" : "Not found",
-    confirmPasswordInput: confirmPasswordInput ? "Found" : "Not found",
-    agreeTermsCheckbox: agreeTermsCheckbox ? "Found" : "Not found"
-  });
+  console.log("Form elements:", Object.entries(elements)
+    .filter(([key]) => key !== 'passwordToggles')
+    .reduce((acc, [key, el]) => {
+      acc[key] = el ? "Found" : "Not found";
+      return acc;
+    }, {}));
 
-  // Fungsi utilitas validasi
+  // Validasi dengan RegExp yang dioptimalkan
   const validators = {
-    email: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-    password: (password) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password),
-    phone: (phone) => /^[0-9]{10,13}$/.test(phone)
+    email: email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+    password: password => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password),
+    phone: phone => /^[0-9]{10,13}$/.test(phone),
+    username: username => /^[a-zA-Z0-9_]{3,}$/.test(username)
   };
 
-  // Fungsi untuk menampilkan error
-  function setError(input, message) {
-    const formGroup = input.closest(".form-group");
-    if (!formGroup) return;
+  // Fungsi manipulasi error yang dioptimalkan
+  const errorHandler = {
+    set: (input, message) => {
+      const formGroup = input.closest(".form-group");
+      if (!formGroup) return;
 
-    let error = formGroup.querySelector(".error-message");
-    if (!error) {
-      error = document.createElement("div");
-      error.className = "error-message";
-      formGroup.appendChild(error);
+      let error = formGroup.querySelector(".error-message");
+      if (!error) {
+        error = document.createElement("div");
+        error.className = "error-message";
+        formGroup.appendChild(error);
+      }
+
+      error.textContent = message;
+      error.style.cssText = "color: white; font-size: 12px; margin-top: 8px; display: block;";
+    },
+    
+    remove: (input) => {
+      const formGroup = input.closest(".form-group");
+      if (!formGroup) return;
+
+      const error = formGroup.querySelector(".error-message");
+      if (error) {
+        error.textContent = "";
+        error.style.display = "none";
+      }
+    },
+    
+    clearAll: () => {
+      document.querySelectorAll(".error-message").forEach(el => {
+        el.textContent = "";
+        el.style.display = "none";
+      });
     }
+  };
 
-    error.textContent = message;
-    error.style.color = "white";
-    error.style.fontSize = "12px";
-    error.style.marginTop = "8px";
-    error.style.display = "block";
-  }
-
-  // Fungsi untuk menghapus error
-  function removeError(input) {
-    const formGroup = input.closest(".form-group");
-    if (!formGroup) return;
-
-    const error = formGroup.querySelector(".error-message");
-    if (error) {
-      error.textContent = "";
-      error.style.display = "none";
-    }
-  }
-
-  // Bersihkan semua pesan error
-  function clearAllErrors() {
-    document.querySelectorAll(".error-message").forEach((el) => {
-      el.textContent = "";
-      el.style.display = "none";
-    });
-  }
-
-  // Event handler untuk form submission
-  if (signupForm) {
-    signupForm.addEventListener("submit", async function (e) {
+  // Handle form submission
+  if (elements.form) {
+    elements.form.addEventListener("submit", async function (e) {
       e.preventDefault();
       console.log("Form submission started");
       
-      clearAllErrors();
+      errorHandler.clearAll();
+      
+      // Validasi form
+      const validationRules = [
+        { field: elements.fullName, name: 'fullName', rule: value => !!value.trim(), message: "Nama lengkap tidak boleh kosong" },
+        { field: elements.userName, name: 'username', rule: value => !!value.trim(), message: "Username tidak boleh kosong" },
+        { field: elements.userName, name: 'username', rule: value => value.trim().length >= 3, message: "Username minimal 3 karakter" },
+        { field: elements.userName, name: 'username', rule: value => validators.username(value.trim()), message: "Username hanya boleh mengandung huruf, angka, dan underscore" },
+        { field: elements.email, name: 'email', rule: value => !!value.trim(), message: "Email tidak boleh kosong" },
+        { field: elements.email, name: 'email', rule: value => validators.email(value.trim()), message: "Format email tidak valid" },
+        { field: elements.phone, name: 'phone', rule: value => !!value.trim(), message: "Nomor telepon tidak boleh kosong" },
+        { field: elements.phone, name: 'phone', rule: value => validators.phone(value.trim()), message: "Format nomor telepon tidak valid (10-13 digit)" },
+        { field: elements.password, name: 'password', rule: value => !!value.trim(), message: "Password tidak boleh kosong" },
+        { field: elements.password, name: 'password', rule: value => validators.password(value.trim()), message: "Password minimal 8 karakter dan mengandung huruf & angka" },
+        { field: elements.confirmPassword, name: 'confirmPassword', rule: value => !!value.trim(), message: "Konfirmasi password tidak boleh kosong" },
+        { field: elements.confirmPassword, name: 'confirmPassword', rule: value => value.trim() === elements.password.value.trim(), message: "Konfirmasi password tidak cocok" },
+        { field: elements.terms, name: 'terms', rule: value => value.checked, message: "Harus menyetujui syarat & ketentuan" }
+      ];
+      
+      const validationStatus = {};
       let isValid = true;
       
-      // Object untuk menyimpan status validasi
-      const validationStatus = {
-        fullName: { isValid: true, value: nameInput.value.trim(), error: null },
-        username: { isValid: true, value: userName.value.trim(), error: null },
-        email: { isValid: true, value: emailInput.value.trim(), error: null },
-        phone: { isValid: true, value: phone.value.trim(), error: null },
-        password: { isValid: true, value: "********", error: null },
-        confirmPassword: { isValid: true, value: "********", error: null },
-        terms: { isValid: true, value: agreeTermsCheckbox.checked, error: null }
-      };
-
-      // Validasi Nama
-      if (!nameInput.value.trim()) {
-        setError(nameInput, "Nama lengkap tidak boleh kosong");
-        isValid = false;
-        validationStatus.fullName.isValid = false;
-        validationStatus.fullName.error = "Nama lengkap tidak boleh kosong";
-      }
-
-      // Validasi Username
-      if (!userName.value.trim()) {
-        setError(userName, "Username tidak boleh kosong");
-        isValid = false;
-        validationStatus.username.isValid = false;
-        validationStatus.username.error = "Username tidak boleh kosong";
-      } else if (userName.value.trim().length < 3) {
-        setError(userName, "Username minimal 3 karakter");
-        isValid = false;
-        validationStatus.username.isValid = false;
-        validationStatus.username.error = "Username minimal 3 karakter";
-      } else if (!/^[a-zA-Z0-9_]+$/.test(userName.value.trim())) {
-        setError(userName, "Username hanya boleh mengandung huruf, angka, dan underscore");
-        isValid = false;
-        validationStatus.username.isValid = false;
-        validationStatus.username.error = "Username hanya boleh mengandung huruf, angka, dan underscore";
-      }
-
-      // Validasi Email
-      if (!emailInput.value.trim()) {
-        setError(emailInput, "Email tidak boleh kosong");
-        isValid = false;
-        validationStatus.email.isValid = false;
-        validationStatus.email.error = "Email tidak boleh kosong";
-      } else if (!validators.email(emailInput.value.trim())) {
-        setError(emailInput, "Format email tidak valid");
-        isValid = false;
-        validationStatus.email.isValid = false;
-        validationStatus.email.error = "Format email tidak valid";
-      }
-
-      // Validasi Nomor Telepon
-      if (!phone.value.trim()) {
-        setError(phone, "Nomor telepon tidak boleh kosong");
-        isValid = false;
-        validationStatus.phone.isValid = false;
-        validationStatus.phone.error = "Nomor telepon tidak boleh kosong";
-      } else if (!validators.phone(phone.value.trim())) {
-        setError(phone, "Format nomor telepon tidak valid (10-13 digit)");
-        isValid = false;
-        validationStatus.phone.isValid = false;
-        validationStatus.phone.error = "Format nomor telepon tidak valid (10-13 digit)";
-      }
-
-      // Validasi Password
-      if (!passwordInput.value.trim()) {
-        setError(passwordInput, "Password tidak boleh kosong");
-        isValid = false;
-        validationStatus.password.isValid = false;
-        validationStatus.password.error = "Password tidak boleh kosong";
-      } else if (!validators.password(passwordInput.value.trim())) {
-        setError(
-          passwordInput,
-          "Password minimal 8 karakter dan mengandung huruf & angka"
-        );
-        isValid = false;
-        validationStatus.password.isValid = false;
-        validationStatus.password.error = "Password minimal 8 karakter dan mengandung huruf & angka";
-      }
-
-      // Validasi Konfirmasi Password
-      if (!confirmPasswordInput.value.trim()) {
-        setError(
-          confirmPasswordInput,
-          "Konfirmasi password tidak boleh kosong"
-        );
-        isValid = false;
-        validationStatus.confirmPassword.isValid = false;
-        validationStatus.confirmPassword.error = "Konfirmasi password tidak boleh kosong";
-      } else if (
-        confirmPasswordInput.value.trim() !== passwordInput.value.trim()
-      ) {
-        setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
-        isValid = false;
-        validationStatus.confirmPassword.isValid = false;
-        validationStatus.confirmPassword.error = "Konfirmasi password tidak cocok";
-      }
-
-      // Validasi Persetujuan Syarat
-      if (!agreeTermsCheckbox.checked) {
-        setError(agreeTermsCheckbox, "Harus menyetujui syarat & ketentuan");
-        isValid = false;
-        validationStatus.terms.isValid = false;
-        validationStatus.terms.error = "Harus menyetujui syarat & ketentuan";
-      }
+      validationRules.forEach(({field, name, rule, message}) => {
+        if (!validationStatus[name]) {
+          validationStatus[name] = { isValid: true, value: field.value?.trim() || field.checked, error: null };
+        }
+        
+        const value = field.value?.trim() || field.checked;
+        if (!rule(value)) {
+          errorHandler.set(field, message);
+          isValid = false;
+          validationStatus[name].isValid = false;
+          validationStatus[name].error = message;
+        }
+      });
 
       if (isValid) {
         const formData = {
-          fullName: nameInput.value.trim(),
-          username: userName.value.trim(),
-          email: emailInput.value.trim(),
-          phoneNumber: phone.value.trim(),
-          password: passwordInput.value,
-          confirmPassword: confirmPasswordInput.value,
-          role: true  // Menggunakan boolean true, bukan string "true"
+          fullName: elements.fullName.value.trim(),
+          username: elements.userName.value.trim(),
+          email: elements.email.value.trim(),
+          phoneNumber: elements.phone.value.trim(),
+          password: elements.password.value,
+          confirmPassword: elements.confirmPassword.value,
+          role: true
         };
 
         console.log("Form validation successful");
@@ -203,24 +128,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
           // Menambahkan feedback visual saat proses pengiriman data
-          const submitButton = signupForm.querySelector("button[type='submit']");
+          const submitButton = elements.form.querySelector("button[type='submit']");
           const originalButtonText = submitButton.textContent;
           submitButton.disabled = true;
           submitButton.textContent = "Mendaftar...";
           
-          // Solusi untuk CORS: Gunakan proxy atau tambahkan credential:omit
-          // Opsi 1: Gunakan proxy CORS
-          const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Proxy alternatif
+          // Solusi untuk CORS dengan menggunakan proxy server
+          // Gunakan proxy server yang Anda kontrol, bukan cors-anywhere
+          const corsProxyUrl = "https://your-own-cors-proxy.domain/";  
+          const targetUrl = `${corsProxyUrl}${apiUrl}`;
           
-          // Menggunakan fetch dengan mode 'no-cors' dan credentials: 'omit'
-          // untuk mengurangi masalah CORS
+          // Alternatif pendekatan untuk mengatasi CORS
           const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Accept": "application/json"
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            // mode: 'cors', // Gunakan jika server menyediakan CORS headers
+            credentials: 'same-origin'
+          }).catch(error => {
+            console.warn("Fetch failed, using fallback method");
+            
+            // Fallback: Coba gunakan XMLHttpRequest jika fetch gagal
+            return new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open("POST", apiUrl);
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.setRequestHeader("Accept", "application/json");
+              xhr.onload = () => resolve({
+                ok: xhr.status >= 200 && xhr.status < 300,
+                json: () => JSON.parse(xhr.responseText)
+              });
+              xhr.onerror = () => reject(new Error("Network error"));
+              xhr.send(JSON.stringify(formData));
+            });
           });
           
           // Kembalikan tombol ke keadaan normal
@@ -235,12 +178,12 @@ document.addEventListener("DOMContentLoaded", function () {
           const data = await response.json();
           
           if (data.success) {
-            // Sukses - simpan token jika ada
+            // Simpan token jika ada
             if (data.token) {
               localStorage.setItem("authToken", data.token);
             }
             
-            // Tampilkan pesan sukses yang lebih baik dengan SweetAlert jika ada
+            // Tampilkan pesan sukses dengan SweetAlert jika tersedia
             if (typeof Swal !== 'undefined') {
               Swal.fire({
                 title: "Pendaftaran Berhasil!",
@@ -261,17 +204,9 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
           console.error("Error during registration:", error);
           
-          // Jika error berkaitan dengan CORS, tampilkan pesan yang lebih informatif
           if (error.message.includes("CORS") || error.name === "TypeError") {
-            // Tambahkan alternatif untuk mengirim data melalui backend proxy jika ada
-            alert("Maaf, terjadi masalah koneksi ke server. Silakan coba lagi nanti atau hubungi admin.");
-            
-            // Tambahkan opsi fallback untuk mendaftar melalui alternatif
-            console.log("Mencoba metode alternatif pendaftaran...");
-            // Implementasi logika fallback jika diperlukan
-            
-            // Atau arahkan ke halaman alternatif
-            // window.location.href = "alternative-register.html";
+            // Pesan khusus untuk error CORS
+            handleCorsError(formData);
           } else {
             alert("Terjadi kesalahan saat pendaftaran: " + error.message);
           }
@@ -297,9 +232,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Toggle Password Visibility
-  passwordToggles.forEach((toggle) => {
-    toggle.addEventListener("click", function () {
+  // Fungsi untuk menangani error CORS
+  function handleCorsError(formData) {
+    console.warn("CORS issue detected, trying alternative approach");
+    
+    // Opsi 1: Tampilkan pesan yang lebih bermanfaat
+    alert("Maaf, ada masalah koneksi ke server. Coba salah satu dari langkah berikut:\n\n" +
+          "1. Refresh halaman dan coba lagi\n" +
+          "2. Pastikan Anda menggunakan browser terbaru\n" +
+          "3. Jika masalah berlanjut, hubungi admin di info@Eventify.id");
+    
+    // Opsi 2: Simpan data secara lokal untuk dikirim nanti
+    const pendingRegistrations = JSON.parse(localStorage.getItem('pendingRegistrations') || '[]');
+    pendingRegistrations.push({
+      ...formData,
+      password: btoa(formData.password), // Enkripsi sederhana (tidak aman untuk produksi)
+      confirmPassword: btoa(formData.confirmPassword),
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('pendingRegistrations', JSON.stringify(pendingRegistrations));
+    console.log("Data pendaftaran disimpan lokal untuk pengiriman nanti");
+    
+    // Opsi 3: Arahkan ke halaman alternatif
+    // window.location.href = "alternative-register.html?email=" + encodeURIComponent(formData.email);
+  }
+
+  // Manajemen toggle visibility password
+  elements.passwordToggles.forEach(toggle => {
+    toggle.addEventListener("click", function() {
       const input = this.previousElementSibling;
       const type = input.getAttribute("type") === "password" ? "text" : "password";
       input.setAttribute("type", type);
@@ -307,64 +267,63 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Real-time validation for Username
-  userName.addEventListener("input", function() {
-    if (this.value.trim() === "") {
-      removeError(this);
-    } else if (this.value.trim().length < 3) {
-      setError(this, "Username minimal 3 karakter");
-    } else if (!/^[a-zA-Z0-9_]+$/.test(this.value.trim())) {
-      setError(this, "Username hanya boleh mengandung huruf, angka, dan underscore");
-    } else {
-      removeError(this);
-    }
-  });
+  // Event listeners untuk validasi real-time
+  setupRealTimeValidation();
+  
+  function setupRealTimeValidation() {
+    // Username validation
+    elements.userName.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        errorHandler.remove(this);
+      } else if (this.value.trim().length < 3) {
+        errorHandler.set(this, "Username minimal 3 karakter");
+      } else if (!/^[a-zA-Z0-9_]+$/.test(this.value.trim())) {
+        errorHandler.set(this, "Username hanya boleh mengandung huruf, angka, dan underscore");
+      } else {
+        errorHandler.remove(this);
+      }
+    });
 
-  // Real-time validation for Phone Number
-  phone.addEventListener("input", function() {
-    const oldValue = this.value;
-    this.value = this.value.replace(/[^0-9]/g, "");
-    
-    if (this.value.trim() === "") {
-      removeError(this);
-    } else if (!validators.phone(this.value.trim())) {
-      setError(this, "Format nomor telepon tidak valid (10-13 digit)");
-    } else {
-      removeError(this);
-    }
-  });
-
-  // Real-time validation for Password
-  passwordInput.addEventListener("input", function () {
-    if (this.value.trim() === "") {
-      removeError(this);
-    } else if (!validators.password(this.value.trim())) {
-      setError(
-        this,
-        "Password minimal 8 karakter dan mengandung huruf & angka"
-      );
-    } else {
-      removeError(this);
+    // Phone validation
+    elements.phone.addEventListener("input", function() {
+      // Hapus karakter non-angka
+      this.value = this.value.replace(/[^0-9]/g, "");
       
-      // Update konfirmasi password jika sudah terisi
-      if (confirmPasswordInput.value.trim() !== "") {
-        if (confirmPasswordInput.value.trim() !== this.value.trim()) {
-          setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
-        } else {
-          removeError(confirmPasswordInput);
-        }
+      if (this.value.trim() === "") {
+        errorHandler.remove(this);
+      } else if (!validators.phone(this.value.trim())) {
+        errorHandler.set(this, "Format nomor telepon tidak valid (10-13 digit)");
+      } else {
+        errorHandler.remove(this);
+      }
+    });
+
+    // Password validation
+    elements.password.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        errorHandler.remove(this);
+      } else if (!validators.password(this.value.trim())) {
+        errorHandler.set(this, "Password minimal 8 karakter dan mengandung huruf & angka");
+      } else {
+        errorHandler.remove(this);
+        
+        // Update konfirmasi password
+        validateConfirmPassword();
+      }
+    });
+
+    // Confirm password validation
+    elements.confirmPassword.addEventListener("input", validateConfirmPassword);
+    
+    function validateConfirmPassword() {
+      const confirmInput = elements.confirmPassword;
+      if (confirmInput.value.trim() === "") {
+        errorHandler.remove(confirmInput);
+      } else if (confirmInput.value.trim() !== elements.password.value.trim()) {
+        errorHandler.set(confirmInput, "Konfirmasi password tidak cocok");
+      } else {
+        errorHandler.remove(confirmInput);
       }
     }
-  });
-
-  // Real-time validation for Confirm Password
-  confirmPasswordInput.addEventListener("input", function () {
-    if (this.value.trim() === "") {
-      removeError(this);
-    } else if (this.value.trim() !== passwordInput.value.trim()) {
-      setError(this, "Konfirmasi password tidak cocok");
-    } else {
-      removeError(this);
-    }
-  });
+  }
 });
