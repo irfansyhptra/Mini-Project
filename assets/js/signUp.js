@@ -1,28 +1,17 @@
 // Import validation utilities
-const {
-    API_BASE_URL,
-    logApiRequest,
-    logApiResponse,
-    logApiError,
-    showLoading,
-    hideLoading,
-    showError,
-    showSuccess,
-    handleApiError,
-    validateSignupForm
-} = window.ValidationUtils;
+const Validation = window.ValidationUtils;
 
 // Handle signup form submission
 async function handleSignup(event) {
     event.preventDefault();
     
-    if (!validateSignupForm()) {
+    if (!Validation.validateSignupForm()) {
         return;
     }
 
     const submitButton = event.target.querySelector('button[type="submit"]');
     if (submitButton) {
-        showLoading(submitButton);
+        Validation.showLoading(submitButton);
     }
 
     try {
@@ -35,9 +24,9 @@ async function handleSignup(event) {
             role: "true"
         };
 
-        logApiRequest('/register', formData);
+        Validation.logApiRequest('/register', formData);
 
-        const response = await fetch(`${API_BASE_URL}/register`, {
+        const response = await fetch(`${Validation.API_BASE_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,20 +35,20 @@ async function handleSignup(event) {
         });
 
         const data = await response.json();
-        logApiResponse(response, data);
+        Validation.logApiResponse(response, data);
 
         if (!response.ok) {
             throw new Error(data.message || 'Registration failed');
         }
 
-        showSuccess('Registration successful! Please login.');
+        Validation.showSuccess('Registration successful! Please login.');
         window.location.href = 'login.html';
     } catch (error) {
-        logApiError(error, 'Signup');
-        showError(handleApiError(error));
+        Validation.logApiError(error, 'Signup');
+        Validation.showError(Validation.handleApiError(error));
     } finally {
         if (submitButton) {
-            hideLoading(submitButton);
+            Validation.hideLoading(submitButton);
         }
     }
 }
