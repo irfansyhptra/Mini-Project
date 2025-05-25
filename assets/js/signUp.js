@@ -52,11 +52,18 @@ document.addEventListener("DOMContentLoaded", function () {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Origin': 'https://eventoryy.vercel.app'
           },
           mode: 'cors',
+          credentials: 'omit',
           body: JSON.stringify(requestData)
         });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
         console.log('✅ API Response:', {
@@ -64,10 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
           statusText: response.statusText,
           data: data
         });
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Registration failed');
-        }
 
         alert('Registration successful! Please login.');
         window.location.href = 'login.html';
@@ -81,6 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let errorMessage = 'Registration failed. Please try again.';
         if (error.message.includes('semua kolom harus di isii')) {
           errorMessage = 'Mohon lengkapi semua field yang diperlukan.';
+        } else if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+          errorMessage = 'Terjadi masalah koneksi. Silakan coba lagi nanti.';
         } else if (error.message) {
           errorMessage = error.message;
         }

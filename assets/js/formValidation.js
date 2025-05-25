@@ -1,6 +1,11 @@
 // Constants
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'currentUser';
+const API_BASE_URL = 'https://back-end-eventory.vercel.app/api';
+const API_ENDPOINTS = {
+    REGISTER: `${API_BASE_URL}/Users/register`,
+    LOGIN: `${API_BASE_URL}/Users/login`
+};
 
 // Utility functions
 function setError(input, message) {
@@ -170,6 +175,8 @@ function validateSignupForm() {
 window.ValidationUtils = {
     TOKEN_KEY,
     USER_KEY,
+    API_BASE_URL,
+    API_ENDPOINTS,
     setError,
     removeError,
     validateEmail,
