@@ -139,6 +139,8 @@ document.addEventListener("DOMContentLoaded", function () {
               "Content-Type": "application/json",
               "Accept": "application/json"
             },
+            mode: "cors",
+            credentials: "include",
             body: JSON.stringify(formData)
           });
 
