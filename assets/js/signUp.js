@@ -184,15 +184,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (isValid) {
-        const formData = {
-          fullName: nameInput.value.trim(),
-          username: userName.value.trim(),
-          email: emailInput.value.trim(),
-          phoneNumber: phone.value.trim(),
-          password: passwordInput.value,
-          confirmPassword: confirmPasswordInput.value,
-          role: true
-        };
+          const formData = {
+            fullName: nameInput.value.trim(),
+            username: userName.value.trim(),
+            email: emailInput.value.trim(),
+            phoneNumber: phone.value.trim(),
+            password: passwordInput.value,
+            confirmPassword: confirmPasswordInput.value,
+            role: "true"  // Change from boolean to string if the API expects a string
+          };
 
         console.log("Form validation successful");
         console.log("Data yang akan dikirim:", {
@@ -220,8 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
               "Content-Type": "application/json",
               "Accept": "application/json"
             },
-            mode: "cors",
-            credentials: "omit", // Ubah dari 'include' menjadi 'omit'
             body: JSON.stringify(formData)
           });
           
