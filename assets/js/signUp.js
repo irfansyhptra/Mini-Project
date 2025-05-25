@@ -184,15 +184,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (isValid) {
-          const formData = {
-            fullName: nameInput.value.trim(),
-            username: userName.value.trim(),
-            email: emailInput.value.trim(),
-            phoneNumber: phone.value.trim(),
-            password: passwordInput.value,
-            confirmPassword: confirmPasswordInput.value,
-            role: "true"  // Change from boolean to string if the API expects a string
-          };
+        const formData = {
+          fullName: nameInput.value.trim(),
+          username: userName.value.trim(),
+          email: emailInput.value.trim(),
+          phoneNumber: phone.value.trim(),
+          password: passwordInput.value,
+          confirmPassword: confirmPasswordInput.value,
+          role: true  // Menggunakan boolean true, bukan string "true"
+        };
 
         console.log("Form validation successful");
         console.log("Data yang akan dikirim:", {
