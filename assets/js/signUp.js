@@ -1,6 +1,10 @@
 // Import validation utilities
 const Validation = window.ValidationUtils;
 
+// CORS Proxy URL
+const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+const API_URL = 'https://back-end-eventory.vercel.app/api/Users/register';
+
 document.addEventListener("DOMContentLoaded", function () {
   const signupForm = document.getElementById("signup-form");
   const nameInput = document.getElementById("signup-name");
@@ -43,37 +47,65 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         console.log('🌐 API Request:', {
-          endpoint: 'https://back-end-eventory.vercel.app/api/Users/register',
+          endpoint: API_URL,
           method: 'POST',
           data: requestData
         });
 
-        const response = await fetch('https://back-end-eventory.vercel.app/api/Users/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Origin': 'https://eventoryy.vercel.app'
-          },
-          mode: 'cors',
-          credentials: 'omit',
-          body: JSON.stringify(requestData)
-        });
+        // Try direct API call first
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+          });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log('✅ API Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            data: data
+          });
+
+          alert('Registration successful! Please login.');
+          window.location.href = 'login.html';
+          return;
+        } catch (directError) {
+          console.log('Direct API call failed, trying CORS proxy...', directError);
+          
+          // If direct call fails, try with CORS proxy
+          const proxyResponse = await fetch(CORS_PROXY + API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(requestData)
+          });
+
+          if (!proxyResponse.ok) {
+            const errorData = await proxyResponse.json().catch(() => ({}));
+            throw new Error(errorData.message || `HTTP error! status: ${proxyResponse.status}`);
+          }
+
+          const proxyData = await proxyResponse.json();
+          console.log('✅ Proxy API Response:', {
+            status: proxyResponse.status,
+            statusText: proxyResponse.statusText,
+            data: proxyData
+          });
+
+          alert('Registration successful! Please login.');
+          window.location.href = 'login.html';
         }
-
-        const data = await response.json();
-        console.log('✅ API Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          data: data
-        });
-
-        alert('Registration successful! Please login.');
-        window.location.href = 'login.html';
       } catch (error) {
         console.error('❌ API Error:', {
           context: 'Signup',
