@@ -132,49 +132,28 @@ document.addEventListener("DOMContentLoaded", function () {
           const originalButtonText = submitButton.textContent;
           submitButton.disabled = true;
           submitButton.textContent = "Mendaftar...";
-          
-          // Solusi untuk CORS dengan menggunakan proxy server
-          // Gunakan proxy server yang Anda kontrol, bukan cors-anywhere
-          const corsProxyUrl = "https://your-own-cors-proxy.domain/";  
-          const targetUrl = `${corsProxyUrl}${apiUrl}`;
-          
-          // Alternatif pendekatan untuk mengatasi CORS
+
+          // Coba menggunakan fetch dengan konfigurasi CORS yang tepat
           const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Accept": "application/json"
             },
-            body: JSON.stringify(formData),
-            // mode: 'cors', // Gunakan jika server menyediakan CORS headers
-            credentials: 'same-origin'
-          }).catch(error => {
-            console.warn("Fetch failed, using fallback method");
-            
-            // Fallback: Coba gunakan XMLHttpRequest jika fetch gagal
-            return new Promise((resolve, reject) => {
-              const xhr = new XMLHttpRequest();
-              xhr.open("POST", apiUrl);
-              xhr.setRequestHeader("Content-Type", "application/json");
-              xhr.setRequestHeader("Accept", "application/json");
-              xhr.onload = () => resolve({
-                ok: xhr.status >= 200 && xhr.status < 300,
-                json: () => JSON.parse(xhr.responseText)
-              });
-              xhr.onerror = () => reject(new Error("Network error"));
-              xhr.send(JSON.stringify(formData));
-            });
+            mode: "cors",
+            credentials: "omit",
+            body: JSON.stringify(formData)
           });
-          
+
           // Kembalikan tombol ke keadaan normal
           submitButton.disabled = false;
           submitButton.textContent = originalButtonText;
-          
+
           if (!response.ok) {
             const data = await response.json();
             throw new Error(data.message || "Terjadi kesalahan saat pendaftaran");
           }
-          
+
           const data = await response.json();
           
           if (data.success) {
@@ -204,9 +183,45 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
           console.error("Error during registration:", error);
           
+          // Kembalikan tombol ke keadaan normal
+          const submitButton = elements.form.querySelector("button[type='submit']");
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+
           if (error.message.includes("CORS") || error.name === "TypeError") {
-            // Pesan khusus untuk error CORS
-            handleCorsError(formData);
+            // Coba metode alternatif menggunakan XMLHttpRequest
+            try {
+              const xhr = new XMLHttpRequest();
+              xhr.open("POST", apiUrl, true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.setRequestHeader("Accept", "application/json");
+              
+              xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  const data = JSON.parse(xhr.responseText);
+                  if (data.success) {
+                    if (data.token) {
+                      localStorage.setItem("authToken", data.token);
+                    }
+                    alert("Pendaftaran berhasil! Anda akan diarahkan ke halaman login.");
+                    window.location.href = "login.html";
+                  } else {
+                    alert("Pendaftaran gagal: " + (data.message || "Terjadi kesalahan"));
+                  }
+                } else {
+                  alert("Terjadi kesalahan saat pendaftaran. Silakan coba lagi nanti.");
+                }
+              };
+              
+              xhr.onerror = function() {
+                alert("Terjadi kesalahan koneksi. Silakan coba lagi nanti atau hubungi admin.");
+              };
+              
+              xhr.send(JSON.stringify(formData));
+            } catch (xhrError) {
+              console.error("XHR fallback failed:", xhrError);
+              alert("Terjadi kesalahan saat pendaftaran. Silakan coba lagi nanti atau hubungi admin di info@Eventify.id");
+            }
           } else {
             alert("Terjadi kesalahan saat pendaftaran: " + error.message);
           }
