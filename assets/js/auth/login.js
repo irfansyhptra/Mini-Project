@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const userData = result.data || {}; // Ambil data user, atau objek kosong jika tidak ada
 
         // Cek role dengan === (lebih aman)
-        if (userData.role === true) {
+        if (userData.role === false) {
           showMessage("Login berhasil! Mengalihkan ke halaman admin...", 'success');
           setTimeout(() => {
             window.location.href = window.location.origin + "/Frontend/page/admin/dashboardAdmin.html";
