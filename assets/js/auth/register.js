@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const agreeTermsCheckbox = document.getElementById("terms");
   const submitButton = document.getElementById("submit-button");
   const passwordToggles = document.querySelectorAll(".toggle-password");
+  const errorContainer = document.getElementById("error-container");
+  const successContainer = document.getElementById("success-container");
 
   // Set button disabled secara default
   if (submitButton) {
@@ -296,6 +298,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       
       if (isValid) {
+        // Reset error and success containers
+        if (errorContainer) errorContainer.classList.add("hidden");
+        if (successContainer) successContainer.classList.add("hidden");
+
         // Disable submit button
         if (submitButton) {
           submitButton.disabled = true;
@@ -340,8 +346,13 @@ document.addEventListener("DOMContentLoaded", function () {
           
           // Handle response
           if (response.ok) {
-            alert("Pendaftaran berhasil!");
-            window.location.href = "login.html";
+            if (successContainer) {
+              successContainer.textContent = "Pendaftaran berhasil!";
+              successContainer.classList.remove("hidden");
+            }
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 1500);
           } else {
             // Check for specific error messages from server
             if (result.message && result.message.toLowerCase().includes("email")) {
@@ -349,12 +360,18 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (result.message && result.message.toLowerCase().includes("username")) {
               setError(userNameInput, result.message || "Username sudah terdaftar");
             } else {
-              throw new Error(result.message || "Terjadi kesalahan saat pendaftaran");
+              if (errorContainer) {
+                errorContainer.textContent = result.message || "Terjadi kesalahan saat pendaftaran";
+                errorContainer.classList.remove("hidden");
+              }
             }
           }
         } catch (error) {
           console.error("Error during registration:", error);
-          alert(error.message || "Terjadi kesalahan pada sistem. Silakan coba lagi nanti.");
+          if (errorContainer) {
+            errorContainer.textContent = error.message || "Terjadi kesalahan pada sistem. Silakan coba lagi nanti.";
+            errorContainer.classList.remove("hidden");
+          }
         } finally {
           // Reset loading state
           if (buttonText) buttonText.classList.remove("hidden");
