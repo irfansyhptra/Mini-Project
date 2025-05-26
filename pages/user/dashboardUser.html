@@ -574,93 +574,108 @@
         </div>
     </div>
 
-    <!-- Create Event Modal -->
-    <div class="modal" id="create-event-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Buat Event Baru</h2>
-                <button class="modal-close" id="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="create-event-form">
-                    <div class="form-group">
-                        <label class="form-label" for="event-name">Nama Event</label>
-                        <input type="text" id="event-name" class="form-control" placeholder="Masukkan nama event">
+<div class="modal" id="create-event-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Buat Event Baru</h2>
+            <button class="modal-close" id="close-event-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="create-event-form">
+                <div class="form-group">
+                    <label class="form-label" for="event-name">Nama Event <span class="text-red-500">*</span></label>
+                    <input type="text" id="event-name" class="form-control" placeholder="Masukkan nama event" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="event-description">Deskripsi Event <span
+                            class="text-red-500">*</span></label>
+                    <textarea id="event-description" class="form-control" rows="3"
+                        placeholder="Masukkan deskripsi event" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1"> <label class="form-label" for="event-date">Tanggal <span
+                                class="text-red-500">*</span></label>
+                        <input type="date" id="event-date" class="form-control" required>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="event-description">Deskripsi Event</label>
-                        <textarea id="event-description" class="form-control"
-                            placeholder="Masukkan deskripsi event"></textarea>
+                    <div class="form-group flex-1">
+                        <label class="form-label" for="event-time">Waktu <span class="text-red-500">*</span></label>
+                        <input type="time" id="event-time" class="form-control" required>
                     </div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="event-date">Tanggal</label>
-                            <input type="date" id="event-date" class="form-control">
-                        </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-location">Lokasi <span class="text-red-500">*</span></label>
+                    <input type="text" id="event-location" class="form-control" placeholder="Masukkan lokasi event"
+                        required>
+                </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="event-time">Waktu</label>
-                            <input type="time" id="event-time" class="form-control">
-                        </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label class="form-label" for="event-category">Kategori <span
+                                class="text-red-500">*</span></label>
+                        <select id="event-category" class="form-control" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="Konferensi">Konferensi</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Seminar">Seminar</option>
+                            <option value="Pameran">Pameran</option>
+                            <option value="Konser">Konser</option>
+                            <option value="Festival">Festival</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Networking">Networking</option>
+                        </select>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label class="form-label" for="event-capacity">Kapasitas <span
+                                class="text-red-500">*</span></label>
+                        <input type="number" id="event-capacity" class="form-control" placeholder="Jumlah peserta"
+                            min="1" required>
+                    </div>
+                </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="event-location">Lokasi</label>
-                            <input type="text" id="event-location" class="form-control"
-                                placeholder="Masukkan lokasi event">
-                        </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-image">Gambar Event <span class="text-red-500">*</span></label>
+                    <input type="file" id="event-image" class="form-control" accept="image/*" required>
+                </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" for="event-category">Kategori</label>
-                                <select id="event-category" class="form-control">
-                                    <option value="">Pilih kategori</option>
-                                    <option value="conference">Konferensi</option>
-                                    <option value="workshop">Workshop</option>
-                                    <option value="seminar">Seminar</option>
-                                    <option value="exhibition">Pameran</option>
-                                    <option value="concert">Konser</option>
-                                    <option value="festival">Festival</option>
-                                    <option value="sports">Olahraga</option>
-                                    <option value="networking">Networking</option>
-                                    <option value="other">Lainnya</option>
-                                </select>
-                            </div>
+                <div class="form-group">
+                    <label class="form-label" for="event-tickets">Jenis Tiket <span
+                            class="text-red-500">*</span></label>
+                    <select id="event-tickets" class="form-control" required>
+                        <option value="Gratis">Gratis</option>
+                        <option value="Berbayar">Berbayar</option>
+                    </select>
+                </div>
 
-                            <div class="form-group">
-                                <label class="form-label" for="event-capacity">Kapasitas</label>
-                                <input type="number" id="event-capacity" class="form-control"
-                                    placeholder="Jumlah peserta maksimal">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="event-image">Gambar Event</label>
-                            <input type="file" id="event-image" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="event-tickets">Apakah event berbayar?</label>
-                            <select id="event-tickets" class="form-control">
-                                <option value="free">Gratis</option>
-                                <option value="paid">Berbayar</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" id="ticket-price-group" style="display: none;">
-                            <label class="form-label" for="ticket-price">Harga Tiket (Rp)</label>
-                            <input type="number" id="ticket-price" class="form-control"
-                                placeholder="Masukkan harga tiket">
-                        </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancel-event">Batal</button>
-                <button class="btn btn-primary" id="save-event">Simpan Event</button>
-            </div>
+                <div class="form-group" id="ticket-price-group" style="display: none;"> <label class="form-label"
+                        for="ticket-price">Harga Tiket (Rp) <span class="text-red-500">*</span></label>
+                    <input type="number" id="ticket-price" class="form-control"
+                        placeholder="Masukkan harga tiket (misal: 50000)" min="0">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancel-event-btn">Batal</button> <button type="submit"
+                class="btn btn-primary" id="save-event" form="create-event-form">Simpan Event</button>
         </div>
     </div>
+</div>
+
+<div id="success-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <h3 class="text-2xl font-bold text-gray-800 mb-2">Event Berhasil Dibuat!</h3>
+    <p class="text-gray-600 mb-6">Event Anda telah berhasil dibuat dan akan segera ditinjau.</p> <button
+        id="success-close-btn"
+        class="bg-gradient-to-r from-blue-800 to-blue-600 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
+        Tutup
+    </button>
+</div>
+
+<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <h3 class="text-2xl font-bold text-gray-800 mb-2">Membuat Event...</h3>
+    <p class="text-gray-600">Mohon tunggu sebentar, event Anda sedang diproses.</p>
+</div>
 
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
