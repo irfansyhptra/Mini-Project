@@ -867,6 +867,8 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             animation: modalFade 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         @keyframes modalFade {
@@ -886,24 +888,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: var(--light-grey);
         }
 
         .modal-title {
             font-size: 18px;
             font-weight: 600;
             color: var(--dark-grey);
+            margin: 0;
         }
 
         .modal-close {
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             color: var(--medium-grey);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--secondary-color);
         }
 
         .modal-body {
             padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
         .form-group {
@@ -924,13 +935,14 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            background-color: var(--white);
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+            box-shadow: 0 0 0 3px rgba(7, 23, 57, 0.1);
         }
 
         textarea.form-control {
@@ -950,6 +962,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            background-color: var(--light-grey);
         }
 
         /* Responsive styles */
@@ -963,10 +976,10 @@
             .sidebar {
                 width: 80px; 
                 padding: 15px 0;
-                transform: translateX(-100%); /* Hide sidebar off-screen */
+                transform: translateX(-100%);
             }
             .sidebar.show {
-                transform: translateX(0); /* Show sidebar when active */
+                transform: translateX(0);
             }
 
 
@@ -989,7 +1002,7 @@
             }
 
             .main-content {
-                margin-left: 0; /* Remove margin when sidebar is hidden */
+                margin-left: 0;
             }
 
             }
@@ -1025,7 +1038,7 @@
         @media (max-width: 768px) {
             .menu-toggle {
                 display: block; 
-                cursor: pointer; /* Ensure the toggle is clickable */
+                cursor: pointer;
             }
 
 
