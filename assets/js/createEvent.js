@@ -1,167 +1,10 @@
-const API_URL = 'https://back-end-eventory.vercel.app/event/createEvent';
-const TOKEN = localStorage.getItem('token');
-
-// Check authentication
-if (!TOKEN) {
-    window.location.href = '/pages/login.html';
-}
-
-// DOM Elements
-const createEventForm = document.getElementById('create-event-form');
-const eventTickets = document.getElementById('event-tickets');
-const ticketPriceGroup = document.getElementById('ticket-price-group');
-const loadingOverlay = document.getElementById('loading-overlay');
-const successOverlay = document.getElementById('success-overlay');
-const successCloseBtn = document.getElementById('success-close-btn');
-const eventDateInput = document.getElementById('event-date');
-const eventTimeInput = document.getElementById('event-time');
-const eventLocationInput = document.getElementById('event-location');
-const eventCategoryInput = document.getElementById('event-category');
-const eventCapacityInput = document.getElementById('event-capacity');
-const eventImageInput = document.getElementById('event-image');
-const ticketPriceInput = document.getElementById('ticket-price');
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners();
-});
-
-function setupEventListeners() {
-    // Ticket type change
-    eventTickets?.addEventListener('change', toggleTicketPriceField);
-    toggleTicketPriceField(); // Initial state
-
-    // Form submission
-    createEventForm?.addEventListener('submit', handleCreateEvent);
-
-    // Success overlay close
-    successCloseBtn?.addEventListener('click', () => {
-        successOverlay.classList.add('hidden');
-        window.location.href = 'myEvent.html';
-    });
-}
-
-// Toggle ticket price field visibility
-function toggleTicketPriceField() {
-    if (eventTickets && ticketPriceGroup && ticketPriceInput) {
-        if (eventTickets.value === 'Berbayar') {
-            ticketPriceGroup.style.display = 'block';
-            ticketPriceInput.required = true;
-        } else {
-            ticketPriceGroup.style.display = 'none';
-            ticketPriceInput.required = false;
-        }
-    }
-}
-
-// Handle create event
-async function handleCreateEvent(e) {
-    e.preventDefault();
-    
-    try {
-        // Validate required fields
-        if (!eventDateInput.value || !eventTimeInput.value ||
-            !eventLocationInput.value.trim() || !eventCategoryInput.value ||
-            !eventCapacityInput.value || !eventTickets.value) {
-            throw new Error('Semua kolom yang ditandai (*) wajib diisi.');
-        }
-
-        if (eventTickets.value === 'Berbayar' && !ticketPriceInput.value.trim()) {
-            throw new Error('Harga tiket wajib diisi jika event berbayar.');
-        }
-
-        // Validate image
-        const imageFile = eventImageInput.files[0];
-        if (!imageFile) {
-            throw new Error('Gambar event wajib diunggah.');
-        }
-
-        // Create FormData
-        const formData = new FormData();
-        formData.append('title', document.getElementById('event-title').value);
-        formData.append('description', document.getElementById('event-description').value);
-        formData.append('date', eventDateInput.value);
-        formData.append('time', eventTimeInput.value);
-        formData.append('location', eventLocationInput.value);
-        formData.append('kategori', eventCategoryInput.value);
-        formData.append('maxParticipants', eventCapacityInput.value);
-        formData.append('ticket', eventTickets.value);
-        formData.append('images', imageFile);
-        formData.append('creatorID', localStorage.getItem('userId'));
-
-        if (eventTickets.value === 'Berbayar') {
-            formData.append('ticketPrice', ticketPriceInput.value);
-        }
-
-        // Show loading overlay
-        loadingOverlay.classList.remove('hidden');
-
-        // Send request
-        const response = await fetch(`${API_URL}/createEvent`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${TOKEN}`
-            },
-            body: formData
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create event');
-        }
-
-        const data = await response.json();
-        showNotification('Event berhasil dibuat!', 'success');
-        successOverlay.classList.remove('hidden');
-    } catch (error) {
-        console.error('Error creating event:', error);
-        showNotification(error.message || 'Gagal membuat event', 'error');
-    } finally {
-        loadingOverlay.classList.add('hidden');
-    }
-}
-
-// Show notification
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${getNotificationIcon(type)}"></i>
-            <span>${message}</span>
-        </div>
-        <button class="notification-close">&times;</button>
-    `;
-
-    document.body.appendChild(notification);
-    setTimeout(() => notification.classList.add('show'), 100);
-
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    });
-
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
-}
-
-// Get notification icon
-function getNotificationIcon(type) {
-    const icons = {
-        'success': 'fa-check-circle',
-        'error': 'fa-exclamation-circle',
-        'warning': 'fa-exclamation-triangle',
-        'info': 'fa-info-circle'
-    };
-    return icons[type] || icons.info;
-}
+// File: createEvent.js
 
 // Fungsi ini akan dijalankan setelah seluruh konten HTML dimuat
 document.addEventListener('DOMContentLoaded', () => {
     // --- Referensi Elemen DOM ---
     const createEventModal = document.getElementById('create-event-modal');
+    const createEventForm = document.getElementById('create-event-form');
     const openModalButton = document.getElementById('open-create-event-btn'); // Ganti dengan ID tombol Anda untuk membuka modal
     const closeModalButton = document.getElementById('close-event-modal-btn');
     const cancelEventButton = document.getElementById('cancel-event-btn');
@@ -176,7 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventCategoryInput = document.getElementById('event-category');
     const eventCapacityInput = document.getElementById('event-capacity');
     const eventImageInput = document.getElementById('event-image');
+    const eventTicketsSelect = document.getElementById('event-tickets');
+    const ticketPriceGroup = document.getElementById('ticket-price-group');
     const ticketPriceInput = document.getElementById('ticket-price');
+
+    // Overlay
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const successOverlay = document.getElementById('success-overlay');
+    const successCloseBtn = document.getElementById('success-close-btn');
 
     // --- Fungsi untuk Modal ---
     function showCreateEventModal() {
@@ -199,15 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
             ticketPriceInput.required = false;
         }
         // Pastikan select tiket kembali ke default jika perlu (misal, 'Gratis')
-        if (eventTickets) {
-             // eventTickets.value = 'Gratis'; // Atau value default Anda
+        if (eventTicketsSelect) {
+             // eventTicketsSelect.value = 'Gratis'; // Atau value default Anda
         }
     }
 
     // --- Fungsi untuk Harga Tiket ---
     function toggleTicketPriceField() {
-        if (eventTickets && ticketPriceGroup && ticketPriceInput) {
-            if (eventTickets.value === 'Berbayar') {
+        if (eventTicketsSelect && ticketPriceGroup && ticketPriceInput) {
+            if (eventTicketsSelect.value === 'Berbayar') {
                 ticketPriceGroup.style.display = 'block';
                 ticketPriceInput.required = true;
             } else {
@@ -252,11 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!eventNameInput.value.trim() || !eventDescriptionInput.value.trim() ||
                 !eventDateInput.value || !eventTimeInput.value ||
                 !eventLocationInput.value.trim() || !eventCategoryInput.value ||
-                !eventCapacityInput.value || !eventTickets.value) {
+                !eventCapacityInput.value || !eventTicketsSelect.value) {
                 throw new Error('Semua kolom yang ditandai (*) wajib diisi.');
             }
 
-            if (eventTickets.value === 'Berbayar' && !ticketPriceInput.value.trim()) {
+            if (eventTicketsSelect.value === 'Berbayar' && !ticketPriceInput.value.trim()) {
                 throw new Error('Harga tiket wajib diisi jika event berbayar.');
             }
             if (eventCapacityInput.valueAsNumber < 1) {
@@ -290,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('location', eventLocationInput.value.trim());
             formData.append('kategori', eventCategoryInput.value); // Nilai sudah sesuai dari HTML
             formData.append('maxParticipants', eventCapacityInput.value);
-            formData.append('ticket', eventTickets.value); // Nilai sudah sesuai dari HTML
+            formData.append('ticket', eventTicketsSelect.value); // Nilai sudah sesuai dari HTML
             formData.append('images', imageFileToUpload); // Field 'images' untuk backend
 
-            if (eventTickets.value === 'Berbayar') {
+            if (eventTicketsSelect.value === 'Berbayar') {
                 formData.append('ticketPrice', ticketPriceInput.value); // Kirim harga jika berbayar
                 // Pastikan backend Anda siap menerima field 'ticketPrice' ini
             }
@@ -305,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // 6. Kirim Data ke Backend
-            const response = await fetch(`${API_URL}/createEvent`, {
+            const response = await fetch('https://back-end-eventory.vercel.app/event/createEvent', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -353,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Formulir event (ID: create-event-form) tidak ditemukan.');
     }
 
-    if (eventTickets) {
-        eventTickets.addEventListener('change', toggleTicketPriceField);
+    if (eventTicketsSelect) {
+        eventTicketsSelect.addEventListener('change', toggleTicketPriceField);
         toggleTicketPriceField(); // Panggil sekali saat load untuk set kondisi awal
     }
 
