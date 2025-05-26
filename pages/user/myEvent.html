@@ -1143,13 +1143,6 @@
             background: var(--light-color);
         }
 
-        /* Enhanced Dashboard Structure */
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
         .main-content {
             flex-grow: 1;
             width: calc(100% - 280px);
@@ -1179,189 +1172,6 @@
             position: sticky;
             top: 0;
             z-index: 10;
-        }
-
-        /* Sidebar Enhancements */
-        .sidebar {
-            width: 280px;
-            height: 100vh;
-            background: var(--primary-gradient);
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 100;
-            transition: width 0.3s ease;
-            color: var(--white);
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .sidebar.collapsed {
-            width: 80px;
-        }
-
-        .sidebar-header {
-            padding: 1.5rem 1.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--white);
-            font-weight: 700;
-            font-size: 1.5rem;
-            gap: 0.8rem;
-        }
-
-        .logo i {
-            font-size: 1.8rem;
-        }
-
-        .sidebar.collapsed .logo span {
-            display: none;
-        }
-
-        .user-info {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .sidebar.collapsed .user-info {
-            justify-content: center;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            flex-shrink: 0;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-details {
-            overflow: hidden;
-        }
-
-        .sidebar.collapsed .user-details {
-            display: none;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-role {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        .sidebar-menu {
-            flex-grow: 1;
-            padding: 1.5rem 0;
-            overflow-y: auto;
-        }
-
-        .menu-label {
-            padding: 0 1.5rem;
-            margin: 1.5rem 0 0.75rem;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 600;
-        }
-
-        .sidebar.collapsed .menu-label {
-            display: none;
-        }
-
-        .sidebar-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.9rem 1.5rem;
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            position: relative;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-        }
-
-        .sidebar-menu a.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: var(--white);
-        }
-
-        .sidebar-menu a i {
-            font-size: 1.25rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar.collapsed .menu-text {
-            display: none;
-        }
-
-        .sidebar-footer {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-footer a {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .sidebar.collapsed .sidebar-footer span {
-            display: none;
-        }
-
-        .sidebar.collapsed .sidebar-footer {
-            display: flex;
-            justify-content: center;
         }
 
         /* Header Components */
@@ -1602,85 +1412,85 @@
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="../../index.html" class="logo">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Eventory</span>
-                </a>
-            </div>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../../index.html" class="logo">
+                <i class="fas fa-calendar-check"></i>
+                <span>Eventory</span>
+            </a>
+        </div>
 
-            <div class="user-info">
-                <div class="user-avatar">
-                    <img src="../../assets/image/dev1.jpg" alt="user-avatar">
-                </div>
-                <div class="user-details">
-                    <div class="user-name">Irfan</div>
-                    <div class="user-role">Pengguna</div>
-                </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <img src="../../assets/image/dev1.jpg" alt="user-avatar">
             </div>
-
-            <div class="sidebar-menu">
-                <div class="menu-label">Menu Utama</div>
-                <ul>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span class="menu-text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="myEvent.html" class="active">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span class="menu-text">Event Saya</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#jelajahi-event">
-                            <i class="fas fa-compass"></i>
-                            <span class="menu-text">Jelajahi Event</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#tiket-saya">
-                            <i class="fas fa-ticket-alt"></i>
-                            <span class="menu-text">Tiket Saya</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="menu-label">Lainnya</div>
-                <ul>
-                    <li>
-                        <a href="../../pages/user/profileUser.html">
-                            <i class="fas fa-user"></i>
-                            <span class="menu-text">Profil</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-cog"></i>
-                            <span class="menu-text">Pengaturan</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-question-circle"></i>
-                            <span class="menu-text">Bantuan</span>
-                        </a>
-                    </li>
-                </ul>
+            <div class="user-details">
+                <div class="user-name">Irfan</div>
+                <div class="user-role">Pengguna</div>
             </div>
+        </div>
 
-            <div class="sidebar-footer">
-                <a href="../../index.html">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </a>
-            </div>
-        </aside>
+        <div class="sidebar-menu">
+            <div class="menu-label">Menu Utama</div>
+            <ul>
+                <li>
+                    <a href="#" class="active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="myEvent.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="menu-text">Event Saya</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#jelajahi-event">
+                        <i class="fas fa-compass"></i>
+                        <span class="menu-text">Jelajahi Event</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tiket-saya">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span class="menu-text">Tiket Saya</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="menu-label">Lainnya</div>
+            <ul>
+                <li>
+                    <a href="../../pages/user/profileUser.html">
+                        <i class="fas fa-user"></i>
+                        <span class="menu-text">Profil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span class="menu-text">Pengaturan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-question-circle"></i>
+                        <span class="menu-text">Bantuan</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="../../index.html">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Keluar</span>
+            </a>
+        </div>
+    </aside>
 
         <div class="main-content">
             <header class="dashboard-header">
