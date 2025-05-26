@@ -1,3 +1,6 @@
+// File: events.js
+
+// Initialize AOS library for animations
 AOS.init({
     duration: 800,
     easing: 'ease-in-out',
@@ -5,7 +8,7 @@ AOS.init({
 });
 
 // --- Configuration & Constants ---
-const API_BASE_URL = 'https://back-end-eventory.vercel.app'; // Updated API Base URL
+const API_BASE_URL = 'https://back-end-eventory.vercel.app'; // API Base URL
 const TOKEN = localStorage.getItem('token');
 const DEFAULT_EVENT_IMAGE = '../../assets/image/default-event.jpg'; // Pastikan path ini benar
 
@@ -31,7 +34,7 @@ if (!TOKEN) {
 // --- Main Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     if (TOKEN) { // Lanjutkan hanya jika terautentikasi
-        loadAndRenderUserEvents(); // Mengganti nama fungsi agar lebih deskriptif
+        loadAndRenderAllEvents(); // Mengganti nama fungsi
         setupGlobalEventListeners();
     }
 });
@@ -55,10 +58,10 @@ function setupGlobalEventListeners() {
         }
     });
 
-    // Listener untuk search, filter, dan sort sekarang akan memanggil loadAndRenderUserEvents
-    DOMElements.searchInput?.addEventListener('input', debounce(loadAndRenderUserEvents, 300));
-    DOMElements.categoryFilter?.addEventListener('change', loadAndRenderUserEvents);
-    DOMElements.sortSelect?.addEventListener('change', loadAndRenderUserEvents);
+    // Listener untuk search, filter, dan sort sekarang akan memanggil loadAndRenderAllEvents
+    DOMElements.searchInput?.addEventListener('input', debounce(loadAndRenderAllEvents, 300));
+    DOMElements.categoryFilter?.addEventListener('change', loadAndRenderAllEvents);
+    DOMElements.sortSelect?.addEventListener('change', loadAndRenderAllEvents);
 
     DOMElements.logoutBtn?.addEventListener('click', handleLogout);
 }
@@ -66,33 +69,22 @@ function setupGlobalEventListeners() {
 // --- Core Event Handling Functions ---
 
 /**
- * Fetches events for the logged-in user, applies filters and sorting, then renders them.
+ * Fetches all events, applies filters and sorting, then renders them.
  */
-async function loadAndRenderUserEvents() {
+async function loadAndRenderAllEvents() {
     if (!DOMElements.eventList) {
         console.warn('Kontainer daftar event tidak ditemukan. Melewati pemuatan event.');
         return;
     }
-    DOMElements.eventList.innerHTML = '<div class="loading-state"><p>Memuat event Anda...</p></div>';
+    DOMElements.eventList.innerHTML = '<div class="loading-state text-center py-10"><p class="text-lg text-gray-500">Memuat semua event...</p></div>';
 
     try {
-        // Ambil User Data dan User ID
-        const userDataString = localStorage.getItem('user');
-        if (!userDataString) {
-            throw new Error('Data pengguna tidak ditemukan di localStorage. Silakan login kembali.');
-        }
-        const userData = JSON.parse(userDataString);
-        if (!userData || !userData._id) {
-            throw new Error('ID pengguna tidak valid dalam data pengguna. Silakan login kembali.');
-        }
-        const userId = userData._id;
-
         const searchQuery = DOMElements.searchInput?.value.trim().toLowerCase() || '';
         const category = DOMElements.categoryFilter?.value || '';
         const sort = DOMElements.sortSelect?.value || 'newest';
 
-        // Fetch event berdasarkan User ID
-        const response = await fetch(`${API_BASE_URL}/event/getEventsByUserId/${userId}`, {
+        // Fetch all events
+        const response = await fetch(`${API_BASE_URL}/event/getAllEvents`, {
             headers: {
                 'Authorization': `Bearer ${TOKEN}`
             }
@@ -100,7 +92,7 @@ async function loadAndRenderUserEvents() {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
-            throw new Error(errorData?.message || `Gagal mengambil data event pengguna. Status: ${response.status}`);
+            throw new Error(errorData?.message || `Gagal mengambil data semua event. Status: ${response.status}`);
         }
 
         const result = await response.json();
@@ -110,7 +102,7 @@ async function loadAndRenderUserEvents() {
 
         let events = result.data;
 
-        // Terapkan filter client-side (untuk event milik pengguna)
+        // Terapkan filter client-side
         if (searchQuery) {
             events = events.filter(event =>
                 (event.title && event.title.toLowerCase().includes(searchQuery)) ||
@@ -127,11 +119,11 @@ async function loadAndRenderUserEvents() {
         renderEvents(events);
 
     } catch (error) {
-        console.error('Error memuat event pengguna:', error);
+        console.error('Error memuat semua event:', error);
         if (DOMElements.eventList) {
-            DOMElements.eventList.innerHTML = `<div class="error-state"><p>Gagal memuat event: ${error.message}</p></div>`;
+            DOMElements.eventList.innerHTML = `<div class="error-state text-center py-10"><p class="text-lg text-red-500">Gagal memuat event: ${error.message}</p></div>`;
         }
-        showNotification(error.message || 'Gagal memuat event pengguna.', 'error');
+        showNotification(error.message || 'Gagal memuat semua event.', 'error');
     }
 }
 
@@ -150,7 +142,10 @@ function sortEvents(events, sortBy) {
             case 'upcoming':
                 return new Date(a.date) - new Date(b.date);
             case 'title':
-                return a.title.localeCompare(b.title);
+                // Pastikan title ada sebelum memanggil localeCompare
+                const titleA = a.title || '';
+                const titleB = b.title || '';
+                return titleA.localeCompare(titleB);
             default:
                 return 0;
         }
@@ -168,8 +163,8 @@ function renderEvents(events) {
         DOMElements.eventList.innerHTML = `
             <div class="empty-state text-center py-10" data-aos="fade-up">
                 <i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i>
-                <p class="text-xl text-gray-600">Tidak ada event yang Anda buat atau ikuti.</p>
-                <p class="text-gray-500">Coba buat event baru atau jelajahi event lain!</p>
+                <p class="text-xl text-gray-600">Tidak ada event yang tersedia saat ini.</p>
+                <p class="text-gray-500">Silakan cek kembali nanti atau coba ubah filter Anda.</p>
             </div>
         `;
         return;
@@ -241,21 +236,19 @@ async function handleJoinEvent(eventId) {
     if (!eventId) return;
     console.log(`Mencoba bergabung dengan event: ${eventId}`);
 
-    // Opsional: Tambahkan dialog konfirmasi
-    // if (!confirm('Apakah Anda yakin ingin bergabung dengan event ini?')) {
-    //     return;
-    // }
-
     try {
-        // Pastikan endpoint ini benar sesuai router backend Anda untuk join event
-        // Jika backend mengharapkan eventId di body, sesuaikan fetch
+        // Endpoint untuk join event, pastikan sesuai dengan router backend Anda
+        // Router Anda: router.post("/joinEvent", joinEvent);
+        // Controller Anda: const { eventId } = req.params;
+        // Ini berarti router Anda SEHARUSNYA: router.post("/joinEvent/:eventId", joinEvent);
+        // Frontend mengirim eventId di path, jadi backend harus mengharapkannya di path.
         const response = await fetch(`${API_BASE_URL}/event/joinEvent/${eventId}`, { 
-            method: 'POST', // Router Anda untuk joinEvent adalah POST
+            method: 'POST',
             headers: {
                 'Authorization': `Bearer ${TOKEN}`,
-                'Content-Type': 'application/json' 
+                'Content-Type': 'application/json' // Umumnya baik untuk POST, bahkan jika body kosong
             },
-            // body: JSON.stringify({}) // Jika backend memerlukan body JSON, bahkan kosong
+            // body: JSON.stringify({}) // Kirim body kosong jika backend memerlukan
         });
 
         const responseData = await response.json();
@@ -265,7 +258,7 @@ async function handleJoinEvent(eventId) {
         }
 
         showNotification(responseData.message || 'Berhasil bergabung dengan event!', 'success');
-        loadAndRenderUserEvents(); // Muat ulang event untuk update jumlah peserta
+        loadAndRenderAllEvents(); // Muat ulang semua event untuk update jumlah peserta
     } catch (error) {
         console.error('Error bergabung dengan event:', error);
         showNotification(error.message || 'Gagal bergabung dengan event.', 'error');
@@ -288,7 +281,7 @@ function viewEventDetails(eventId) {
 function handleLogout(e) {
     e.preventDefault();
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('user'); // Hapus data user juga
     showNotification('Anda telah berhasil logout.', 'success');
     setTimeout(() => {
         window.location.href = '../auth/login.html'; // Pastikan path ini benar
@@ -303,25 +296,31 @@ function formatDate(dateString) {
         hour: '2-digit', minute: '2-digit',
     };
     try {
-        return new Date(dateString).toLocaleDateString('id-ID', options);
+        // Coba parsing dengan asumsi UTC jika tidak ada info timezone, lalu format ke lokal
+        const dateObj = new Date(dateString);
+        return dateObj.toLocaleDateString('id-ID', options);
     } catch (e) {
         console.error("Error memformat tanggal:", dateString, e);
-        return dateString;
+        return dateString; // Fallback ke string asli jika error
     }
 }
 
 function getStatusClass(status) {
-    const statusClasses = {
-        'pending': 'bg-yellow-500', 'approved': 'bg-green-500',
-        'rejected': 'bg-red-500', 'cancelled': 'bg-gray-500'
+    const statusClasses = { // Contoh menggunakan Tailwind CSS classes
+        'pending': 'bg-yellow-500', 
+        'approved': 'bg-green-500',
+        'rejected': 'bg-red-500', 
+        'cancelled': 'bg-gray-500'
     };
-    return statusClasses[status] || 'bg-gray-400';
+    return statusClasses[status] || 'bg-gray-400'; // Default class
 }
 
 function getStatusText(status) {
     const statusTexts = {
-        'pending': 'Menunggu Verifikasi', 'approved': 'Terverifikasi',
-        'rejected': 'Ditolak', 'cancelled': 'Dibatalkan'
+        'pending': 'Menunggu Verifikasi', 
+        'approved': 'Terverifikasi',
+        'rejected': 'Ditolak', 
+        'cancelled': 'Dibatalkan'
     };
     return statusTexts[status] || 'Status Tidak Diketahui';
 }
@@ -329,33 +328,43 @@ function getStatusText(status) {
 function showNotification(message, type = 'info') {
     const notificationArea = document.getElementById('notification-area') || createNotificationArea();
     const notification = document.createElement('div');
-    notification.className = `notification p-4 mb-2 rounded-md shadow-md text-white ${getNotificationBackground(type)}`;
+    // Sesuaikan kelas dengan framework CSS Anda jika perlu
+    notification.className = `notification p-4 mb-2 rounded-md shadow-lg text-white ${getNotificationBackground(type)} transition-all duration-300 ease-in-out transform opacity-0 translate-y-2`;
     notification.innerHTML = `
         <div class="flex items-center justify-between">
             <div class="flex items-center">
-                <i class="fas ${getNotificationIcon(type)} mr-2"></i>
+                <i class="fas ${getNotificationIcon(type)} mr-3"></i>
                 <span>${message}</span>
             </div>
-            <button class="notification-close text-xl leading-none hover:text-gray-200">&times;</button>
+            <button class="notification-close text-xl leading-none hover:text-gray-200 focus:outline-none">&times;</button>
         </div>`;
     notificationArea.appendChild(notification);
-    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Animate in
+    requestAnimationFrame(() => {
+        notification.classList.remove('opacity-0', 'translate-y-2');
+        notification.classList.add('opacity-100', 'translate-y-0');
+    });
+
 
     const closeButton = notification.querySelector('.notification-close');
-    closeButton.addEventListener('click', () => {
-        notification.classList.remove('show');
+    const removeNotification = () => {
+        notification.classList.remove('opacity-100', 'translate-y-0');
+        notification.classList.add('opacity-0', 'translate-y-2');
         notification.addEventListener('transitionend', () => notification.remove(), { once: true });
-    });
-    setTimeout(() => {
-        notification.classList.remove('show');
-        notification.addEventListener('transitionend', () => notification.remove(), { once: true });
-    }, 5000);
+    };
+
+    closeButton.addEventListener('click', removeNotification);
+    
+    setTimeout(removeNotification, 5000); // Auto-dismiss
 }
 
 function getNotificationBackground(type) {
-    const backgrounds = {
-        'success': 'bg-green-500', 'error': 'bg-red-500',
-        'warning': 'bg-yellow-500', 'info': 'bg-blue-500'
+    const backgrounds = { // Contoh Tailwind
+        'success': 'bg-green-600', 
+        'error': 'bg-red-600',
+        'warning': 'bg-yellow-500', 
+        'info': 'bg-blue-600'
     };
     return backgrounds[type] || backgrounds.info;
 }
@@ -365,8 +374,13 @@ function createNotificationArea() {
     if (!area) {
         area = document.createElement('div');
         area.id = 'notification-area';
-        area.style.position = 'fixed'; area.style.top = '20px'; area.style.right = '20px';
-        area.style.zIndex = '1000'; area.style.width = '300px'; // Sesuaikan styling jika perlu
+        // Styling untuk area notifikasi
+        area.style.position = 'fixed'; 
+        area.style.top = '20px'; 
+        area.style.right = '20px';
+        area.style.zIndex = '1050'; // Pastikan di atas elemen lain
+        area.style.width = 'auto'; // Lebar otomatis atau set spesifik
+        area.style.maxWidth = '400px';
         document.body.appendChild(area);
     }
     return area;
@@ -374,8 +388,10 @@ function createNotificationArea() {
 
 function getNotificationIcon(type) {
     const icons = {
-        'success': 'fa-check-circle', 'error': 'fa-exclamation-circle',
-        'warning': 'fa-exclamation-triangle', 'info': 'fa-info-circle'
+        'success': 'fa-check-circle', 
+        'error': 'fa-exclamation-circle',
+        'warning': 'fa-exclamation-triangle', 
+        'info': 'fa-info-circle'
     };
     return icons[type] || icons.info;
 }
