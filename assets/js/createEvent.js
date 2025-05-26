@@ -1,12 +1,10 @@
-// File: createEvent.js
-
 // Constants
-const API_URL = 'https://back-end-eventory.vercel.app/event';
+const API_URL = 'https://back-end-eventory.vercel.app/event/createEvent';
 const TOKEN = localStorage.getItem('token');
 
 // Check authentication
 if (!TOKEN) {
-    window.location.href = '../auth/login.html';
+    window.location.href = '/pages/login.html';
 }
 
 // DOM Elements
