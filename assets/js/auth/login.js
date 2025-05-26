@@ -135,12 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (userData.role === false) {
           showMessage("Login berhasil! Mengalihkan ke halaman admin...", 'success');
           setTimeout(() => {
-            window.location.href = window.location.origin + "/Frontend/page/admin/dashboardAdmin.html";
+            window.location.href = window.location.origin + "../page/admin/dashboardAdmin.html";
           }, 1500);
         } else {
           showMessage("Login berhasil! Mengalihkan ke halaman pengguna...", 'success');
           setTimeout(() => {
-            window.location.href = window.location.origin + "/Frontend/page/user/dashboardUser.html";
+            window.location.href = window.location.origin + "../page/user/dashboardUser.html";
           }, 1500);
         }
       } else {
