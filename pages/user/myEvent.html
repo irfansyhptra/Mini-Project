@@ -12,51 +12,613 @@
         rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
-    <link rel="stylesheet" href="../../assets/css/myEvent.css">
 </head>
+<style>
+    :root {
+        --primary-color: #071739;
+        --secondary-color: #b71c1c;
+        --light-color: #778899;
+        --dark-color: #4b6382;
+        --white: #ffffff;
+        --light-grey: #f5f5f5;
+        --dark-grey: #333333;
+        --medium-grey: #757575;
+        --border-color: #e0e0e0;
+    }
+
+    /*--------------------------------------------------------------
+# Event List & Card Styling
+--------------------------------------------------------------*/
+    .event-list-section {
+        margin-top: 1.5rem;
+    }
+
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .event-card-item {
+        background-color: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .event-card-item:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-card-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .event-card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .event-card-item:hover .event-card-image {
+        transform: scale(1.05);
+    }
+
+    .event-card-status {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--white);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .status-pending {
+        background: linear-gradient(45deg, #f39c12, #e67e22);
+    }
+
+    .status-approved {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+    }
+
+    .status-rejected {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+    }
+
+    .status-cancelled {
+        background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+    }
+
+    .status-upcoming {
+        background: linear-gradient(45deg, #3498db, #2980b9);
+    }
+
+    .status-ongoing {
+        background: linear-gradient(45deg, #1abc9c, #16a085);
+    }
+
+    .status-completed {
+        background: linear-gradient(45deg, #9b59b6, #8e44ad);
+    }
+
+    .event-card-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--dark-grey);
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .event-card-date-location,
+    .event-card-participants,
+    .event-card-category {
+        font-size: 0.9rem;
+        color: var(--medium-grey);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .event-card-date-location i,
+    .event-card-participants i,
+    .event-card-category i {
+        margin-right: 0.6rem;
+        color: var(--primary-color);
+        width: 18px;
+        text-align: center;
+    }
+
+    .event-card-actions {
+        padding: 1.5rem;
+        padding-top: 1rem;
+        display: flex;
+        gap: 0.75rem;
+        border-top: 1px solid var(--border-color);
+        margin-top: auto;
+    }
+
+    .event-card-actions .btn {
+        flex-grow: 1;
+        font-size: 0.85rem;
+    }
+
+    /*--------------------------------------------------------------
+# Filters Section Styling
+--------------------------------------------------------------*/
+    .filters-section {
+        background-color: var(--white);
+        border-radius: 10px;
+        padding: 1.8rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .filter-group-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        align-items: center;
+    }
+
+    .search-control {
+        position: relative;
+        flex-grow: 1;
+        min-width: 280px;
+    }
+
+    .search-icon {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        color: var(--medium-grey);
+        font-size: 0.9rem;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: 'Poppins', sans-serif;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background-color: var(--white);
+    }
+
+    .search-control .form-input {
+        padding-left: 3rem;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(7, 23, 57, 0.25);
+        outline: none;
+    }
+
+    .select-filters-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .filter-select {
+        min-width: 200px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0aec0'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.2em 1.2em;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem;
+    }
+
+    /*--------------------------------------------------------------
+# Loading & Empty States
+--------------------------------------------------------------*/
+    .loading-indicator,
+    .empty-state-container {
+        text-align: center;
+        padding: 4rem 1rem;
+        color: var(--medium-grey);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+    }
+
+    .spinner {
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border-left-color: var(--primary-color);
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 1.5rem;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--medium-grey);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.75rem;
+        color: var(--dark-grey);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+    }
+
+    .empty-state-message {
+        font-size: 1.05rem;
+        margin-bottom: 2rem;
+    }
+
+    /*--------------------------------------------------------------
+# Responsive Design
+--------------------------------------------------------------*/
+    @media (max-width: 992px) {
+
+        .filter-group-wrapper,
+        .select-filters-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .event-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .event-card-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .event-card-actions .btn {
+            width: 100%;
+        }
+
+        .event-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .filters-section {
+            padding: 1.2rem;
+        }
+
+        .form-input,
+        .form-select {
+            font-size: 0.9rem;
+        }
+    }
+
+    /*--------------------------------------------------------------
+# Modal Styling
+--------------------------------------------------------------*/
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+    }
+
+    .modal-dialog {
+        background-color: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow: hidden;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .modal.show .modal-dialog {
+        transform: translateY(0);
+    }
+
+    .modal-content-inner {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-header-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--light-grey);
+    }
+
+    .modal-main-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark-grey);
+        margin: 0;
+    }
+
+    .modal-close-button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--medium-grey);
+        cursor: pointer;
+        padding: 0.5rem;
+        line-height: 1;
+        transition: color 0.2s ease;
+    }
+
+    .modal-close-button:hover {
+        color: var(--secondary-color);
+    }
+
+    .modal-body-section {
+        padding: 1.5rem;
+        overflow-y: auto;
+        max-height: calc(90vh - 140px);
+    }
+
+    .modal-footer-section {
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        background-color: var(--light-grey);
+    }
+
+    /* Form Elements in Modal */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--dark-grey);
+        margin-bottom: 0.5rem;
+    }
+
+    .required-asterisk {
+        color: var(--secondary-color);
+        margin-left: 0.2rem;
+    }
+
+    .form-input-modal,
+    .form-textarea-modal,
+    .form-select-modal {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: 'Poppins', sans-serif;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background-color: var(--white);
+    }
+
+    .form-textarea-modal {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-input-modal:focus,
+    .form-textarea-modal:focus,
+    .form-select-modal:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(7, 23, 57, 0.1);
+        outline: none;
+    }
+
+    .form-row-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .form-text-muted {
+        font-size: 0.8rem;
+        color: var(--medium-grey);
+        margin-top: 0.5rem;
+    }
+
+    /* Delete Confirmation Modal */
+    .modal-dialog.modal-sm {
+        max-width: 400px;
+    }
+
+    /* Responsive Modal */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            width: 95%;
+            margin: 1rem;
+        }
+
+        .modal-header-section,
+        .modal-body-section,
+        .modal-footer-section {
+            padding: 1rem;
+        }
+
+        .form-row-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 
 <body>
-    <div class="dashboard-layout">
+    <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <a href="../../index.html" class="sidebar-logo-link">
-                    <i class="fas fa-calendar-check logo-icon"></i>
-                    <span class="logo-text">Eventory</span>
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventory</span>
                 </a>
             </div>
-            <nav class="sidebar-nav">
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="../../assets/image/default-avatar.png" alt="user-avatar" id="user-avatar-sidebar">
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="user-name-sidebar">Nama Pengguna</div>
+                    <div class="user-role">Pengguna</div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label">Menu Utama</div>
                 <ul>
-                    <li><a href="dashboardUser.html"><i class="fas fa-tachometer-alt nav-icon"></i> Dashboard</a></li>
-                    <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt nav-icon"></i> Event
-                            Saya</a></li>
-                    <li><a href="allEvents.html"><i class="fas fa-compass nav-icon"></i> Jelajahi Event</a></li>
-                    <li><a href="profileUser.html"><i class="fas fa-user nav-icon"></i> Profil</a></li>
-                    <li><a href="#" id="logout-btn-sidebar"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a></li>
+                    <li>
+                        <a href="dashboardUser.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myEvent.html" class="active">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="menu-text">Event Saya</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="allEvents.html">
+                            <i class="fas fa-compass"></i>
+                            <span class="menu-text">Jelajahi Event</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">Tiket Saya</span>
+                        </a>
+                    </li>
                 </ul>
-            </nav>
+
+                <div class="menu-label">Lainnya</div>
+                <ul>
+                    <li>
+                        <a href="profileUser.html">
+                            <i class="fas fa-user"></i>
+                            <span class="menu-text">Profil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">Pengaturan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="menu-text">Bantuan</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="sidebar-footer">
-                <p>&copy; <span id="current-year"></span> Eventory. All rights reserved.</p>
+                <a href="#" id="logout-btn-sidebar">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
             </div>
         </aside>
 
-        <div class="main-content-wrapper">
-            <header class="top-nav">
-                <button id="menu-toggle" class="menu-toggle-btn" aria-label="Toggle Menu">
+        <div class="main-content">
+            <header class="dashboard-header">
+                <button class="menu-toggle" id="menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="top-nav-actions">
-                    <div class="user-profile-dropdown">
-                        <button id="user-dropdown-toggle" class="user-dropdown-toggle-btn" aria-expanded="false">
-                            <img src="../../assets/image/default-avatar.png" alt="User Avatar" class="user-avatar-nav"
-                                id="user-avatar-top-nav">
-                            <span class="user-name-nav" id="user-name-top-nav">Nama Pengguna</span>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </button>
-                        <div id="user-dropdown-menu" class="dropdown-menu-content">
-                            <a href="profileUser.html"><i class="fas fa-user-circle"></i> Profil Saya</a>
-                            <a href="settings.html"><i class="fas fa-cog"></i> Pengaturan Akun</a>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari event...">
+                </div>
+
+                <div class="header-actions">
+                    <button>
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+
+                    <div class="user-dropdown">
+                        <div class="dropdown-toggle" id="user-dropdown-toggle">
+                            <img src="../../assets/image/default-avatar.png" alt="User Avatar" id="user-avatar-header">
+                            <span id="user-name-header">Nama Pengguna</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+
+                        <div class="dropdown-menu" id="user-dropdown-menu">
+                            <a href="profileUser.html">
+                                <i class="fas fa-user"></i> Profil Saya
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" id="logout-btn-dropdown"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                            <a href="#" id="logout-btn-dropdown">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </a>
                         </div>
                     </div>
                 </div>
