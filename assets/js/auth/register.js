@@ -1,329 +1,150 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Element references
-  const elements = {
-    form: document.getElementById("signup-form"),
-    name: document.getElementById("fullName"),
-    username: document.getElementById("userName"),
-    email: document.getElementById("email"),
-    phone: document.getElementById("phone"),
-    password: document.getElementById("password"),
-    confirmPassword: document.getElementById("confirmPassword"),
-    terms: document.getElementById("terms"),
-    submitButton: document.getElementById("signup-button"),
-    errorContainer: document.getElementById("signup-error"),
-    successContainer: document.getElementById("signup-success"),
-    loadingSpinner: document.getElementById("signup-loading"),
-    buttonText: document.getElementById("signup-button-text"),
-    passwordToggles: document.querySelectorAll(".toggle-password")
-  };
+  const signupForm = document.getElementById("signup-form");
+  const nameInput = document.getElementById("fullName");
+  const userNameInput = document.getElementById("userName");
+  const emailInput = document.getElementById("email");
+  const phoneInput = document.getElementById("phone");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const agreeTermsCheckbox = document.getElementById("terms");
+  const submitButton = document.getElementById("submit-button");
+  const passwordToggles = document.querySelectorAll(".toggle-password");
 
-  // Validation patterns
-  const patterns = {
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-    phone: /^[0-9]{10,13}$/
-  };
-
-  // Initialize form
-  function initializeForm() {
-    if (elements.submitButton) {
-      elements.submitButton.disabled = true;
-    }
-
-    // Add event listeners
-    addEventListeners();
+  // Set button disabled secara default
+  if (submitButton) {
+    submitButton.disabled = true;
   }
 
-  // Add all event listeners
-  function addEventListeners() {
-    // Terms checkbox listener
-    if (elements.terms && elements.submitButton) {
-      elements.terms.addEventListener("change", () => {
-        elements.submitButton.disabled = !elements.terms.checked;
-      });
-    }
-
-    // Password toggle listeners
-    elements.passwordToggles.forEach(toggle => {
-      toggle.addEventListener("click", handlePasswordToggle);
+  // Enable/disable button based on agreement checkbox
+  if (agreeTermsCheckbox) {
+    agreeTermsCheckbox.addEventListener("change", () => {
+      if (submitButton) {
+        submitButton.disabled = !agreeTermsCheckbox.checked;
+      }
     });
-
-    // Password validation listeners
-    if (elements.password) {
-      elements.password.addEventListener("input", handlePasswordInput);
-    }
-
-    if (elements.confirmPassword) {
-      elements.confirmPassword.addEventListener("input", handleConfirmPasswordInput);
-    }
-
-    // Form submission
-    if (elements.form) {
-      elements.form.addEventListener("submit", handleFormSubmit);
-    }
   }
 
-  // Password toggle handler
-  function handlePasswordToggle() {
-    const input = this.previousElementSibling;
-    const type = input.getAttribute("type") === "password" ? "text" : "password";
-    input.setAttribute("type", type);
-    
-    const icon = this.querySelector("i");
-    if (icon) {
-      icon.classList.toggle("fa-eye");
-      icon.classList.toggle("fa-eye-slash");
-    }
-  }
-
-  // Password input handler
-  function handlePasswordInput() {
-    const value = this.value.trim();
-    if (!value) {
-      removeError(this);
-    } else if (!patterns.password.test(value)) {
-      setError(this, "Password minimal 8 karakter dan mengandung huruf & angka");
-    } else {
-      removeError(this);
-    }
-    
-    // Check confirm password if it has content
-    if (elements.confirmPassword.value.trim()) {
-      validateConfirmPassword();
-    }
-  }
-
-  // Confirm password input handler
-  function handleConfirmPasswordInput() {
-    validateConfirmPassword();
-  }
-
-  // Validate confirm password
-  function validateConfirmPassword() {
-    const value = elements.confirmPassword.value.trim();
-    if (!value) {
-      removeError(elements.confirmPassword);
-    } else if (value !== elements.password.value.trim()) {
-      setError(elements.confirmPassword, "Konfirmasi password tidak cocok");
-    } else {
-      removeError(elements.confirmPassword);
-    }
-  }
-
-  // Form submission handler
-  async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    // Reset form state
-    resetFormState();
-    
-    // Validate form
-    if (!validateForm()) {
-      return;
-    }
-    
-    try {
-      setLoading(true);
+  // Toggle password visibility
+  passwordToggles.forEach((toggle) => {
+    toggle.addEventListener("click", function () {
+      const input = this.previousElementSibling;
+      const type = input.getAttribute("type") === "password" ? "text" : "password";
+      input.setAttribute("type", type);
       
-      const userData = prepareUserData();
-      const response = await sendRegistrationRequest(userData);
+      // Toggle icon
+      const icon = this.querySelector("i");
+      if (icon) {
+        icon.classList.toggle("fa-eye");
+        icon.classList.toggle("fa-eye-slash");
+      }
+    });
+  });
+
+  // Real-time input validations
+  if (nameInput) {
+    nameInput.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        setError(this, "Nama lengkap tidak boleh kosong");
+      } else if (this.value.trim().length < 3) {
+        setError(this, "Nama lengkap minimal 3 karakter");
+      } else {
+        removeError(this);
+      }
+    });
+  }
+
+  if (userNameInput) {
+    userNameInput.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        setError(this, "Username tidak boleh kosong");
+      } else if (this.value.trim().length < 4) {
+        setError(this, "Username minimal 4 karakter");
+      } else if (!/^[a-zA-Z0-9_]+$/.test(this.value.trim())) {
+        setError(this, "Username hanya boleh mengandung huruf, angka, dan underscore");
+      } else {
+        removeError(this);
+      }
+    });
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        setError(this, "Email tidak boleh kosong");
+      } else if (!validateEmail(this.value.trim())) {
+        setError(this, "Format email tidak valid");
+      } else {
+        removeError(this);
+      }
+    });
+  }
+
+  // Phone number input validation (numbers only)
+  if (phoneInput) {
+    phoneInput.addEventListener("input", function() {
+      this.value = this.value.replace(/[^0-9]/g, "");
+      // Limit to 13 digits
+      if (this.value.length > 13) {
+        this.value = this.value.slice(0, 13);
+      }
       
-      if (response.ok) {
-        handleSuccessfulRegistration(userData);
+      if (this.value.trim() === "") {
+        setError(this, "Nomor telepon tidak boleh kosong");
+      } else if (!validatePhone(this.value.trim())) {
+        setError(this, "Format nomor telepon tidak valid (10-13 digit)");
       } else {
-        handleRegistrationError(await response.json());
+        removeError(this);
       }
-    } catch (error) {
-      handleError(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Reset form state
-  function resetFormState() {
-    document.querySelectorAll(".error-message").forEach(el => {
-      el.textContent = "";
     });
-    
-    elements.form.querySelectorAll("input, select, textarea").forEach(input => {
-      input.classList.remove("border-red-500");
+  }
+
+  // Password validation
+  if (passwordInput) {
+    passwordInput.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        setError(this, "Password tidak boleh kosong");
+      } else if (!validatePassword(this.value.trim())) {
+        setError(this, "Password minimal 8 karakter dan mengandung huruf & angka");
+      } else {
+        removeError(this);
+      }
+      
+      // Check confirm password if it has content
+      if (confirmPasswordInput && confirmPasswordInput.value.trim() !== "") {
+        if (confirmPasswordInput.value.trim() !== this.value.trim()) {
+          setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
+        } else {
+          removeError(confirmPasswordInput);
+        }
+      }
     });
-    
-    if (elements.errorContainer) elements.errorContainer.classList.add("hidden");
-    if (elements.successContainer) elements.successContainer.classList.add("hidden");
   }
 
-  // Validate form
-  function validateForm() {
-    let isValid = true;
-
-    // Name validation
-    if (!elements.name.value.trim()) {
-      setError(elements.name, "Nama lengkap tidak boleh kosong");
-      isValid = false;
-    }
-
-    // Username validation
-    if (!elements.username.value.trim()) {
-      setError(elements.username, "Username tidak boleh kosong");
-      isValid = false;
-    }
-
-    // Email validation
-    if (!elements.email.value.trim()) {
-      setError(elements.email, "Email tidak boleh kosong");
-      isValid = false;
-    } else if (!patterns.email.test(elements.email.value.trim())) {
-      setError(elements.email, "Format email tidak valid");
-      isValid = false;
-    }
-
-    // Phone validation
-    if (!elements.phone.value.trim()) {
-      setError(elements.phone, "Nomor telepon tidak boleh kosong");
-      isValid = false;
-    } else if (!patterns.phone.test(elements.phone.value.trim())) {
-      setError(elements.phone, "Nomor telepon tidak valid (10-13 digit)");
-      isValid = false;
-    }
-
-    // Password validation
-    if (!elements.password.value.trim()) {
-      setError(elements.password, "Password tidak boleh kosong");
-      isValid = false;
-    } else if (!patterns.password.test(elements.password.value.trim())) {
-      setError(elements.password, "Password minimal 8 karakter dan mengandung huruf & angka");
-      isValid = false;
-    }
-
-    // Confirm password validation
-    if (!elements.confirmPassword.value.trim()) {
-      setError(elements.confirmPassword, "Konfirmasi password tidak boleh kosong");
-      isValid = false;
-    } else if (elements.confirmPassword.value.trim() !== elements.password.value.trim()) {
-      setError(elements.confirmPassword, "Konfirmasi password tidak cocok");
-      isValid = false;
-    }
-
-    // Terms validation
-    if (!elements.terms.checked) {
-      showError("Anda harus menyetujui syarat & ketentuan");
-      isValid = false;
-    }
-
-    return isValid;
-  }
-
-  // Prepare user data
-  function prepareUserData() {
-    return {
-      fullName: elements.name.value.trim(),
-      username: elements.username.value.trim(),
-      email: elements.email.value.trim().toLowerCase(),
-      password: elements.password.value,
-      confirmPassword: elements.confirmPassword.value,
-      phoneNumber: elements.phone.value.trim(),
-      role: "user"
-    };
-  }
-
-  // Send registration request
-  async function sendRegistrationRequest(userData) {
-    try {
-      const response = await fetch("https://back-end-eventory.vercel.app/api/Users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(userData)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
-
-      return response;
-    } catch (error) {
-      console.error("Registration request failed:", error);
-      throw error;
-    }
-  }
-
-  // Handle successful registration
-  function handleSuccessfulRegistration(userData) {
-    showSuccess("Pendaftaran berhasil! Mengalihkan ke halaman login...");
-    elements.form.reset();
-    
-    // Store success information
-    sessionStorage.setItem("registrationSuccess", "true");
-    sessionStorage.setItem("registeredEmail", userData.email);
-    
-    // Redirect to login page
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1500);
-  }
-
-  // Handle registration error
-  function handleRegistrationError(result) {
-    if (result.message) {
-      if (result.message.toLowerCase().includes("email")) {
-        setError(elements.email, "Email sudah terdaftar");
-      } else if (result.message.toLowerCase().includes("username")) {
-        setError(elements.username, "Username sudah digunakan");
+  if (confirmPasswordInput) {
+    confirmPasswordInput.addEventListener("input", function() {
+      if (this.value.trim() === "") {
+        setError(this, "Konfirmasi password tidak boleh kosong");
+      } else if (this.value.trim() !== passwordInput.value.trim()) {
+        setError(this, "Konfirmasi password tidak cocok");
       } else {
-        showError(result.message);
+        removeError(this);
       }
-    } else {
-      showError("Terjadi kesalahan saat pendaftaran");
-    }
+    });
   }
 
-  // Handle general error
-  function handleError(error) {
-    console.error("Error during registration:", error);
-    showError(error.message || "Terjadi kesalahan pada sistem. Silakan coba lagi nanti.");
+  // Validation functions
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  // Set loading state
-  function setLoading(isLoading) {
-    if (elements.loadingSpinner && elements.buttonText) {
-      if (isLoading) {
-        elements.loadingSpinner.classList.remove("hidden");
-        elements.buttonText.classList.add("hidden");
-        elements.submitButton.disabled = true;
-      } else {
-        elements.loadingSpinner.classList.add("hidden");
-        elements.buttonText.classList.remove("hidden");
-        elements.submitButton.disabled = !elements.terms.checked;
-      }
-    }
+  function validatePassword(password) {
+    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   }
 
-  // Show error message
-  function showError(message) {
-    if (elements.errorContainer) {
-      elements.errorContainer.textContent = message;
-      elements.errorContainer.classList.remove("hidden");
-      if (elements.successContainer) elements.successContainer.classList.add("hidden");
-      elements.errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+  function validatePhone(phone) {
+    return /^[0-9]{10,13}$/.test(phone);
   }
 
-  // Show success message
-  function showSuccess(message) {
-    if (elements.successContainer) {
-      elements.successContainer.textContent = message;
-      elements.successContainer.classList.remove("hidden");
-      if (elements.errorContainer) elements.errorContainer.classList.add("hidden");
-      elements.successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }
-
-  // Set error for input
   function setError(input, message) {
     if (!input) return;
     
@@ -341,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
     input.classList.add("border-red-500");
   }
 
-  // Remove error from input
   function removeError(input) {
     if (!input) return;
     
@@ -355,6 +175,193 @@ document.addEventListener("DOMContentLoaded", function () {
     input.classList.remove("border-red-500");
   }
 
-  // Initialize the form
-  initializeForm();
+  function showError(message) {
+    if (errorContainer) {
+      errorContainer.textContent = message;
+      errorContainer.classList.remove("hidden");
+      if (successContainer) successContainer.classList.add("hidden");
+      
+      // Scroll to error container
+      errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function showSuccess(message) {
+    if (successContainer) {
+      successContainer.textContent = message;
+      successContainer.classList.remove("hidden");
+      if (errorContainer) errorContainer.classList.add("hidden");
+      
+      // Scroll to success container
+      successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function setLoading(isLoading) {
+    if (loadingSpinner && buttonText) {
+      if (isLoading) {
+        loadingSpinner.classList.remove("hidden");
+        buttonText.classList.add("hidden");
+        submitButton.disabled = true;
+      } else {
+        loadingSpinner.classList.add("hidden");
+        buttonText.classList.remove("hidden");
+        submitButton.disabled = !agreeTermsCheckbox.checked;
+      }
+    }
+  }
+
+  // Form submission
+  if (signupForm) {
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll(".error-message").forEach((el) => {
+        el.textContent = "";
+      });
+      
+      // Reset input border colors
+      signupForm.querySelectorAll("input").forEach(input => {
+        input.classList.remove("border-red-500");
+      });
+      
+      if (errorContainer) errorContainer.classList.add("hidden");
+      if (successContainer) successContainer.classList.add("hidden");
+      
+      // Validasi form
+      let isValid = true;
+      
+      // Nama validation
+      if (!nameInput || !nameInput.value.trim()) {
+        setError(nameInput, "Nama lengkap tidak boleh kosong");
+        isValid = false;
+      } else if (nameInput.value.trim().length < 3) {
+        setError(nameInput, "Nama lengkap minimal 3 karakter");
+        isValid = false;
+      }
+
+      // Username validation
+      if (!userNameInput || !userNameInput.value.trim()) {
+        setError(userNameInput, "Username tidak boleh kosong");
+        isValid = false;
+      } else if (userNameInput.value.trim().length < 4) {
+        setError(userNameInput, "Username minimal 4 karakter");
+        isValid = false;
+      } else if (!/^[a-zA-Z0-9_]+$/.test(userNameInput.value.trim())) {
+        setError(userNameInput, "Username hanya boleh mengandung huruf, angka, dan underscore");
+        isValid = false;
+      }
+      
+      // Email validation
+      if (!emailInput || !emailInput.value.trim()) {
+        setError(emailInput, "Email tidak boleh kosong");
+        isValid = false;
+      } else if (!validateEmail(emailInput.value.trim())) {
+        setError(emailInput, "Format email tidak valid");
+        isValid = false;
+      }
+      
+      // Password validation
+      if (!passwordInput || !passwordInput.value.trim()) {
+        setError(passwordInput, "Password tidak boleh kosong");
+        isValid = false;
+      } else if (!validatePassword(passwordInput.value.trim())) {
+        setError(passwordInput, "Password minimal 8 karakter dan mengandung huruf & angka");
+        isValid = false;
+      }
+      
+      // Confirm password validation
+      if (!confirmPasswordInput || !confirmPasswordInput.value.trim()) {
+        setError(confirmPasswordInput, "Konfirmasi password tidak boleh kosong");
+        isValid = false;
+      } else if (confirmPasswordInput.value.trim() !== passwordInput.value.trim()) {
+        setError(confirmPasswordInput, "Konfirmasi password tidak cocok");
+        isValid = false;
+      }
+
+      // Phone validation
+      if (!phoneInput || !phoneInput.value.trim()) {
+        setError(phoneInput, "Nomor telepon tidak boleh kosong");
+        isValid = false;
+      } else if (!validatePhone(phoneInput.value.trim())) {
+        setError(phoneInput, "Format nomor telepon tidak valid (10-13 digit)");
+        isValid = false;
+      }
+
+      // Agreement validation
+      if (!agreeTermsCheckbox || !agreeTermsCheckbox.checked) {
+        setError(agreeTermsCheckbox, "Harus menyetujui syarat & ketentuan");
+        isValid = false;
+      }
+      
+      if (isValid) {
+        // Disable submit button
+        if (submitButton) {
+          submitButton.disabled = true;
+        }
+
+        // Show loading state
+        const buttonText = submitButton.querySelector(".button-text");
+        const loadingSpinner = submitButton.querySelector(".loading-spinner");
+        if (buttonText) buttonText.classList.add("hidden");
+        if (loadingSpinner) loadingSpinner.classList.remove("hidden");
+
+        try {
+          // Prepare data for API
+          const userData = {
+            fullName: nameInput.value.trim(),
+            userName: userNameInput.value.trim(),
+            email: emailInput.value.trim().toLowerCase(),
+            password: passwordInput.value,
+            confirmPassword: confirmPasswordInput.value,
+            phone: phoneInput.value.trim(),
+            role: "true"  // Set default role as true
+          };
+
+          console.log('Sending data:', userData);
+          
+          // Send registration request
+          const response = await fetch(
+            "https://back-end-eventory.vercel.app/auth/register",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              },
+              body: JSON.stringify(userData)
+            }
+          );
+          
+          // Get response data
+          const result = await response.json();
+          console.log('Response:', result);
+          
+          // Handle response
+          if (response.ok) {
+            alert("Pendaftaran berhasil!");
+            window.location.href = "login.html";
+          } else {
+            // Check for specific error messages from server
+            if (result.message && result.message.toLowerCase().includes("email")) {
+              setError(emailInput, result.message || "Email sudah terdaftar");
+            } else if (result.message && result.message.toLowerCase().includes("username")) {
+              setError(userNameInput, result.message || "Username sudah terdaftar");
+            } else {
+              throw new Error(result.message || "Terjadi kesalahan saat pendaftaran");
+            }
+          }
+        } catch (error) {
+          console.error("Error during registration:", error);
+          alert(error.message || "Terjadi kesalahan pada sistem. Silakan coba lagi nanti.");
+        } finally {
+          // Reset loading state
+          if (buttonText) buttonText.classList.remove("hidden");
+          if (loadingSpinner) loadingSpinner.classList.add("hidden");
+          if (submitButton) submitButton.disabled = false;
+        }
+      }
+    });
+  }
 });
