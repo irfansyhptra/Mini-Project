@@ -8,11 +8,6 @@ function isValidPassword(password) {
   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
 }
 
-// Fungsi validasi NIK
-function isValidNIK(nik) {
-  return /^\d{16}$/.test(nik);
-}
-
 // Fungsi validasi nomor telepon
 function isValidPhone(phone) {
   return /^[0-9]{10,13}$/.test(phone);

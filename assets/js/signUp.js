@@ -163,6 +163,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
+  function validatePhone(phone) {
+    return /^[0-9]{10,13}$/.test(phone);
+  }
+
   function validatePassword(password) {
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   }
