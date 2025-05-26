@@ -135,12 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (userData.role === true) {
           showMessage("Login berhasil! Mengalihkan ke halaman admin...", 'success');
           setTimeout(() => {
-            window.location.href = window.location.origin + "/SILAPOR-FrontEnd/page/dashboardAdmin.html";
+            window.location.href = window.location.origin + "/Frontend/page/admin/dashboardAdmin.html";
           }, 1500);
         } else {
           showMessage("Login berhasil! Mengalihkan ke halaman pengguna...", 'success');
           setTimeout(() => {
-            window.location.href = window.location.origin + "/SILAPOR-FrontEnd/page/berandaUser.html";
+            window.location.href = window.location.origin + "/Frontend/page/user/dashboardUser.html";
           }, 1500);
         }
       } else {
