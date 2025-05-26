@@ -19,10 +19,10 @@
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="dashboardUser.html"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt"></i> Event Saya</a></li>
                 <li><a href="allEvents.html"><i class="fas fa-list"></i> Semua Event</a></li>
-                <li><a href="profile.html"><i class="fas fa-user"></i> Profil</a></li>
+                <li><a href="profileUser.html"><i class="fas fa-user"></i> Profil</a></li>
             </ul>
         </nav>
     </div>
@@ -41,7 +41,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div id="user-dropdown-menu" class="user-dropdown-menu">
-                    <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                    <a href="profileUser.html"><i class="fas fa-user"></i> Profil</a>
                     <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</a>
                 </div>
             </div>
@@ -56,9 +56,72 @@
                 </button>
             </div>
 
+            <!-- Filters Section -->
+            <div class="filters-section" data-aos="fade-up">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Cari event...">
+                </div>
+                <div class="filter-group">
+                    <select id="status-filter" class="filter-select">
+                        <option value="">Semua Status</option>
+                        <option value="pending">Menunggu Verifikasi</option>
+                        <option value="approved">Terverifikasi</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="cancelled">Dibatalkan</option>
+                    </select>
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Semua Kategori</option>
+                        <option value="Konferensi">Konferensi</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Pameran">Pameran</option>
+                        <option value="Konser">Konser</option>
+                        <option value="Festival">Festival</option>
+                        <option value="Olahraga">Olahraga</option>
+                        <option value="Networking">Networking</option>
+                    </select>
+                    <select id="sort-filter" class="filter-select">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="upcoming">Mendatang</option>
+                        <option value="title">Judul (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Event List -->
             <div id="event-list" class="event-list" data-aos="fade-up">
                 <!-- Events will be loaded here dynamically -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" data-aos="fade-up">
+                <button id="prev-page" class="btn btn-outline" disabled>
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <div class="page-info">
+                    Halaman <span id="current-page">1</span> dari <span id="total-pages">1</span>
+                </div>
+                <button id="next-page" class="btn btn-outline" disabled>
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>Memuat event...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <i class="fas fa-calendar-times fa-3x"></i>
+                <h3>Tidak Ada Event</h3>
+                <p>Anda belum membuat event apapun.</p>
+                <button id="create-first-event" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Buat Event Pertama
+                </button>
             </div>
         </div>
     </div>
@@ -72,65 +135,101 @@
             </div>
             <form id="create-event-form">
                 <div class="form-group">
-                    <label for="event-title">Judul Event</label>
+                    <label for="event-title">Judul Event <span class="required">*</span></label>
                     <input type="text" id="event-title" name="title" required>
                 </div>
                 <div class="form-group">
-                    <label for="event-description">Deskripsi</label>
+                    <label for="event-description">Deskripsi <span class="required">*</span></label>
                     <textarea id="event-description" name="description" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="event-date">Tanggal</label>
-                    <input type="date" id="event-date" name="date" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-date">Tanggal <span class="required">*</span></label>
+                        <input type="date" id="event-date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-time">Waktu <span class="required">*</span></label>
+                        <input type="time" id="event-time" name="time" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="event-time">Waktu</label>
-                    <input type="time" id="event-time" name="time" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-location">Lokasi</label>
+                    <label for="event-location">Lokasi <span class="required">*</span></label>
                     <input type="text" id="event-location" name="location" required>
                 </div>
-                <div class="form-group">
-                    <label for="event-category">Kategori</label>
-                    <select id="event-category" name="kategori" required>
-                        <option value="">Pilih Kategori</option>
-                        <option value="Konferensi">Konferensi</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Seminar">Seminar</option>
-                        <option value="Pameran">Pameran</option>
-                        <option value="Konser">Konser</option>
-                        <option value="Festival">Festival</option>
-                        <option value="Olahraga">Olahraga</option>
-                        <option value="Networking">Networking</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-category">Kategori <span class="required">*</span></label>
+                        <select id="event-category" name="kategori" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="Konferensi">Konferensi</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Seminar">Seminar</option>
+                            <option value="Pameran">Pameran</option>
+                            <option value="Konser">Konser</option>
+                            <option value="Festival">Festival</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Networking">Networking</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="max-participants">Maksimal Peserta <span class="required">*</span></label>
+                        <input type="number" id="max-participants" name="maxParticipants" min="1" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="event-tickets">Jenis Tiket</label>
+                    <label for="event-tickets">Jenis Tiket <span class="required">*</span></label>
                     <select id="event-tickets" name="ticket" required>
-                        <option value="">Pilih Jenis Tiket</option>
                         <option value="Gratis">Gratis</option>
                         <option value="Berbayar">Berbayar</option>
                     </select>
                 </div>
                 <div id="ticket-price-group" class="form-group" style="display: none;">
-                    <label for="ticket-price">Harga Tiket</label>
+                    <label for="ticket-price">Harga Tiket <span class="required">*</span></label>
                     <input type="number" id="ticket-price" name="ticketPrice" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="max-participants">Maksimal Peserta</label>
-                    <input type="number" id="max-participants" name="maxParticipants" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-images">Gambar Event</label>
-                    <input type="file" id="event-images" name="images" multiple accept="image/*" required>
-                    <small>Upload minimal 1 gambar (maksimal 10 gambar)</small>
+                    <label for="event-images">Gambar Event <span class="required">*</span></label>
+                    <input type="file" id="event-images" name="images" accept="image/*" required>
+                    <small>Upload minimal 1 gambar (maksimal 10MB)</small>
                 </div>
                 <div class="form-actions">
                     <button type="button" id="cancel-event" class="btn btn-secondary">Batal</button>
                     <button type="submit" class="btn btn-primary">Buat Event</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-confirmation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Konfirmasi Hapus</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-delete">Batal</button>
+                <button class="btn btn-danger" id="confirm-delete">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Memproses...</p>
+    </div>
+
+    <!-- Success Overlay -->
+    <div id="success-overlay" class="success-overlay" style="display: none;">
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Berhasil!</h3>
+            <p id="success-message">Event berhasil dibuat.</p>
+            <button id="success-close" class="btn btn-primary">Tutup</button>
         </div>
     </div>
 
