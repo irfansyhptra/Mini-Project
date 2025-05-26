@@ -1,4 +1,3 @@
-// Constants
 const API_URL = 'https://back-end-eventory.vercel.app/event/createEvent';
 const TOKEN = localStorage.getItem('token');
 

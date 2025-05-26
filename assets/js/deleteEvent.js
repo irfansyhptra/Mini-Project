@@ -1,4 +1,3 @@
-// Constants
 const API_URL = 'http://localhost:3000';
 const TOKEN = localStorage.getItem('token');
 
