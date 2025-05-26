@@ -12,6 +12,7 @@
         rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
+    <link rel="stylesheet" href="../../assets/css/myEvent.css">
     <style>
         :root {
             --primary-color: #071739;
@@ -410,12 +411,10 @@
                 transform: scale(1);
                 opacity: 0.8;
             }
-
             50% {
                 transform: scale(1.05);
                 opacity: 1;
             }
-
             100% {
                 transform: scale(1);
                 opacity: 0.8;
@@ -703,7 +702,6 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -718,17 +716,9 @@
         }
 
         @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         /* Notification Area */
@@ -757,7 +747,6 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
-
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -773,7 +762,6 @@
                 transform: translateX(0);
                 opacity: 1;
             }
-
             to {
                 transform: translateX(100%);
                 opacity: 0;
@@ -863,7 +851,6 @@
             from {
                 transform: scaleX(1);
             }
-
             to {
                 transform: scaleX(0);
             }
@@ -891,7 +878,6 @@
 
         /* Responsive Design */
         @media (max-width: 992px) {
-
             .filter-group-wrapper,
             .select-filters-group {
                 flex-direction: column;
@@ -966,7 +952,6 @@
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="../../index.html" class="logo">
@@ -974,50 +959,50 @@
                     <span>Eventory</span>
                 </a>
             </div>
-    
+
             <div class="user-info">
                 <div class="user-avatar">
-                    <img src="../../assets/image/dev1.jpg" alt="user-avatar">
+                    <img src="../../assets/image/default-avatar.png" alt="user-avatar" id="user-avatar-sidebar">
                 </div>
                 <div class="user-details">
-                    <div class="user-name">Irfan</div>
+                    <div class="user-name" id="user-name-sidebar">Nama Pengguna</div>
                     <div class="user-role">Pengguna</div>
                 </div>
             </div>
-    
+
             <div class="sidebar-menu">
                 <div class="menu-label">Menu Utama</div>
                 <ul>
                     <li>
-                        <a href="#" class="active">
+                        <a href="dashboardUser.html">
                             <i class="fas fa-tachometer-alt"></i>
                             <span class="menu-text">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="myEvent.html">
+                        <a href="myEvent.html" class="active">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="menu-text">Event Saya</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#jelajahi-event">
+                        <a href="allEvents.html">
                             <i class="fas fa-compass"></i>
                             <span class="menu-text">Jelajahi Event</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#tiket-saya">
+                        <a href="#">
                             <i class="fas fa-ticket-alt"></i>
                             <span class="menu-text">Tiket Saya</span>
                         </a>
                     </li>
                 </ul>
-    
+
                 <div class="menu-label">Lainnya</div>
                 <ul>
                     <li>
-                        <a href="../../pages/user/profileUser.html">
+                        <a href="profileUser.html">
                             <i class="fas fa-user"></i>
                             <span class="menu-text">Profil</span>
                         </a>
@@ -1036,9 +1021,9 @@
                     </li>
                 </ul>
             </div>
-    
+
             <div class="sidebar-footer">
-                <a href="../../index.html">
+                <a href="#" id="logout-btn-sidebar">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Keluar</span>
                 </a>
@@ -1146,8 +1131,7 @@
                     <div id="empty-state" class="empty-state-container" style="display: none;">
                         <i class="fas fa-calendar-times empty-state-icon"></i>
                         <h3 class="empty-state-title">Anda Belum Membuat Event</h3>
-                        <p class="empty-state-message">Mulailah dengan membuat event pertama Anda untuk menampilkan
-                            acara hebat dan menarik peserta!</p>
+                        <p class="empty-state-message">Mulailah dengan membuat event pertama Anda untuk menampilkan acara hebat dan menarik peserta!</p>
                         <button id="create-first-event-btn" class="btn btn-primary btn-lg">
                             <i class="fas fa-plus"></i> Buat Event Sekarang
                         </button>
@@ -1314,7 +1298,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // Initialize AOS
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
                 once: true,
                 duration: 600,
@@ -1350,7 +1334,7 @@
             // Sidebar toggle
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar');
-
+            
             if (menuToggle && sidebar) {
                 menuToggle.addEventListener('click', () => {
                     sidebar.classList.toggle('collapsed');
@@ -1361,16 +1345,16 @@
             // User dropdown
             const userDropdownToggle = document.getElementById('user-dropdown-toggle');
             const userDropdownMenu = document.getElementById('user-dropdown-menu');
-
+            
             if (userDropdownToggle && userDropdownMenu) {
-                userDropdownToggle.addEventListener('click', function (event) {
+                userDropdownToggle.addEventListener('click', function(event) {
                     event.stopPropagation();
                     const isExpanded = this.getAttribute('aria-expanded') === 'true' || false;
                     this.setAttribute('aria-expanded', !isExpanded);
                     userDropdownMenu.classList.toggle('show');
                 });
 
-                document.addEventListener('click', function (event) {
+                document.addEventListener('click', function(event) {
                     if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
                         userDropdownToggle.setAttribute('aria-expanded', 'false');
                         userDropdownMenu.classList.remove('show');
@@ -1408,7 +1392,7 @@
             });
 
             // Escape key to close modals
-            document.addEventListener('keydown', function (event) {
+            document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     closeModal('create-event-modal');
                     closeModal('delete-confirmation-modal');
@@ -1466,18 +1450,18 @@
             if (userDataString) {
                 try {
                     const userData = JSON.parse(userDataString);
-
+                    
                     // Update sidebar user info
                     const userNameSidebar = document.getElementById('user-name-sidebar');
                     const userAvatarSidebar = document.getElementById('user-avatar-sidebar');
-
+                    
                     if (userNameSidebar) userNameSidebar.textContent = userData.name || 'Pengguna';
                     if (userAvatarSidebar && userData.avatar) userAvatarSidebar.src = userData.avatar;
-
+                    
                     // Update header user info
                     const userNameHeader = document.getElementById('user-name-header');
                     const userAvatarHeader = document.getElementById('user-avatar-header');
-
+                    
                     if (userNameHeader) userNameHeader.textContent = userData.name || 'Pengguna';
                     if (userAvatarHeader && userData.avatar) userAvatarHeader.src = userData.avatar;
                 } catch (error) {
@@ -1502,7 +1486,7 @@
             const saveEventBtn = document.getElementById('save-event-modal-btn');
 
             if (eventTicketsSelect) {
-                eventTicketsSelect.addEventListener('change', function () {
+                eventTicketsSelect.addEventListener('change', function() {
                     if (this.value === 'Berbayar') {
                         ticketPriceGroup.style.display = 'block';
                         ticketPriceInput.setAttribute('required', 'required');
@@ -1515,23 +1499,23 @@
             }
 
             if (createEventForm) {
-                createEventForm.addEventListener('submit', function (event) {
+                createEventForm.addEventListener('submit', function(event) {
                     event.preventDefault();
-
+                    
                     // Show loading overlay
                     document.getElementById('global-loading-overlay').style.display = 'flex';
-
+                    
                     // Simulate form submission
                     setTimeout(() => {
                         const eventId = document.getElementById('event-id-modal').value;
                         const isEdit = !!eventId;
-
+                        
                         document.getElementById('global-loading-overlay').style.display = 'none';
-
+                        
                         // Show success message
                         const successTitle = document.getElementById('global-success-title');
                         const successMessage = document.getElementById('global-success-message');
-
+                        
                         if (isEdit) {
                             successTitle.textContent = 'Event Berhasil Diperbarui!';
                             successMessage.textContent = 'Perubahan pada event Anda telah berhasil disimpan.';
@@ -1539,15 +1523,15 @@
                             successTitle.textContent = 'Event Berhasil Dibuat!';
                             successMessage.textContent = 'Event baru Anda telah berhasil disimpan dan akan diproses oleh admin.';
                         }
-
+                        
                         document.getElementById('global-success-overlay').style.display = 'flex';
-
+                        
                         // Close the modal
                         closeModal('create-event-modal');
-
+                        
                         // Reset form for next use
                         createEventForm.reset();
-
+                        
                         // Reload events after a delay
                         setTimeout(() => {
                             loadEvents();
@@ -1566,19 +1550,19 @@
             const statusFilter = document.getElementById('status-filter');
             const categoryFilter = document.getElementById('category-filter');
             const sortFilter = document.getElementById('sort-filter');
-
+            
             // Debounced search
             let searchTimeout;
-
+            
             if (searchInput) {
-                searchInput.addEventListener('input', function () {
+                searchInput.addEventListener('input', function() {
                     clearTimeout(searchTimeout);
                     searchTimeout = setTimeout(() => {
                         loadEvents();
                     }, 500);
                 });
             }
-
+            
             // Apply filters on change
             [statusFilter, categoryFilter, sortFilter].forEach(filter => {
                 if (filter) {
@@ -1601,24 +1585,24 @@
             const eventList = document.getElementById('event-list');
             const emptyState = document.getElementById('empty-state');
             const paginationContainer = document.querySelector('.pagination-container');
-
+            
             // Show loading state
             if (loadingState) loadingState.style.display = 'flex';
             if (eventList) eventList.style.display = 'none';
             if (emptyState) emptyState.style.display = 'none';
             if (paginationContainer) paginationContainer.style.display = 'none';
-
+            
             // Get filter values
             const searchQuery = document.getElementById('search-input')?.value || '';
             const statusFilter = document.getElementById('status-filter')?.value || '';
             const categoryFilter = document.getElementById('category-filter')?.value || '';
             const sortFilter = document.getElementById('sort-filter')?.value || 'newest';
-
+            
             // Simulate API request delay
             setTimeout(() => {
                 // Simulate getting events from API
                 let events = [];
-
+                
                 // Create some sample events
                 const sampleEvents = [
                     {
@@ -1682,27 +1666,27 @@
                         image: '../../assets/image/default-event.jpg'
                     }
                 ];
-
+                
                 // Apply filters
                 events = sampleEvents.filter(event => {
                     // Search filter
                     if (searchQuery && !event.title.toLowerCase().includes(searchQuery.toLowerCase()) && !event.location.toLowerCase().includes(searchQuery.toLowerCase())) {
                         return false;
                     }
-
+                    
                     // Status filter
                     if (statusFilter && event.status !== statusFilter) {
                         return false;
                     }
-
+                    
                     // Category filter
                     if (categoryFilter && event.category !== categoryFilter) {
                         return false;
                     }
-
+                    
                     return true;
                 });
-
+                
                 // Apply sorting
                 events.sort((a, b) => {
                     switch (sortFilter) {
@@ -1720,16 +1704,16 @@
                             return 0;
                     }
                 });
-
+                
                 // Calculate pagination
                 totalPages = Math.ceil(events.length / eventsPerPage);
                 const startIndex = (currentPage - 1) * eventsPerPage;
                 const endIndex = startIndex + eventsPerPage;
                 const paginatedEvents = events.slice(startIndex, endIndex);
-
+                
                 // Update UI with the events
                 if (loadingState) loadingState.style.display = 'none';
-
+                
                 if (events.length === 0) {
                     // Show empty state
                     if (emptyState) emptyState.style.display = 'flex';
@@ -1740,17 +1724,17 @@
                     if (eventList) {
                         eventList.style.display = 'grid';
                         eventList.innerHTML = ''; // Clear existing events
-
+                        
                         // Create event cards
                         paginatedEvents.forEach(event => {
                             const eventCard = createEventCard(event);
                             eventList.appendChild(eventCard);
                         });
-
+                        
                         // Re-initialize AOS for the new content
                         AOS.refresh();
                     }
-
+                    
                     // Update pagination
                     if (paginationContainer) {
                         paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
@@ -1771,7 +1755,7 @@
             article.className = 'event-card-item';
             article.dataset.id = event.id;
             article.dataset.aos = 'fade-up';
-
+            
             // Format date for display
             const eventDate = new Date(event.date);
             const formattedDate = new Intl.DateTimeFormat('id-ID', {
@@ -1779,7 +1763,7 @@
                 month: 'short',
                 year: 'numeric'
             }).format(eventDate);
-
+            
             // Get status label
             const statusLabels = {
                 'pending': 'Menunggu Verifikasi',
@@ -1790,9 +1774,9 @@
                 'ongoing': 'Sedang Berlangsung',
                 'completed': 'Selesai'
             };
-
+            
             const statusLabel = statusLabels[event.status] || event.status;
-
+            
             article.innerHTML = `
                 <div class="event-card-image-wrapper">
                     <img src="${event.image}" alt="${event.title}" class="event-card-image">
@@ -1823,31 +1807,31 @@
                     </button>
                 </div>
             `;
-
+            
             // Add event listeners
             const viewButton = article.querySelector('.btn-view-details');
             const editButton = article.querySelector('.btn-edit-event');
             const deleteButton = article.querySelector('.btn-delete-event');
-
+            
             if (viewButton) {
                 viewButton.addEventListener('click', () => {
                     // In a real app, redirect to event details page
                     console.log('View event:', event.id);
                 });
             }
-
+            
             if (editButton) {
                 editButton.addEventListener('click', () => {
                     openEditEventModal(event);
                 });
             }
-
+            
             if (deleteButton) {
                 deleteButton.addEventListener('click', () => {
                     openDeleteConfirmationModal(event);
                 });
             }
-
+            
             return article;
         }
 
@@ -1865,15 +1849,15 @@
             document.getElementById('event-location-modal').value = event.location;
             document.getElementById('event-category-modal').value = event.category;
             document.getElementById('max-participants-modal').value = event.maxParticipants;
-
+            
             // Set ticket type and handle price visibility
             const ticketType = event.ticketPrice > 0 ? 'Berbayar' : 'Gratis';
             const ticketSelect = document.getElementById('event-tickets-modal');
             ticketSelect.value = ticketType;
-
+            
             const ticketPriceGroup = document.getElementById('ticket-price-group-modal');
             const ticketPriceInput = document.getElementById('ticket-price-modal');
-
+            
             if (ticketType === 'Berbayar') {
                 ticketPriceGroup.style.display = 'block';
                 ticketPriceInput.setAttribute('required', 'required');
@@ -1883,7 +1867,7 @@
                 ticketPriceInput.removeAttribute('required');
                 ticketPriceInput.value = '';
             }
-
+            
             // Show the modal
             openModal('create-event-modal');
         }
@@ -1896,19 +1880,19 @@
             if (eventNameElement) {
                 eventNameElement.textContent = event.title;
             }
-
+            
             const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
             if (confirmDeleteBtn) {
                 // Remove existing listeners
                 const newConfirmBtn = confirmDeleteBtn.cloneNode(true);
                 confirmDeleteBtn.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtn);
-
+                
                 // Add new delete handler
                 newConfirmBtn.addEventListener('click', () => {
                     deleteEvent(event.id);
                 });
             }
-
+            
             openModal('delete-confirmation-modal');
         }
 
@@ -1918,19 +1902,19 @@
         function deleteEvent(eventId) {
             // Close the modal
             closeModal('delete-confirmation-modal');
-
+            
             // Show loading overlay
             document.getElementById('global-loading-overlay').style.display = 'flex';
-
+            
             // Simulate API request delay
             setTimeout(() => {
                 document.getElementById('global-loading-overlay').style.display = 'none';
-
+                
                 // Show success message
                 document.getElementById('global-success-title').textContent = 'Event Berhasil Dihapus!';
                 document.getElementById('global-success-message').textContent = 'Event Anda telah berhasil dihapus.';
                 document.getElementById('global-success-overlay').style.display = 'flex';
-
+                
                 // Reload events after a delay
                 setTimeout(() => {
                     loadEvents();
@@ -1972,9 +1956,9 @@
          */
         function showNotification(type, title, message, duration = 5000) {
             const notificationArea = document.getElementById('notification-area');
-
+            
             if (!notificationArea) return;
-
+            
             const notificationId = 'notification-' + Date.now();
             const notificationHtml = `
                 <div id="${notificationId}" class="notification-toast notification-${type}">
@@ -1995,19 +1979,19 @@
                     </div>
                 </div>
             `;
-
+            
             notificationArea.insertAdjacentHTML('beforeend', notificationHtml);
-
+            
             const notification = document.getElementById(notificationId);
             const closeBtn = notification.querySelector('.notification-close');
-
+            
             closeBtn.addEventListener('click', () => {
                 notification.classList.add('slide-out');
                 setTimeout(() => {
                     notification.remove();
                 }, 300);
             });
-
+            
             // Auto-remove after duration
             setTimeout(() => {
                 if (notification.parentNode) {
@@ -2024,19 +2008,19 @@
          */
         function handleLogout(e) {
             e.preventDefault();
-
+            
             // Show loading overlay
             document.getElementById('global-loading-overlay').style.display = 'flex';
-
+            
             // Simulate API request delay
             setTimeout(() => {
                 // Clear user data
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-
+                
                 // Redirect to login page
                 // window.location.href = '../auth/login.html';
-
+                
                 // In this example, just hide the loading overlay
                 document.getElementById('global-loading-overlay').style.display = 'none';
                 showNotification('success', 'Berhasil Keluar', 'Anda telah berhasil keluar dari akun.');
