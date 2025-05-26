@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
           // Ganti URL ini dengan URL API backend Anda
-          const response = await fetch('https://back-end-eventory.vercel.app/api/Users/register', {
+          const response = await fetch('https://back-end-eventory.vercel.app/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
