@@ -6,14 +6,963 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Saya | Eventory</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
-    <link rel="stylesheet" href="../../assets/css/myEvent.css">
-</head>
+    <style>
+        :root {
+            --primary-color: #071739;
+            --primary-light: rgba(7, 23, 57, 0.1);
+            --primary-dark: #050f24;
+            --secondary-color: #b71c1c;
+            --secondary-light: #e57373;
+            --light-color: #778899;
+            --dark-color: #4b6382;
+            --white: #ffffff;
+            --light-grey: #f5f5f5;
+            --dark-grey: #333333;
+            --medium-grey: #757575;
+            --border-color: #e0e0e0;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #3498db;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --box-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition-normal: all 0.3s ease;
+            --transition-fast: all 0.2s ease;
+            --border-radius: 10px;
+            --border-radius-sm: 8px;
+            --border-radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-grey);
+        }
+
+        /* Improved Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            outline: none;
+        }
+
+        .btn i {
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            box-shadow: 0 2px 5px rgba(7, 23, 57, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(7, 23, 57, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9e9e9;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-secondary {
+            background-color: transparent;
+            color: var(--medium-grey);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-lg {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-with-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        /* Event List & Card Styling */
+        .event-list-section {
+            margin-top: 1.5rem;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card-item {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            border: 1px solid var(--border-color);
+            height: 100%;
+        }
+
+        .event-card-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--box-shadow-hover);
+            border-color: rgba(7, 23, 57, 0.1);
+        }
+
+        .event-card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .event-card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .event-card-item:hover .event-card-image {
+            transform: scale(1.05);
+        }
+
+        .event-card-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(2px);
+        }
+
+        .status-pending {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .status-approved {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .status-rejected {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .status-cancelled {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+
+        .status-upcoming {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .status-ongoing {
+            background: linear-gradient(45deg, #1abc9c, #16a085);
+        }
+
+        .status-completed {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .event-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .event-card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dark-grey);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .event-card-date-location,
+        .event-card-participants,
+        .event-card-category {
+            font-size: 0.9rem;
+            color: var(--medium-grey);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .event-card-date-location i,
+        .event-card-participants i,
+        .event-card-category i {
+            margin-right: 0.6rem;
+            color: var(--primary-color);
+            width: 18px;
+            text-align: center;
+        }
+
+        .event-card-actions {
+            padding: 1.5rem;
+            padding-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .event-card-actions .btn {
+            flex-grow: 1;
+            font-size: 0.85rem;
+        }
+
+        /* Filters Section Styling */
+        .filters-section {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.8rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            transition: var(--transition-normal);
+        }
+
+        .filters-section:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-group-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .search-control {
+            position: relative;
+            flex-grow: 1;
+            min-width: 280px;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: var(--medium-grey);
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition-normal);
+            background-color: var(--white);
+        }
+
+        .search-control .form-input {
+            padding-left: 3rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            outline: none;
+        }
+
+        .select-filters-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-select {
+            min-width: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0aec0'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.2em 1.2em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem;
+        }
+
+        /* Loading & Empty States */
+        .loading-indicator,
+        .empty-state-container {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--medium-grey);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(5px);
+            border: 1px dashed var(--border-color);
+            transition: var(--transition-normal);
+        }
+
+        .empty-state-container:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--medium-grey);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        .empty-state-title {
+            font-size: 1.75rem;
+            color: var(--dark-grey);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .empty-state-message {
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Page Header */
+        .page-header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-main-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+            position: relative;
+        }
+
+        .page-main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2.5rem;
+            gap: 1rem;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-info-display {
+            font-size: 0.9rem;
+            color: var(--medium-grey);
+            background-color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-dialog {
+            background-color: var(--white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            margin: 2rem 0;
+        }
+
+        .modal.show .modal-dialog {
+            transform: translateY(0);
+        }
+
+        .modal-content-inner {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--light-grey);
+        }
+
+        .modal-main-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .modal-close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--medium-grey);
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+            transition: var(--transition-fast);
+            border-radius: 50%;
+        }
+
+        .modal-close-button:hover {
+            color: var(--secondary-color);
+            background-color: rgba(183, 28, 28, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .modal-body-section {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
+        }
+
+        .modal-footer-section {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background-color: var(--light-grey);
+        }
+
+        /* Form Elements in Modal */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark-grey);
+            margin-bottom: 0.5rem;
+        }
+
+        .required-asterisk {
+            color: var(--secondary-color);
+            margin-left: 0.2rem;
+        }
+
+        .form-input-modal,
+        .form-textarea-modal,
+        .form-select-modal {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition-normal);
+            background-color: var(--white);
+        }
+
+        .form-textarea-modal {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input-modal:focus,
+        .form-textarea-modal:focus,
+        .form-select-modal:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            outline: none;
+        }
+
+        .form-row-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-text-muted {
+            font-size: 0.8rem;
+            color: var(--medium-grey);
+            margin-top: 0.5rem;
+        }
+
+        /* Delete Confirmation Modal */
+        .modal-dialog.modal-sm {
+            max-width: 400px;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay-global {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner-global {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Success Overlay */
+        .success-overlay-global {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .success-content-global {
+            background-color: var(--white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon-global {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Notification Area */
+        #notification-area {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1500;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .notification-toast {
+            background-color: var(--white);
+            border-radius: var(--border-radius-sm);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            overflow: hidden;
+            animation: slideIn 0.3s ease forwards;
+            position: relative;
+            padding: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-toast.slide-out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification-content {
+            display: flex;
+            padding: 1rem;
+        }
+
+        .notification-icon {
+            flex-shrink: 0;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .notification-message-container {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .notification-message {
+            font-size: 0.85rem;
+            color: var(--medium-grey);
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: var(--medium-grey);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem;
+            transition: var(--transition-fast);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .notification-close:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--dark-grey);
+        }
+
+        .notification-progress {
+            height: 3px;
+            background-color: var(--border-color);
+            width: 100%;
+        }
+
+        .notification-progress-bar {
+            height: 100%;
+            width: 100%;
+            transform-origin: left;
+            animation: progress 5s linear forwards;
+        }
+
+        .notification-success .notification-progress-bar {
+            background-color: var(--success-color);
+        }
+
+        .notification-error .notification-progress-bar {
+            background-color: var(--danger-color);
+        }
+
+        .notification-warning .notification-progress-bar {
+            background-color: var(--warning-color);
+        }
+
+        .notification-info .notification-progress-bar {
+            background-color: var(--info-color);
+        }
+
+        @keyframes progress {
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        /* File Input Styling */
+        .form-input-file-modal {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding: 2rem 1rem;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            transition: var(--transition-normal);
+            cursor: pointer;
+            background-color: var(--light-grey);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input-file-modal:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(7, 23, 57, 0.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+
+            .filter-group-wrapper,
+            .select-filters-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .event-card-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .event-card-actions .btn {
+                width: 100%;
+            }
+
+            .event-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .modal-dialog {
+                width: 95%;
+                margin: 1rem;
+            }
+
+            .modal-header-section,
+            .modal-body-section,
+            .modal-footer-section {
+                padding: 1rem;
+            }
+
+            .form-row-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer-section {
+                flex-direction: column;
+            }
+
+            .modal-footer-section .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filters-section {
+                padding: 1.2rem;
+            }
+
+            .form-input,
+            .form-select {
+                font-size: 0.9rem;
+            }
+
+            .page-header-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .event-card-image-wrapper {
+                height: 180px;
+            }
+        }
+    </style>
 
 <body>
     <div class="dashboard-container">
@@ -97,7 +1046,7 @@
 
         <div class="main-content">
             <header class="dashboard-header">
-                <button class="menu-toggle" id="menu-toggle">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -107,7 +1056,7 @@
                 </div>
 
                 <div class="header-actions">
-                    <button>
+                    <button aria-label="Notifications">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </button>
@@ -143,7 +1092,7 @@
                     </button>
                 </div>
 
-                <section class="filters-section card-style" data-aos="fade-up">
+                <section class="filters-section" data-aos="fade-up">
                     <div class="filter-group-wrapper">
                         <div class="search-control">
                             <i class="fas fa-search search-icon"></i>
@@ -191,40 +1140,13 @@
                         <p>Memuat event Anda...</p>
                     </div>
                     <div id="event-list" class="event-grid">
-                        <!-- 
-                        <article class="event-card-item" data-aos="fade-up" data-id="EVENT_ID_HERE">
-                            <div class="event-card-image-wrapper">
-                                <img src="../../assets/image/default-event.jpg" alt="Nama Event" class="event-card-image">
-                                <span class="event-card-status status-approved">Terverifikasi</span>
-                            </div>
-                            <div class="event-card-content">
-                                <h3 class="event-card-title">Judul Event yang Menarik</h3>
-                                <p class="event-card-date-location">
-                                    <i class="fas fa-calendar-alt"></i> 25 Des 2024 &bull; <i class="fas fa-map-marker-alt"></i> Jakarta
-                                </p>
-                                <p class="event-card-participants">
-                                    <i class="fas fa-users"></i> 50/100 Peserta
-                                </p>
-                                <p class="event-card-category"><i class="fas fa-tag"></i> Workshop</p>
-                            </div>
-                            <div class="event-card-actions">
-                                <button class="btn btn-secondary btn-sm btn-view-details" data-event-id="EVENT_ID_HERE" name="viewEventButton">
-                                    <i class="fas fa-eye"></i> Detail
-                                </button>
-                                <button class="btn btn-warning btn-sm btn-edit-event" data-event-id="EVENT_ID_HERE" name="editEventButton">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-danger btn-sm btn-delete-event" data-event-id="EVENT_ID_HERE" name="deleteEventButton">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </button>
-                            </div>
-                        </article> 
-                        -->
+                        <!-- Event cards will be dynamically populated here -->
                     </div>
                     <div id="empty-state" class="empty-state-container" style="display: none;">
                         <i class="fas fa-calendar-times empty-state-icon"></i>
                         <h3 class="empty-state-title">Anda Belum Membuat Event</h3>
-                        <p class="empty-state-message">Mulailah dengan membuat event pertama Anda!</p>
+                        <p class="empty-state-message">Mulailah dengan membuat event pertama Anda untuk menampilkan
+                            acara hebat dan menarik peserta!</p>
                         <button id="create-first-event-btn" class="btn btn-primary btn-lg">
                             <i class="fas fa-plus"></i> Buat Event Sekarang
                         </button>
@@ -245,6 +1167,8 @@
             </main>
         </div>
     </div>
+
+    <!-- Create/Edit Event Modal -->
     <div id="create-event-modal" class="modal" style="display: none;" role="dialog" aria-labelledby="modal-title"
         aria-modal="true">
         <div class="modal-dialog">
@@ -255,16 +1179,19 @@
                 </header>
                 <section class="modal-body-section">
                     <form id="create-event-form">
+                        <input type="hidden" id="event-id-modal" name="eventId">
                         <div class="form-group">
                             <label for="event-title-modal" class="form-label">Judul Event <span
                                     class="required-asterisk">*</span></label>
-                            <input type="text" id="event-title-modal" name="title" class="form-input-modal" required>
+                            <input type="text" id="event-title-modal" name="title" class="form-input-modal" required
+                                maxlength="100" placeholder="Masukkan judul acara yang menarik">
                         </div>
                         <div class="form-group">
                             <label for="event-description-modal" class="form-label">Deskripsi <span
                                     class="required-asterisk">*</span></label>
                             <textarea id="event-description-modal" name="description" class="form-textarea-modal"
-                                rows="4" required></textarea>
+                                rows="4" required
+                                placeholder="Jelaskan secara detail mengenai acara Anda, termasuk apa yang akan didapatkan peserta"></textarea>
                         </div>
                         <div class="form-row-grid">
                             <div class="form-group">
@@ -282,7 +1209,7 @@
                             <label for="event-location-modal" class="form-label">Lokasi <span
                                     class="required-asterisk">*</span></label>
                             <input type="text" id="event-location-modal" name="location" class="form-input-modal"
-                                required>
+                                required placeholder="Masukkan alamat lengkap lokasi acara">
                         </div>
                         <div class="form-row-grid">
                             <div class="form-group">
@@ -304,7 +1231,7 @@
                                 <label for="max-participants-modal" class="form-label">Maksimal Peserta <span
                                         class="required-asterisk">*</span></label>
                                 <input type="number" id="max-participants-modal" name="maxParticipants"
-                                    class="form-input-modal" min="1" required>
+                                    class="form-input-modal" min="1" required placeholder="Jumlah maksimal peserta">
                             </div>
                         </div>
                         <div class="form-group">
@@ -319,7 +1246,7 @@
                             <label for="ticket-price-modal" class="form-label">Harga Tiket (Rp) <span
                                     class="required-asterisk">*</span></label>
                             <input type="number" id="ticket-price-modal" name="ticketPrice" class="form-input-modal"
-                                min="0">
+                                min="0" placeholder="Contoh: 50000">
                         </div>
                         <div class="form-group">
                             <label for="event-images-modal" class="form-label">Gambar Event <span
@@ -340,6 +1267,7 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div id="delete-confirmation-modal" class="modal" style="display: none;" role="alertdialog"
         aria-labelledby="delete-modal-title" aria-describedby="delete-modal-description">
         <div class="modal-dialog modal-sm">
@@ -363,13 +1291,16 @@
         </div>
     </div>
 
+    <!-- Notification Area -->
     <div id="notification-area"></div>
 
+    <!-- Global Loading Overlay -->
     <div id="global-loading-overlay" class="loading-overlay-global" style="display: none;">
         <div class="spinner-global"></div>
         <p>Memproses permintaan Anda...</p>
     </div>
 
+    <!-- Global Success Overlay -->
     <div id="global-success-overlay" class="success-overlay-global" style="display: none;">
         <div class="success-content-global">
             <i class="fas fa-check-circle success-icon-global"></i>
@@ -379,82 +1310,737 @@
         </div>
     </div>
 
-
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../../assets/js/myEvent.js"></script>
     <script>
-        // Inisialisasi AOS
-        AOS.init({
-            once: true, // Animasi hanya sekali
-            duration: 600 // Durasi animasi
+        // Initialize AOS
+        document.addEventListener('DOMContentLoaded', function () {
+            AOS.init({
+                once: true,
+                duration: 600,
+                offset: 100
+            });
+
+            // Initialize core functionality
+            initializePage();
         });
 
-        // Update tahun di footer
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        /**
+         * Initialize page functionality
+         */
+        function initializePage() {
+            // Core UI elements
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const userDropdownToggle = document.getElementById('user-dropdown-toggle');
+            const userDropdownMenu = document.getElementById('user-dropdown-menu');
 
-        // Contoh dasar untuk toggle menu sidebar (jika belum ada di file JS terpisah)
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const mainContentWrapper = document.querySelector('.main-content-wrapper');
-
-        if (menuToggle && sidebar && mainContentWrapper) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                mainContentWrapper.classList.toggle('expanded');
-            });
+            // Event handling
+            setupEventListeners();
+            loadUserData();
+            setupCreateEventForm();
+            setupEventFilters();
+            loadEvents();
         }
 
-        // Contoh dasar untuk user dropdown (jika belum ada di file JS terpisah)
-        const userDropdownToggle = document.getElementById('user-dropdown-toggle');
-        const userDropdownMenu = document.getElementById('user-dropdown-menu');
+        /**
+         * Set up all event listeners
+         */
+        function setupEventListeners() {
+            // Sidebar toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
 
-        if (userDropdownToggle && userDropdownMenu) {
-            userDropdownToggle.addEventListener('click', function (event) {
-                event.stopPropagation();
-                const isExpanded = this.getAttribute('aria-expanded') === 'true' || false;
-                this.setAttribute('aria-expanded', !isExpanded);
-                userDropdownMenu.classList.toggle('show');
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                    document.querySelector('.main-content').classList.toggle('sidebar-collapsed');
+                });
+            }
+
+            // User dropdown
+            const userDropdownToggle = document.getElementById('user-dropdown-toggle');
+            const userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+            if (userDropdownToggle && userDropdownMenu) {
+                userDropdownToggle.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true' || false;
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    userDropdownMenu.classList.toggle('show');
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+                        userDropdownToggle.setAttribute('aria-expanded', 'false');
+                        userDropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // Modal handling
+            const openCreateModalBtn = document.getElementById('open-create-event-modal-btn');
+            const createFirstEventBtn = document.getElementById('create-first-event-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelModalBtn = document.getElementById('cancel-event-modal-btn');
+            const createEventModal = document.getElementById('create-event-modal');
+
+            if (openCreateModalBtn) {
+                openCreateModalBtn.addEventListener('click', () => openModal('create-event-modal'));
+            }
+
+            if (createFirstEventBtn) {
+                createFirstEventBtn.addEventListener('click', () => openModal('create-event-modal'));
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => closeModal('create-event-modal'));
+            }
+
+            if (cancelModalBtn) {
+                cancelModalBtn.addEventListener('click', () => closeModal('create-event-modal'));
+            }
+
+            // Close delete modal buttons
+            const deleteModalCloseButtons = document.querySelectorAll('[data-dismiss="delete-confirmation-modal"]');
+            deleteModalCloseButtons.forEach(button => {
+                button.addEventListener('click', () => closeModal('delete-confirmation-modal'));
             });
 
-            document.addEventListener('click', function (event) {
-                if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
-                    userDropdownToggle.setAttribute('aria-expanded', 'false');
-                    userDropdownMenu.classList.remove('show');
+            // Escape key to close modals
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeModal('create-event-modal');
+                    closeModal('delete-confirmation-modal');
+                }
+            });
+
+            // Handle logout buttons
+            const logoutSidebar = document.getElementById('logout-btn-sidebar');
+            const logoutDropdown = document.getElementById('logout-btn-dropdown');
+
+            if (logoutSidebar) {
+                logoutSidebar.addEventListener('click', handleLogout);
+            }
+
+            if (logoutDropdown) {
+                logoutDropdown.addEventListener('click', handleLogout);
+            }
+
+            // Global success overlay close button
+            const successCloseBtn = document.getElementById('global-success-close-btn');
+            if (successCloseBtn) {
+                successCloseBtn.addEventListener('click', () => {
+                    document.getElementById('global-success-overlay').style.display = 'none';
+                });
+            }
+
+            // Pagination
+            const prevPageBtn = document.getElementById('prev-page');
+            const nextPageBtn = document.getElementById('next-page');
+
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        loadEvents(currentPage);
+                    }
+                });
+            }
+
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        loadEvents(currentPage);
+                    }
+                });
+            }
+        }
+
+        /**
+         * Load user data from localStorage
+         */
+        function loadUserData() {
+            const userDataString = localStorage.getItem('user');
+            if (userDataString) {
+                try {
+                    const userData = JSON.parse(userDataString);
+
+                    // Update sidebar user info
+                    const userNameSidebar = document.getElementById('user-name-sidebar');
+                    const userAvatarSidebar = document.getElementById('user-avatar-sidebar');
+
+                    if (userNameSidebar) userNameSidebar.textContent = userData.name || 'Pengguna';
+                    if (userAvatarSidebar && userData.avatar) userAvatarSidebar.src = userData.avatar;
+
+                    // Update header user info
+                    const userNameHeader = document.getElementById('user-name-header');
+                    const userAvatarHeader = document.getElementById('user-avatar-header');
+
+                    if (userNameHeader) userNameHeader.textContent = userData.name || 'Pengguna';
+                    if (userAvatarHeader && userData.avatar) userAvatarHeader.src = userData.avatar;
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    showNotification('error', 'Error', 'Gagal memuat data pengguna.');
+                }
+            } else {
+                // No user data, redirect to login
+                // window.location.href = '../auth/login.html';
+                console.log('No user data found - in a real app, would redirect to login');
+            }
+        }
+
+        /**
+         * Set up the create event form
+         */
+        function setupCreateEventForm() {
+            const eventTicketsSelect = document.getElementById('event-tickets-modal');
+            const ticketPriceGroup = document.getElementById('ticket-price-group-modal');
+            const ticketPriceInput = document.getElementById('ticket-price-modal');
+            const createEventForm = document.getElementById('create-event-form');
+            const saveEventBtn = document.getElementById('save-event-modal-btn');
+
+            if (eventTicketsSelect) {
+                eventTicketsSelect.addEventListener('change', function () {
+                    if (this.value === 'Berbayar') {
+                        ticketPriceGroup.style.display = 'block';
+                        ticketPriceInput.setAttribute('required', 'required');
+                    } else {
+                        ticketPriceGroup.style.display = 'none';
+                        ticketPriceInput.removeAttribute('required');
+                        ticketPriceInput.value = '';
+                    }
+                });
+            }
+
+            if (createEventForm) {
+                createEventForm.addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    // Show loading overlay
+                    document.getElementById('global-loading-overlay').style.display = 'flex';
+
+                    // Simulate form submission
+                    setTimeout(() => {
+                        const eventId = document.getElementById('event-id-modal').value;
+                        const isEdit = !!eventId;
+
+                        document.getElementById('global-loading-overlay').style.display = 'none';
+
+                        // Show success message
+                        const successTitle = document.getElementById('global-success-title');
+                        const successMessage = document.getElementById('global-success-message');
+
+                        if (isEdit) {
+                            successTitle.textContent = 'Event Berhasil Diperbarui!';
+                            successMessage.textContent = 'Perubahan pada event Anda telah berhasil disimpan.';
+                        } else {
+                            successTitle.textContent = 'Event Berhasil Dibuat!';
+                            successMessage.textContent = 'Event baru Anda telah berhasil disimpan dan akan diproses oleh admin.';
+                        }
+
+                        document.getElementById('global-success-overlay').style.display = 'flex';
+
+                        // Close the modal
+                        closeModal('create-event-modal');
+
+                        // Reset form for next use
+                        createEventForm.reset();
+
+                        // Reload events after a delay
+                        setTimeout(() => {
+                            loadEvents();
+                            document.getElementById('global-success-overlay').style.display = 'none';
+                        }, 2000);
+                    }, 1500);
+                });
+            }
+        }
+
+        /**
+         * Set up event filters
+         */
+        function setupEventFilters() {
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            const categoryFilter = document.getElementById('category-filter');
+            const sortFilter = document.getElementById('sort-filter');
+
+            // Debounced search
+            let searchTimeout;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        loadEvents();
+                    }, 500);
+                });
+            }
+
+            // Apply filters on change
+            [statusFilter, categoryFilter, sortFilter].forEach(filter => {
+                if (filter) {
+                    filter.addEventListener('change', loadEvents);
                 }
             });
         }
 
-        // Placeholder untuk mengisi nama pengguna dan avatar (pindahkan ke myEvent.js atau dashboardUser.js)
-        const userDataString = localStorage.getItem('user');
-        if (userDataString) {
-            const userData = JSON.parse(userDataString);
-            const userNameTopNav = document.getElementById('user-name-top-nav');
-            const userAvatarTopNav = document.getElementById('user-avatar-top-nav');
-            if (userNameTopNav) userNameTopNav.textContent = userData.name || 'Pengguna';
-            if (userAvatarTopNav && userData.avatar) userAvatarTopNav.src = userData.avatar;
+        // Track pagination state
+        let currentPage = 1;
+        let totalPages = 1;
+        let eventsPerPage = 6;
+
+        /**
+         * Load events based on current filters
+         */
+        function loadEvents(page = 1) {
+            currentPage = page;
+            const loadingState = document.getElementById('loading-state');
+            const eventList = document.getElementById('event-list');
+            const emptyState = document.getElementById('empty-state');
+            const paginationContainer = document.querySelector('.pagination-container');
+
+            // Show loading state
+            if (loadingState) loadingState.style.display = 'flex';
+            if (eventList) eventList.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'none';
+            if (paginationContainer) paginationContainer.style.display = 'none';
+
+            // Get filter values
+            const searchQuery = document.getElementById('search-input')?.value || '';
+            const statusFilter = document.getElementById('status-filter')?.value || '';
+            const categoryFilter = document.getElementById('category-filter')?.value || '';
+            const sortFilter = document.getElementById('sort-filter')?.value || 'newest';
+
+            // Simulate API request delay
+            setTimeout(() => {
+                // Simulate getting events from API
+                let events = [];
+
+                // Create some sample events
+                const sampleEvents = [
+                    {
+                        id: '1',
+                        title: 'Workshop UI/UX Design for Beginners',
+                        date: '2025-06-15',
+                        time: '09:00',
+                        location: 'Jakarta Design Center, Jakarta',
+                        participants: 35,
+                        maxParticipants: 50,
+                        category: 'Workshop',
+                        status: 'upcoming',
+                        image: '../../assets/image/default-event.jpg'
+                    },
+                    {
+                        id: '2',
+                        title: 'Tech Conference 2025',
+                        date: '2025-07-20',
+                        time: '08:00',
+                        location: 'Balai Sidang Jakarta',
+                        participants: 245,
+                        maxParticipants: 500,
+                        category: 'Konferensi',
+                        status: 'approved',
+                        image: '../../assets/image/default-event.jpg'
+                    },
+                    {
+                        id: '3',
+                        title: 'Java Programming Masterclass',
+                        date: '2025-06-05',
+                        time: '14:00',
+                        location: 'Online via Zoom',
+                        participants: 120,
+                        maxParticipants: 200,
+                        category: 'Seminar',
+                        status: 'pending',
+                        image: '../../assets/image/default-event.jpg'
+                    },
+                    {
+                        id: '4',
+                        title: 'Digital Marketing Summit',
+                        date: '2025-08-10',
+                        time: '09:30',
+                        location: 'Hotel Mulia, Senayan, Jakarta',
+                        participants: 75,
+                        maxParticipants: 150,
+                        category: 'Konferensi',
+                        status: 'ongoing',
+                        image: '../../assets/image/default-event.jpg'
+                    },
+                    {
+                        id: '5',
+                        title: 'Photography Exhibition',
+                        date: '2025-05-30',
+                        time: '10:00',
+                        location: 'Galeri Nasional Indonesia, Jakarta',
+                        participants: 0,
+                        maxParticipants: 100,
+                        category: 'Pameran',
+                        status: 'rejected',
+                        image: '../../assets/image/default-event.jpg'
+                    }
+                ];
+
+                // Apply filters
+                events = sampleEvents.filter(event => {
+                    // Search filter
+                    if (searchQuery && !event.title.toLowerCase().includes(searchQuery.toLowerCase()) && !event.location.toLowerCase().includes(searchQuery.toLowerCase())) {
+                        return false;
+                    }
+
+                    // Status filter
+                    if (statusFilter && event.status !== statusFilter) {
+                        return false;
+                    }
+
+                    // Category filter
+                    if (categoryFilter && event.category !== categoryFilter) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Apply sorting
+                events.sort((a, b) => {
+                    switch (sortFilter) {
+                        case 'newest':
+                            return parseInt(b.id) - parseInt(a.id);
+                        case 'oldest':
+                            return parseInt(a.id) - parseInt(b.id);
+                        case 'upcomingDate':
+                            return new Date(a.date) - new Date(b.date);
+                        case 'titleAsc':
+                            return a.title.localeCompare(b.title);
+                        case 'titleDesc':
+                            return b.title.localeCompare(a.title);
+                        default:
+                            return 0;
+                    }
+                });
+
+                // Calculate pagination
+                totalPages = Math.ceil(events.length / eventsPerPage);
+                const startIndex = (currentPage - 1) * eventsPerPage;
+                const endIndex = startIndex + eventsPerPage;
+                const paginatedEvents = events.slice(startIndex, endIndex);
+
+                // Update UI with the events
+                if (loadingState) loadingState.style.display = 'none';
+
+                if (events.length === 0) {
+                    // Show empty state
+                    if (emptyState) emptyState.style.display = 'flex';
+                    if (eventList) eventList.style.display = 'none';
+                    if (paginationContainer) paginationContainer.style.display = 'none';
+                } else {
+                    // Show events
+                    if (eventList) {
+                        eventList.style.display = 'grid';
+                        eventList.innerHTML = ''; // Clear existing events
+
+                        // Create event cards
+                        paginatedEvents.forEach(event => {
+                            const eventCard = createEventCard(event);
+                            eventList.appendChild(eventCard);
+                        });
+
+                        // Re-initialize AOS for the new content
+                        AOS.refresh();
+                    }
+
+                    // Update pagination
+                    if (paginationContainer) {
+                        paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+                        document.getElementById('current-page').textContent = currentPage;
+                        document.getElementById('total-pages').textContent = totalPages;
+                        document.getElementById('prev-page').disabled = currentPage === 1;
+                        document.getElementById('next-page').disabled = currentPage === totalPages;
+                    }
+                }
+            }, 1000); // Simulate network delay
         }
 
-        // Menghubungkan tombol logout
-        const logoutSidebar = document.getElementById('logout-btn-sidebar');
-        const logoutDropdown = document.getElementById('logout-btn-dropdown');
+        /**
+         * Create an event card element
+         */
+        function createEventCard(event) {
+            const article = document.createElement('article');
+            article.className = 'event-card-item';
+            article.dataset.id = event.id;
+            article.dataset.aos = 'fade-up';
 
-        function handleLogoutAction(e) {
-            e.preventDefault();
-            // Panggil fungsi logout dari myEvent.js atau file JS utama Anda
-            if (typeof window.handleLogout === 'function') { // Asumsi ada fungsi global handleLogout
-                window.handleLogout();
+            // Format date for display
+            const eventDate = new Date(event.date);
+            const formattedDate = new Intl.DateTimeFormat('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            }).format(eventDate);
+
+            // Get status label
+            const statusLabels = {
+                'pending': 'Menunggu Verifikasi',
+                'approved': 'Terverifikasi',
+                'rejected': 'Ditolak',
+                'cancelled': 'Dibatalkan',
+                'upcoming': 'Mendatang',
+                'ongoing': 'Sedang Berlangsung',
+                'completed': 'Selesai'
+            };
+
+            const statusLabel = statusLabels[event.status] || event.status;
+
+            article.innerHTML = `
+                <div class="event-card-image-wrapper">
+                    <img src="${event.image}" alt="${event.title}" class="event-card-image">
+                    <span class="event-card-status status-${event.status}">${statusLabel}</span>
+                </div>
+                <div class="event-card-content">
+                    <h3 class="event-card-title">${event.title}</h3>
+                    <p class="event-card-date-location">
+                        <i class="fas fa-calendar-alt"></i> ${formattedDate} &bull; <i class="fas fa-clock"></i> ${event.time}
+                    </p>
+                    <p class="event-card-date-location">
+                        <i class="fas fa-map-marker-alt"></i> ${event.location}
+                    </p>
+                    <p class="event-card-participants">
+                        <i class="fas fa-users"></i> ${event.participants}/${event.maxParticipants} Peserta
+                    </p>
+                    <p class="event-card-category"><i class="fas fa-tag"></i> ${event.category}</p>
+                </div>
+                <div class="event-card-actions">
+                    <button class="btn btn-secondary btn-sm btn-view-details" data-event-id="${event.id}" name="viewEventButton">
+                        <i class="fas fa-eye"></i> Detail
+                    </button>
+                    <button class="btn btn-warning btn-sm btn-edit-event" data-event-id="${event.id}" name="editEventButton">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-delete-event" data-event-id="${event.id}" name="deleteEventButton">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </div>
+            `;
+
+            // Add event listeners
+            const viewButton = article.querySelector('.btn-view-details');
+            const editButton = article.querySelector('.btn-edit-event');
+            const deleteButton = article.querySelector('.btn-delete-event');
+
+            if (viewButton) {
+                viewButton.addEventListener('click', () => {
+                    // In a real app, redirect to event details page
+                    console.log('View event:', event.id);
+                });
+            }
+
+            if (editButton) {
+                editButton.addEventListener('click', () => {
+                    openEditEventModal(event);
+                });
+            }
+
+            if (deleteButton) {
+                deleteButton.addEventListener('click', () => {
+                    openDeleteConfirmationModal(event);
+                });
+            }
+
+            return article;
+        }
+
+        /**
+         * Open the edit event modal with event data
+         */
+        function openEditEventModal(event) {
+            // Fill form with event data
+            document.getElementById('modal-title').textContent = 'Edit Event';
+            document.getElementById('event-id-modal').value = event.id;
+            document.getElementById('event-title-modal').value = event.title;
+            document.getElementById('event-description-modal').value = event.description || '';
+            document.getElementById('event-date-modal').value = event.date;
+            document.getElementById('event-time-modal').value = event.time;
+            document.getElementById('event-location-modal').value = event.location;
+            document.getElementById('event-category-modal').value = event.category;
+            document.getElementById('max-participants-modal').value = event.maxParticipants;
+
+            // Set ticket type and handle price visibility
+            const ticketType = event.ticketPrice > 0 ? 'Berbayar' : 'Gratis';
+            const ticketSelect = document.getElementById('event-tickets-modal');
+            ticketSelect.value = ticketType;
+
+            const ticketPriceGroup = document.getElementById('ticket-price-group-modal');
+            const ticketPriceInput = document.getElementById('ticket-price-modal');
+
+            if (ticketType === 'Berbayar') {
+                ticketPriceGroup.style.display = 'block';
+                ticketPriceInput.setAttribute('required', 'required');
+                ticketPriceInput.value = event.ticketPrice || 0;
             } else {
-                console.log("Fungsi logout belum terdefinisi.");
-                // Fallback:
-                // localStorage.removeItem('token');
-                // localStorage.removeItem('user');
-                // window.location.href = '../auth/login.html';
+                ticketPriceGroup.style.display = 'none';
+                ticketPriceInput.removeAttribute('required');
+                ticketPriceInput.value = '';
+            }
+
+            // Show the modal
+            openModal('create-event-modal');
+        }
+
+        /**
+         * Open the delete confirmation modal
+         */
+        function openDeleteConfirmationModal(event) {
+            const eventNameElement = document.getElementById('event-name-to-delete');
+            if (eventNameElement) {
+                eventNameElement.textContent = event.title;
+            }
+
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            if (confirmDeleteBtn) {
+                // Remove existing listeners
+                const newConfirmBtn = confirmDeleteBtn.cloneNode(true);
+                confirmDeleteBtn.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtn);
+
+                // Add new delete handler
+                newConfirmBtn.addEventListener('click', () => {
+                    deleteEvent(event.id);
+                });
+            }
+
+            openModal('delete-confirmation-modal');
+        }
+
+        /**
+         * Delete an event
+         */
+        function deleteEvent(eventId) {
+            // Close the modal
+            closeModal('delete-confirmation-modal');
+
+            // Show loading overlay
+            document.getElementById('global-loading-overlay').style.display = 'flex';
+
+            // Simulate API request delay
+            setTimeout(() => {
+                document.getElementById('global-loading-overlay').style.display = 'none';
+
+                // Show success message
+                document.getElementById('global-success-title').textContent = 'Event Berhasil Dihapus!';
+                document.getElementById('global-success-message').textContent = 'Event Anda telah berhasil dihapus.';
+                document.getElementById('global-success-overlay').style.display = 'flex';
+
+                // Reload events after a delay
+                setTimeout(() => {
+                    loadEvents();
+                    document.getElementById('global-success-overlay').style.display = 'none';
+                }, 2000);
+            }, 1500);
+        }
+
+        /**
+         * Open a modal
+         */
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 50);
+                document.body.style.overflow = 'hidden';
             }
         }
 
-        if (logoutSidebar) logoutSidebar.addEventListener('click', handleLogoutAction);
-        if (logoutDropdown) logoutDropdown.addEventListener('click', handleLogoutAction);
+        /**
+         * Close a modal
+         */
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        }
 
+        /**
+         * Show a notification toast
+         */
+        function showNotification(type, title, message, duration = 5000) {
+            const notificationArea = document.getElementById('notification-area');
+
+            if (!notificationArea) return;
+
+            const notificationId = 'notification-' + Date.now();
+            const notificationHtml = `
+                <div id="${notificationId}" class="notification-toast notification-${type}">
+                    <div class="notification-content">
+                        <div class="notification-icon">
+                            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                        </div>
+                        <div class="notification-message-container">
+                            <div class="notification-title">${title}</div>
+                            <div class="notification-message">${message}</div>
+                        </div>
+                        <button class="notification-close" aria-label="Close notification">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="notification-progress">
+                        <div class="notification-progress-bar"></div>
+                    </div>
+                </div>
+            `;
+
+            notificationArea.insertAdjacentHTML('beforeend', notificationHtml);
+
+            const notification = document.getElementById(notificationId);
+            const closeBtn = notification.querySelector('.notification-close');
+
+            closeBtn.addEventListener('click', () => {
+                notification.classList.add('slide-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            });
+
+            // Auto-remove after duration
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.add('slide-out');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }
+            }, duration);
+        }
+
+        /**
+         * Handle logout action
+         */
+        function handleLogout(e) {
+            e.preventDefault();
+
+            // Show loading overlay
+            document.getElementById('global-loading-overlay').style.display = 'flex';
+
+            // Simulate API request delay
+            setTimeout(() => {
+                // Clear user data
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+
+                // Redirect to login page
+                // window.location.href = '../auth/login.html';
+
+                // In this example, just hide the loading overlay
+                document.getElementById('global-loading-overlay').style.display = 'none';
+                showNotification('success', 'Berhasil Keluar', 'Anda telah berhasil keluar dari akun.');
+            }, 1000);
+        }
     </script>
 </body>
 
