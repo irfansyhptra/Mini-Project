@@ -4,240 +4,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Saya - Event Management System</title>
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Event Saya | Eventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
     <link rel="stylesheet" href="../../assets/css/myEvent.css">
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="../../assets/image/logo.png" alt="Logo" class="logo">
-            <h3>Event Management</h3>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="dashboardUser.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt"></i> Event Saya</a></li>
-                <li><a href="allEvents.html"><i class="fas fa-list"></i> Semua Event</a></li>
-                <li><a href="profileUser.html"><i class="fas fa-user"></i> Profil</a></li>
-            </ul>
-        </nav>
-    </div>
+    <div class="dashboard-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="sidebar-logo-link">
+                    <i class="fas fa-calendar-check logo-icon"></i>
+                    <span class="logo-text">Eventory</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboardUser.html"><i class="fas fa-tachometer-alt nav-icon"></i> Dashboard</a></li>
+                    <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt nav-icon"></i> Event
+                            Saya</a></li>
+                    <li><a href="allEvents.html"><i class="fas fa-compass nav-icon"></i> Jelajahi Event</a></li>
+                    <li><a href="profileUser.html"><i class="fas fa-user nav-icon"></i> Profil</a></li>
+                    <li><a href="#" id="logout-btn-sidebar"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <p>&copy; <span id="current-year"></span> Eventory. All rights reserved.</p>
+            </div>
+        </aside>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Navigation -->
-        <nav class="top-nav">
-            <button id="menu-toggle" class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="user-dropdown">
-                <button id="user-dropdown-toggle" class="user-dropdown-toggle">
-                    <img src="../../assets/image/default-avatar.png" alt="User" class="user-avatar">
-                    <span id="user-name">User Name</span>
-                    <i class="fas fa-chevron-down"></i>
+        <div class="main-content-wrapper">
+            <header class="top-nav">
+                <button id="menu-toggle" class="menu-toggle-btn" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
                 </button>
-                <div id="user-dropdown-menu" class="user-dropdown-menu">
-                    <a href="profileUser.html"><i class="fas fa-user"></i> Profil</a>
-                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</a>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Content Area -->
-        <div class="content-area">
-            <div class="page-header">
-                <h1>Event Saya</h1>
-                <button id="create-event-btn" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Buat Event
-                </button>
-            </div>
-
-            <!-- Filters Section -->
-            <div class="filters-section" data-aos="fade-up">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="search-input" placeholder="Cari event...">
-                </div>
-                <div class="filter-group">
-                    <select id="status-filter" class="filter-select">
-                        <option value="">Semua Status</option>
-                        <option value="pending">Menunggu Verifikasi</option>
-                        <option value="approved">Terverifikasi</option>
-                        <option value="rejected">Ditolak</option>
-                        <option value="cancelled">Dibatalkan</option>
-                    </select>
-                    <select id="category-filter" class="filter-select">
-                        <option value="">Semua Kategori</option>
-                        <option value="Konferensi">Konferensi</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Seminar">Seminar</option>
-                        <option value="Pameran">Pameran</option>
-                        <option value="Konser">Konser</option>
-                        <option value="Festival">Festival</option>
-                        <option value="Olahraga">Olahraga</option>
-                        <option value="Networking">Networking</option>
-                    </select>
-                    <select id="sort-filter" class="filter-select">
-                        <option value="newest">Terbaru</option>
-                        <option value="oldest">Terlama</option>
-                        <option value="upcoming">Mendatang</option>
-                        <option value="title">Judul (A-Z)</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Event List -->
-            <div id="event-list" class="event-list" data-aos="fade-up">
-                <!-- Events will be loaded here dynamically -->
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination" data-aos="fade-up">
-                <button id="prev-page" class="btn btn-outline" disabled>
-                    <i class="fas fa-chevron-left"></i> Sebelumnya
-                </button>
-                <div class="page-info">
-                    Halaman <span id="current-page">1</span> dari <span id="total-pages">1</span>
-                </div>
-                <button id="next-page" class="btn btn-outline" disabled>
-                    Selanjutnya <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-
-            <!-- Loading State -->
-            <div id="loading-state" class="loading-state" style="display: none;">
-                <div class="spinner"></div>
-                <p>Memuat event...</p>
-            </div>
-
-            <!-- Empty State -->
-            <div id="empty-state" class="empty-state" style="display: none;">
-                <i class="fas fa-calendar-times fa-3x"></i>
-                <h3>Tidak Ada Event</h3>
-                <p>Anda belum membuat event apapun.</p>
-                <button id="create-first-event" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Buat Event Pertama
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Event Modal -->
-    <div id="create-event-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Buat Event Baru</h2>
-                <button id="close-modal" class="close-modal">&times;</button>
-            </div>
-            <form id="create-event-form">
-                <div class="form-group">
-                    <label for="event-title">Judul Event <span class="required">*</span></label>
-                    <input type="text" id="event-title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-description">Deskripsi <span class="required">*</span></label>
-                    <textarea id="event-description" name="description" required></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="event-date">Tanggal <span class="required">*</span></label>
-                        <input type="date" id="event-date" name="date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="event-time">Waktu <span class="required">*</span></label>
-                        <input type="time" id="event-time" name="time" required>
+                <div class="top-nav-actions">
+                    <div class="user-profile-dropdown">
+                        <button id="user-dropdown-toggle" class="user-dropdown-toggle-btn" aria-expanded="false">
+                            <img src="../../assets/image/default-avatar.png" alt="User Avatar" class="user-avatar-nav"
+                                id="user-avatar-top-nav">
+                            <span class="user-name-nav" id="user-name-top-nav">Nama Pengguna</span>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div id="user-dropdown-menu" class="dropdown-menu-content">
+                            <a href="profileUser.html"><i class="fas fa-user-circle"></i> Profil Saya</a>
+                            <a href="settings.html"><i class="fas fa-cog"></i> Pengaturan Akun</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logout-btn-dropdown"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="event-location">Lokasi <span class="required">*</span></label>
-                    <input type="text" id="event-location" name="location" required>
+            </header>
+
+            <main class="content-area" id="my-events-page">
+                <div class="page-header-controls">
+                    <h1 class="page-main-title">Event Saya</h1>
+                    <button id="open-create-event-modal-btn" class="btn btn-primary btn-with-icon">
+                        <i class="fas fa-plus"></i> Buat Event Baru
+                    </button>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="event-category">Kategori <span class="required">*</span></label>
-                        <select id="event-category" name="kategori" required>
-                            <option value="">Pilih Kategori</option>
-                            <option value="Konferensi">Konferensi</option>
-                            <option value="Workshop">Workshop</option>
-                            <option value="Seminar">Seminar</option>
-                            <option value="Pameran">Pameran</option>
-                            <option value="Konser">Konser</option>
-                            <option value="Festival">Festival</option>
-                            <option value="Olahraga">Olahraga</option>
-                            <option value="Networking">Networking</option>
-                        </select>
+
+                <section class="filters-section card-style" data-aos="fade-up">
+                    <div class="filter-group-wrapper">
+                        <div class="search-control">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="search-input" class="form-input"
+                                placeholder="Cari event berdasarkan judul, lokasi...">
+                        </div>
+                        <div class="select-filters-group">
+                            <select id="status-filter" class="filter-select form-select"
+                                aria-label="Filter berdasarkan status">
+                                <option value="">Semua Status</option>
+                                <option value="pending">Menunggu Verifikasi</option>
+                                <option value="approved">Terverifikasi</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="cancelled">Dibatalkan</option>
+                                <option value="upcoming">Mendatang</option>
+                                <option value="ongoing">Sedang Berlangsung</option>
+                                <option value="completed">Selesai</option>
+                            </select>
+                            <select id="category-filter" class="filter-select form-select"
+                                aria-label="Filter berdasarkan kategori">
+                                <option value="">Semua Kategori</option>
+                                <option value="Konferensi">Konferensi</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Seminar">Seminar</option>
+                                <option value="Pameran">Pameran</option>
+                                <option value="Konser">Konser</option>
+                                <option value="Festival">Festival</option>
+                                <option value="Olahraga">Olahraga</option>
+                                <option value="Networking">Networking</option>
+                            </select>
+                            <select id="sort-filter" class="filter-select form-select" aria-label="Urutkan event">
+                                <option value="newest">Terbaru Dibuat</option>
+                                <option value="oldest">Terlama Dibuat</option>
+                                <option value="upcomingDate">Tanggal Mendatang</option>
+                                <option value="titleAsc">Judul (A-Z)</option>
+                                <option value="titleDesc">Judul (Z-A)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="max-participants">Maksimal Peserta <span class="required">*</span></label>
-                        <input type="number" id="max-participants" name="maxParticipants" min="1" required>
+                </section>
+
+                <section id="event-list-container" class="event-list-section" aria-live="polite">
+                    <div id="loading-state" class="loading-indicator">
+                        <div class="spinner"></div>
+                        <p>Memuat event Anda...</p>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="event-tickets">Jenis Tiket <span class="required">*</span></label>
-                    <select id="event-tickets" name="ticket" required>
-                        <option value="Gratis">Gratis</option>
-                        <option value="Berbayar">Berbayar</option>
-                    </select>
-                </div>
-                <div id="ticket-price-group" class="form-group" style="display: none;">
-                    <label for="ticket-price">Harga Tiket <span class="required">*</span></label>
-                    <input type="number" id="ticket-price" name="ticketPrice" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="event-images">Gambar Event <span class="required">*</span></label>
-                    <input type="file" id="event-images" name="images" accept="image/*" required>
-                    <small>Upload minimal 1 gambar (maksimal 10MB)</small>
-                </div>
-                <div class="form-actions">
-                    <button type="button" id="cancel-event" class="btn btn-secondary">Batal</button>
-                    <button type="submit" class="btn btn-primary">Buat Event</button>
-                </div>
-            </form>
+                    <div id="event-list" class="event-grid">
+                        <!-- 
+                        <article class="event-card-item" data-aos="fade-up" data-id="EVENT_ID_HERE">
+                            <div class="event-card-image-wrapper">
+                                <img src="../../assets/image/default-event.jpg" alt="Nama Event" class="event-card-image">
+                                <span class="event-card-status status-approved">Terverifikasi</span>
+                            </div>
+                            <div class="event-card-content">
+                                <h3 class="event-card-title">Judul Event yang Menarik</h3>
+                                <p class="event-card-date-location">
+                                    <i class="fas fa-calendar-alt"></i> 25 Des 2024 &bull; <i class="fas fa-map-marker-alt"></i> Jakarta
+                                </p>
+                                <p class="event-card-participants">
+                                    <i class="fas fa-users"></i> 50/100 Peserta
+                                </p>
+                                <p class="event-card-category"><i class="fas fa-tag"></i> Workshop</p>
+                            </div>
+                            <div class="event-card-actions">
+                                <button class="btn btn-secondary btn-sm btn-view-details" data-event-id="EVENT_ID_HERE" name="viewEventButton">
+                                    <i class="fas fa-eye"></i> Detail
+                                </button>
+                                <button class="btn btn-warning btn-sm btn-edit-event" data-event-id="EVENT_ID_HERE" name="editEventButton">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm btn-delete-event" data-event-id="EVENT_ID_HERE" name="deleteEventButton">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                        </article> 
+                        -->
+                    </div>
+                    <div id="empty-state" class="empty-state-container" style="display: none;">
+                        <i class="fas fa-calendar-times empty-state-icon"></i>
+                        <h3 class="empty-state-title">Anda Belum Membuat Event</h3>
+                        <p class="empty-state-message">Mulailah dengan membuat event pertama Anda!</p>
+                        <button id="create-first-event-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus"></i> Buat Event Sekarang
+                        </button>
+                    </div>
+                </section>
+
+                <nav class="pagination-container" aria-label="Paginasi event" style="display: none;" data-aos="fade-up">
+                    <button id="prev-page" class="btn btn-outline-secondary pagination-btn" disabled>
+                        <i class="fas fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <div class="page-info-display">
+                        Halaman <span id="current-page">1</span> dari <span id="total-pages">1</span>
+                    </div>
+                    <button id="next-page" class="btn btn-outline-secondary pagination-btn" disabled>
+                        Selanjutnya <i class="fas fa-chevron-right"></i>
+                    </button>
+                </nav>
+            </main>
+        </div>
+    </div>
+    <div id="create-event-modal" class="modal" style="display: none;" role="dialog" aria-labelledby="modal-title"
+        aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content-inner">
+                <header class="modal-header-section">
+                    <h2 id="modal-title" class="modal-main-title">Buat Event Baru</h2>
+                    <button id="close-modal-btn" class="modal-close-button" aria-label="Tutup modal">&times;</button>
+                </header>
+                <section class="modal-body-section">
+                    <form id="create-event-form">
+                        <div class="form-group">
+                            <label for="event-title-modal" class="form-label">Judul Event <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="text" id="event-title-modal" name="title" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-description-modal" class="form-label">Deskripsi <span
+                                    class="required-asterisk">*</span></label>
+                            <textarea id="event-description-modal" name="description" class="form-textarea-modal"
+                                rows="4" required></textarea>
+                        </div>
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="event-date-modal" class="form-label">Tanggal <span
+                                        class="required-asterisk">*</span></label>
+                                <input type="date" id="event-date-modal" name="date" class="form-input-modal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-time-modal" class="form-label">Waktu <span
+                                        class="required-asterisk">*</span></label>
+                                <input type="time" id="event-time-modal" name="time" class="form-input-modal" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-location-modal" class="form-label">Lokasi <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="text" id="event-location-modal" name="location" class="form-input-modal"
+                                required>
+                        </div>
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="event-category-modal" class="form-label">Kategori <span
+                                        class="required-asterisk">*</span></label>
+                                <select id="event-category-modal" name="kategori" class="form-select-modal" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Konferensi">Konferensi</option>
+                                    <option value="Workshop">Workshop</option>
+                                    <option value="Seminar">Seminar</option>
+                                    <option value="Pameran">Pameran</option>
+                                    <option value="Konser">Konser</option>
+                                    <option value="Festival">Festival</option>
+                                    <option value="Olahraga">Olahraga</option>
+                                    <option value="Networking">Networking</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="max-participants-modal" class="form-label">Maksimal Peserta <span
+                                        class="required-asterisk">*</span></label>
+                                <input type="number" id="max-participants-modal" name="maxParticipants"
+                                    class="form-input-modal" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-tickets-modal" class="form-label">Jenis Tiket <span
+                                    class="required-asterisk">*</span></label>
+                            <select id="event-tickets-modal" name="ticket" class="form-select-modal" required>
+                                <option value="Gratis">Gratis</option>
+                                <option value="Berbayar">Berbayar</option>
+                            </select>
+                        </div>
+                        <div id="ticket-price-group-modal" class="form-group" style="display: none;">
+                            <label for="ticket-price-modal" class="form-label">Harga Tiket (Rp) <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="number" id="ticket-price-modal" name="ticketPrice" class="form-input-modal"
+                                min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="event-images-modal" class="form-label">Gambar Event <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="file" id="event-images-modal" name="images" class="form-input-file-modal"
+                                accept="image/*" required>
+                            <small class="form-text-muted">Upload minimal 1 gambar (format: jpg, png, jpeg. Maks:
+                                5MB)</small>
+                        </div>
+                    </form>
+                </section>
+                <footer class="modal-footer-section">
+                    <button type="button" id="cancel-event-modal-btn" class="btn btn-outline-secondary">Batal</button>
+                    <button type="submit" id="save-event-modal-btn" class="btn btn-primary"
+                        form="create-event-form">Simpan Event</button>
+                </footer>
+            </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Konfirmasi Hapus</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancel-delete">Batal</button>
-                <button class="btn btn-danger" id="confirm-delete">Hapus</button>
+    <div id="delete-confirmation-modal" class="modal" style="display: none;" role="alertdialog"
+        aria-labelledby="delete-modal-title" aria-describedby="delete-modal-description">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content-inner">
+                <header class="modal-header-section">
+                    <h2 id="delete-modal-title" class="modal-main-title">Konfirmasi Hapus Event</h2>
+                    <button class="modal-close-button" data-dismiss="delete-confirmation-modal"
+                        aria-label="Tutup modal">&times;</button>
+                </header>
+                <section class="modal-body-section">
+                    <p id="delete-modal-description">Apakah Anda yakin ingin menghapus event "<span
+                            id="event-name-to-delete" class="font-semibold"></span>"? Tindakan ini tidak dapat
+                        dibatalkan.</p>
+                </section>
+                <footer class="modal-footer-section">
+                    <button type="button" class="btn btn-outline-secondary"
+                        data-dismiss="delete-confirmation-modal">Batal</button>
+                    <button type="button" id="confirm-delete-btn" class="btn btn-danger">Ya, Hapus Event</button>
+                </footer>
             </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay" style="display: none;">
-        <div class="spinner"></div>
-        <p>Memproses...</p>
+    <div id="notification-area"></div>
+
+    <div id="global-loading-overlay" class="loading-overlay-global" style="display: none;">
+        <div class="spinner-global"></div>
+        <p>Memproses permintaan Anda...</p>
     </div>
 
-    <!-- Success Overlay -->
-    <div id="success-overlay" class="success-overlay" style="display: none;">
-        <div class="success-content">
-            <i class="fas fa-check-circle"></i>
-            <h3>Berhasil!</h3>
-            <p id="success-message">Event berhasil dibuat.</p>
-            <button id="success-close" class="btn btn-primary">Tutup</button>
+    <div id="global-success-overlay" class="success-overlay-global" style="display: none;">
+        <div class="success-content-global">
+            <i class="fas fa-check-circle success-icon-global"></i>
+            <h3 id="global-success-title">Berhasil!</h3>
+            <p id="global-success-message">Aksi telah berhasil dilakukan.</p>
+            <button id="global-success-close-btn" class="btn btn-primary">Tutup</button>
         </div>
     </div>
 
-    <!-- Scripts -->
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../../assets/js/myEvent.js"></script>
+    <script>
+        // Inisialisasi AOS
+        AOS.init({
+            once: true, // Animasi hanya sekali
+            duration: 600 // Durasi animasi
+        });
+
+        // Update tahun di footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Contoh dasar untuk toggle menu sidebar (jika belum ada di file JS terpisah)
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContentWrapper = document.querySelector('.main-content-wrapper');
+
+        if (menuToggle && sidebar && mainContentWrapper) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                mainContentWrapper.classList.toggle('expanded');
+            });
+        }
+
+        // Contoh dasar untuk user dropdown (jika belum ada di file JS terpisah)
+        const userDropdownToggle = document.getElementById('user-dropdown-toggle');
+        const userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+        if (userDropdownToggle && userDropdownMenu) {
+            userDropdownToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const isExpanded = this.getAttribute('aria-expanded') === 'true' || false;
+                this.setAttribute('aria-expanded', !isExpanded);
+                userDropdownMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+                    userDropdownToggle.setAttribute('aria-expanded', 'false');
+                    userDropdownMenu.classList.remove('show');
+                }
+            });
+        }
+
+        // Placeholder untuk mengisi nama pengguna dan avatar (pindahkan ke myEvent.js atau dashboardUser.js)
+        const userDataString = localStorage.getItem('user');
+        if (userDataString) {
+            const userData = JSON.parse(userDataString);
+            const userNameTopNav = document.getElementById('user-name-top-nav');
+            const userAvatarTopNav = document.getElementById('user-avatar-top-nav');
+            if (userNameTopNav) userNameTopNav.textContent = userData.name || 'Pengguna';
+            if (userAvatarTopNav && userData.avatar) userAvatarTopNav.src = userData.avatar;
+        }
+
+        // Menghubungkan tombol logout
+        const logoutSidebar = document.getElementById('logout-btn-sidebar');
+        const logoutDropdown = document.getElementById('logout-btn-dropdown');
+
+        function handleLogoutAction(e) {
+            e.preventDefault();
+            // Panggil fungsi logout dari myEvent.js atau file JS utama Anda
+            if (typeof window.handleLogout === 'function') { // Asumsi ada fungsi global handleLogout
+                window.handleLogout();
+            } else {
+                console.log("Fungsi logout belum terdefinisi.");
+                // Fallback:
+                // localStorage.removeItem('token');
+                // localStorage.removeItem('user');
+                // window.location.href = '../auth/login.html';
+            }
+        }
+
+        if (logoutSidebar) logoutSidebar.addEventListener('click', handleLogoutAction);
+        if (logoutDropdown) logoutDropdown.addEventListener('click', handleLogoutAction);
+
+    </script>
 </body>
 
 </html>
