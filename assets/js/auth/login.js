@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // !!! AKHIR BAGIAN BERBAHAYA !!!
 
     try {
-      const response = await fetch("https://backend-silapor.vercel.app/auth/login", {
+      const response = await fetch("https://back-end-eventory.vercel.app/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
