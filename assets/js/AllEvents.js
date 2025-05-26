@@ -6,11 +6,14 @@ AOS.init({
 });
 
 // Constants
-const API_URL = 'https://back-end-eventory.vercel.app/event';
+const API_URL = 'http://localhost:3000';
 const TOKEN = localStorage.getItem('token');
 
 // DOM Elements
 const eventList = document.getElementById('event-list');
+const searchInput = document.getElementById('search-input');
+const categoryFilter = document.getElementById('category-filter');
+const sortSelect = document.getElementById('sort-select');
 const menuToggle = document.getElementById('menu-toggle');
 const sidebar = document.getElementById('sidebar');
 const userDropdownToggle = document.getElementById('user-dropdown-toggle');
@@ -24,7 +27,7 @@ if (!TOKEN) {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    loadUserEvents();
+    loadAllEvents();
     setupEventListeners();
 });
 
@@ -47,14 +50,23 @@ function setupEventListeners() {
         }
     });
 
+    // Search and filter
+    searchInput?.addEventListener('input', debounce(loadAllEvents, 300));
+    categoryFilter?.addEventListener('change', loadAllEvents);
+    sortSelect?.addEventListener('change', loadAllEvents);
+
     // Logout
     logoutBtn?.addEventListener('click', handleLogout);
 }
 
-// Load user events
-async function loadUserEvents() {
+// Load all events
+async function loadAllEvents() {
     try {
-        const response = await fetch(`${API_URL}/getByCreatorID/${localStorage.getItem('userId')}`, {
+        const searchQuery = searchInput?.value || '';
+        const category = categoryFilter?.value || '';
+        const sort = sortSelect?.value || 'newest';
+
+        const response = await fetch(`${API_URL}/event/getAllEvents`, {
             headers: {
                 'Authorization': `Bearer ${TOKEN}`
             }
@@ -63,7 +75,38 @@ async function loadUserEvents() {
         if (!response.ok) throw new Error('Failed to fetch events');
 
         const data = await response.json();
-        renderEvents(data.data);
+        let events = data.data;
+
+        // Apply filters
+        if (searchQuery) {
+            events = events.filter(event => 
+                event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                event.location.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        if (category) {
+            events = events.filter(event => event.kategori === category);
+        }
+
+        // Apply sorting
+        events.sort((a, b) => {
+            switch (sort) {
+                case 'newest':
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                case 'oldest':
+                    return new Date(a.createdAt) - new Date(b.createdAt);
+                case 'upcoming':
+                    return new Date(a.date) - new Date(b.date);
+                case 'title':
+                    return a.title.localeCompare(b.title);
+                default:
+                    return 0;
+            }
+        });
+
+        renderEvents(events);
     } catch (error) {
         console.error('Error loading events:', error);
         showNotification('Gagal memuat event', 'error');
@@ -76,7 +119,7 @@ function renderEvents(events) {
         eventList.innerHTML = `
             <div class="empty-state" data-aos="fade-up">
                 <i class="fas fa-calendar-times"></i>
-                <p>Anda belum memiliki event. Buat event pertama Anda!</p>
+                <p>Tidak ada event yang ditemukan</p>
             </div>
         `;
         return;
@@ -97,17 +140,15 @@ function renderEvents(events) {
                     <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
                     <p><i class="fas fa-tag"></i> ${event.kategori}</p>
                     <p><i class="fas fa-ticket-alt"></i> ${event.ticket}</p>
-                    <p><i class="fas fa-users"></i> ${event.currentParticipants || 0}/${event.maxParticipants} Peserta</p>
+                    <p><i class="fas fa-users"></i> ${event.currentParticipants}/${event.maxParticipants} Peserta</p>
                 </div>
                 <div class="event-actions">
                     <button class="btn btn-view" onclick="viewEvent('${event._id}')">
-                        <i class="fas fa-eye"></i> Lihat
+                        <i class="fas fa-eye"></i> Lihat Detail
                     </button>
-                    <button class="btn btn-edit" onclick="editEvent('${event._id}')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-delete" onclick="deleteEvent('${event._id}')">
-                        <i class="fas fa-trash"></i> Hapus
+                    <button class="btn btn-join" onclick="joinEvent('${event._id}')" 
+                            ${event.currentParticipants >= event.maxParticipants ? 'disabled' : ''}>
+                        <i class="fas fa-user-plus"></i> Bergabung
                     </button>
                 </div>
             </div>
@@ -115,36 +156,30 @@ function renderEvents(events) {
     `).join('');
 }
 
-// View event details
-function viewEvent(eventId) {
-    window.location.href = `eventDetail.html?id=${eventId}`;
-}
-
-// Edit event
-function editEvent(eventId) {
-    window.location.href = `editEvent.html?id=${eventId}`;
-}
-
-// Delete event
-async function deleteEvent(eventId) {
-    if (!confirm('Apakah Anda yakin ingin menghapus event ini?')) return;
-
+// Join event
+async function joinEvent(eventId) {
     try {
-        const response = await fetch(`${API_URL}/deleteEvent/${eventId}`, {
-            method: 'DELETE',
+        const response = await fetch(`${API_URL}/event/joinEvent/${eventId}`, {
+            method: 'POST',
             headers: {
                 'Authorization': `Bearer ${TOKEN}`
             }
         });
 
-        if (!response.ok) throw new Error('Failed to delete event');
+        if (!response.ok) throw new Error('Failed to join event');
 
-        showNotification('Event berhasil dihapus!', 'success');
-        loadUserEvents();
+        const data = await response.json();
+        showNotification('Berhasil bergabung dengan event!', 'success');
+        loadAllEvents();
     } catch (error) {
-        console.error('Error deleting event:', error);
-        showNotification('Gagal menghapus event', 'error');
+        console.error('Error joining event:', error);
+        showNotification('Gagal bergabung dengan event', 'error');
     }
+}
+
+// View event details
+function viewEvent(eventId) {
+    window.location.href = `eventDetail.html?id=${eventId}`;
 }
 
 // Handle logout
@@ -219,4 +254,17 @@ function getNotificationIcon(type) {
         'info': 'fa-info-circle'
     };
     return icons[type] || icons.info;
+}
+
+// Debounce function for search input
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }

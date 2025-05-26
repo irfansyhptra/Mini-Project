@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Saya - Event Management System</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="../../assets/image/logo.png" alt="Logo" class="logo">
+            <h3>Event Management</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt"></i> Event Saya</a></li>
+                <li><a href="allEvents.html"><i class="fas fa-list"></i> Semua Event</a></li>
+                <li><a href="profile.html"><i class="fas fa-user"></i> Profil</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <button id="menu-toggle" class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-dropdown">
+                <button id="user-dropdown-toggle" class="user-dropdown-toggle">
+                    <img src="../../assets/image/default-avatar.png" alt="User" class="user-avatar">
+                    <span id="user-name">User Name</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="user-dropdown-menu" class="user-dropdown-menu">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
+                <h1>Event Saya</h1>
+                <button id="create-event-btn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Buat Event
+                </button>
+            </div>
+
+            <!-- Event List -->
+            <div id="event-list" class="event-list" data-aos="fade-up">
+                <!-- Events will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="create-event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Buat Event Baru</h2>
+                <button id="close-modal" class="close-modal">&times;</button>
+            </div>
+            <form id="create-event-form">
+                <div class="form-group">
+                    <label for="event-title">Judul Event</label>
+                    <input type="text" id="event-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-description">Deskripsi</label>
+                    <textarea id="event-description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="event-date">Tanggal</label>
+                    <input type="date" id="event-date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-time">Waktu</label>
+                    <input type="time" id="event-time" name="time" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-location">Lokasi</label>
+                    <input type="text" id="event-location" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-category">Kategori</label>
+                    <select id="event-category" name="kategori" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Konferensi">Konferensi</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Pameran">Pameran</option>
+                        <option value="Konser">Konser</option>
+                        <option value="Festival">Festival</option>
+                        <option value="Olahraga">Olahraga</option>
+                        <option value="Networking">Networking</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event-tickets">Jenis Tiket</label>
+                    <select id="event-tickets" name="ticket" required>
+                        <option value="">Pilih Jenis Tiket</option>
+                        <option value="Gratis">Gratis</option>
+                        <option value="Berbayar">Berbayar</option>
+                    </select>
+                </div>
+                <div id="ticket-price-group" class="form-group" style="display: none;">
+                    <label for="ticket-price">Harga Tiket</label>
+                    <input type="number" id="ticket-price" name="ticketPrice" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="max-participants">Maksimal Peserta</label>
+                    <input type="number" id="max-participants" name="maxParticipants" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-images">Gambar Event</label>
+                    <input type="file" id="event-images" name="images" multiple accept="image/*" required>
+                    <small>Upload minimal 1 gambar (maksimal 10 gambar)</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancel-event" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">Buat Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../../assets/js/myEvent.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,7 @@ const TOKEN = localStorage.getItem('token');
 
 // DOM Elements
 const eventList = document.getElementById('event-list');
+const createEventBtn = document.getElementById('create-event-btn');
 const menuToggle = document.getElementById('menu-toggle');
 const sidebar = document.getElementById('sidebar');
 const userDropdownToggle = document.getElementById('user-dropdown-toggle');
@@ -45,6 +46,11 @@ function setupEventListeners() {
         if (userDropdownMenu?.classList.contains('show') && !userDropdownToggle?.contains(e.target)) {
             userDropdownMenu.classList.remove('show');
         }
+    });
+
+    // Create event button
+    createEventBtn?.addEventListener('click', () => {
+        window.location.href = 'createEvent.html';
     });
 
     // Logout
