@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Referensi Elemen DOM ---
     const createEventModal = document.getElementById('create-event-modal');
     const createEventForm = document.getElementById('create-event-form');
-    const openModalButton = document.getElementById('open-create-event-btn'); // Ganti dengan ID tombol Anda untuk membuka modal
+    const openModalButton = document.getElementById('create-event-btn');
     const closeModalButton = document.getElementById('close-event-modal-btn');
     const cancelEventButton = document.getElementById('cancel-event-btn');
-    const saveEventButton = document.getElementById('save-event'); // Tombol submit
+    const saveEventButton = document.getElementById('save-event');
 
     // Elemen input formulir
     const eventNameInput = document.getElementById('event-name');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fungsi untuk Modal ---
     function showCreateEventModal() {
         if (createEventModal) {
-            createEventModal.style.display = 'flex'; // Atau 'block', sesuaikan dengan CSS Anda
+            createEventModal.style.display = 'flex';
         }
     }
 
@@ -40,17 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
             createEventModal.style.display = 'none';
         }
         if (createEventForm) {
-            createEventForm.reset(); // Reset formulir saat modal ditutup
+            createEventForm.reset();
         }
-        // Sembunyikan juga field harga tiket dan reset nilainya
         if (ticketPriceGroup) ticketPriceGroup.style.display = 'none';
         if (ticketPriceInput) {
             ticketPriceInput.value = '';
             ticketPriceInput.required = false;
-        }
-        // Pastikan select tiket kembali ke default jika perlu (misal, 'Gratis')
-        if (eventTicketsSelect) {
-             // eventTicketsSelect.value = 'Gratis'; // Atau value default Anda
         }
     }
 
@@ -63,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 ticketPriceGroup.style.display = 'none';
                 ticketPriceInput.required = false;
-                ticketPriceInput.value = ''; // Kosongkan harga jika gratis
+                ticketPriceInput.value = '';
             }
         }
     }
 
     // --- Fungsi Utama: Handle Submit Formulir ---
     async function handleEventSubmit(event) {
-        event.preventDefault(); // Mencegah submit form standar
+        event.preventDefault();
         console.log('Pengiriman formulir event dimulai...');
 
         if (saveEventButton) saveEventButton.disabled = true;
@@ -81,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Autentikasi gagal. Token tidak ditemukan. Silakan login kembali.');
             if (saveEventButton) saveEventButton.disabled = false;
             if (loadingOverlay) loadingOverlay.classList.add('hidden');
-            // window.location.href = '/halaman-login.html'; // Arahkan ke login
             return;
         }
 
@@ -97,8 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const creatorID = userData._id;
 
-            // 2. Validasi Input Dasar (keberadaan nilai untuk field required)
-            // HTML attribute 'required' sudah menangani ini, tapi validasi JS adalah lapisan tambahan yang baik
+            // 2. Validasi Input Dasar
             if (!eventNameInput.value.trim() || !eventDescriptionInput.value.trim() ||
                 !eventDateInput.value || !eventTimeInput.value ||
                 !eventLocationInput.value.trim() || !eventCategoryInput.value ||
@@ -110,19 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Harga tiket wajib diisi jika event berbayar.');
             }
             if (eventCapacityInput.valueAsNumber < 1) {
-                 throw new Error('Kapasitas minimal adalah 1 peserta.');
+                throw new Error('Kapasitas minimal adalah 1 peserta.');
             }
-
 
             // 3. Validasi dan Persiapan Gambar
             const imageFiles = eventImageInput.files;
             if (!imageFiles || imageFiles.length === 0) {
                 throw new Error('Gambar event wajib diunggah.');
             }
-            // Backend Anda mengharapkan field 'images' (plural)
-            // Jika input file Anda tidak 'multiple', hanya file pertama yang akan ada.
             const imageFileToUpload = imageFiles[0];
-
 
             // 4. Gabungkan Tanggal dan Waktu, Format ke ISO String (UTC)
             const localEventDateTime = new Date(`${eventDateInput.value}T${eventTimeInput.value}`);
@@ -138,28 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('description', eventDescriptionInput.value.trim());
             formData.append('date', utcDateTimeString);
             formData.append('location', eventLocationInput.value.trim());
-            formData.append('kategori', eventCategoryInput.value); // Nilai sudah sesuai dari HTML
+            formData.append('kategori', eventCategoryInput.value);
             formData.append('maxParticipants', eventCapacityInput.value);
-            formData.append('ticket', eventTicketsSelect.value); // Nilai sudah sesuai dari HTML
-            formData.append('images', imageFileToUpload); // Field 'images' untuk backend
+            formData.append('ticket', eventTicketsSelect.value);
+            formData.append('images', imageFileToUpload);
 
             if (eventTicketsSelect.value === 'Berbayar') {
-                formData.append('ticketPrice', ticketPriceInput.value); // Kirim harga jika berbayar
-                // Pastikan backend Anda siap menerima field 'ticketPrice' ini
+                formData.append('ticketPrice', ticketPriceInput.value);
             }
-
-            console.log('FormData siap dikirim:');
-            for (let pair of formData.entries()) {
-                 console.log(`${pair[0]}: ${pair[1] instanceof File ? pair[1].name : pair[1]}`);
-            }
-
 
             // 6. Kirim Data ke Backend
             const response = await fetch('https://back-end-eventory.vercel.app/event/createEvent', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
-                    // 'Content-Type' tidak perlu di-set manual untuk FormData
                 },
                 body: formData
             });
@@ -174,7 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Sukses! Respons dari server:', responseData);
 
             if (successOverlay) successOverlay.classList.remove('hidden');
-            closeCreateEventModal(); // Tutup dan reset form setelah sukses
+            closeCreateEventModal();
+            
+            // Refresh data setelah event berhasil dibuat
+            loadDashboardData();
 
         } catch (error) {
             console.error('Error saat mengirim event:', error);
@@ -188,10 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Setup Event Listeners ---
     if (openModalButton) {
         openModalButton.addEventListener('click', showCreateEventModal);
-    } else {
-        // Jika tidak ada tombol khusus, mungkin modal dibuka dengan cara lain atau selalu terlihat
-        // Untuk pengujian, Anda bisa panggil showCreateEventModal() langsung jika diperlukan
-        // console.warn('Tombol untuk membuka modal (ID: open-create-event-btn) tidak ditemukan.');
     }
 
     if (closeModalButton) closeModalButton.addEventListener('click', closeCreateEventModal);
@@ -199,53 +179,280 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (createEventForm) {
         createEventForm.addEventListener('submit', handleEventSubmit);
-    } else {
-        console.error('Formulir event (ID: create-event-form) tidak ditemukan.');
     }
 
     if (eventTicketsSelect) {
         eventTicketsSelect.addEventListener('change', toggleTicketPriceField);
-        toggleTicketPriceField(); // Panggil sekali saat load untuk set kondisi awal
+        toggleTicketPriceField();
     }
 
     if (successCloseBtn && successOverlay) {
         successCloseBtn.addEventListener('click', () => {
             successOverlay.classList.add('hidden');
-            // Anda mungkin ingin melakukan redirect atau tindakan lain di sini
-            // window.location.href = '/halaman-event-saya.html'; // Ganti dengan URL yang sesuai
         });
     }
 
-    // (Opsional) Jika Anda memiliki tombol "Gunakan Lokasi Saat Ini"
-    const getCurrentLocationButton = document.getElementById('get-current-location-button'); // Ganti dengan ID yang benar
-    if (getCurrentLocationButton && eventLocationInput) {
-        getCurrentLocationButton.addEventListener('click', async () => {
-            if (!navigator.geolocation) {
-                alert('Geolocation tidak didukung oleh browser Anda.');
+    // --- Fungsi untuk Memuat Data Dashboard ---
+    async function loadDashboardData() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.warn('Token tidak ditemukan');
                 return;
             }
-            getCurrentLocationButton.disabled = true;
-            getCurrentLocationButton.textContent = 'Mencari...';
-            try {
-                const position = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
-                });
-                const { latitude, longitude } = position.coords;
-                // Contoh menggunakan Nominatim (layanan gratis, perhatikan batas penggunaan)
-                const geoResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`);
-                if (!geoResponse.ok) throw new Error('Gagal mendapatkan nama lokasi.');
-                const geoData = await geoResponse.json();
-                eventLocationInput.value = geoData.display_name || `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)}`;
-            } catch (err) {
-                console.error('Error mendapatkan lokasi:', err);
-                alert(err.message || 'Tidak dapat mengakses lokasi Anda. Pastikan izin lokasi diberikan.');
-                eventLocationInput.focus();
-            } finally {
-                getCurrentLocationButton.disabled = false;
-                getCurrentLocationButton.textContent = 'Gunakan Lokasi Saat Ini';
+
+            // Load stats
+            const statsResponse = await fetch('https://back-end-eventory.vercel.app/event/getUserStats', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (statsResponse.ok) {
+                const statsData = await statsResponse.json();
+                updateDashboardStats(statsData);
             }
-        });
+
+            // Load my events
+            const myEventsResponse = await fetch('https://back-end-eventory.vercel.app/event/getMyEvents', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (myEventsResponse.ok) {
+                const myEventsData = await myEventsResponse.json();
+                renderMyEvents(myEventsData);
+            }
+
+            // Load discover events
+            const discoverEventsResponse = await fetch('https://back-end-eventory.vercel.app/event/getDiscoverEvents', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (discoverEventsResponse.ok) {
+                const discoverEventsData = await discoverEventsResponse.json();
+                renderDiscoverEvents(discoverEventsData);
+            }
+
+            // Load upcoming events
+            const upcomingEventsResponse = await fetch('https://back-end-eventory.vercel.app/event/getUpcomingEvents', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (upcomingEventsResponse.ok) {
+                const upcomingEventsData = await upcomingEventsResponse.json();
+                renderUpcomingEvents(upcomingEventsData);
+            }
+
+            // Load notifications
+            const notificationsResponse = await fetch('https://back-end-eventory.vercel.app/notifications/getUserNotifications', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (notificationsResponse.ok) {
+                const notificationsData = await notificationsResponse.json();
+                renderNotifications(notificationsData);
+            }
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            showNotification('Gagal memuat data dashboard', 'error');
+        }
     }
 
-    console.log('Script createEvent.js berhasil dimuat dan event listener telah dipasang.');
+    // --- Fungsi untuk Update UI ---
+    function updateDashboardStats(stats) {
+        document.getElementById('total-events').textContent = stats.totalEvents || 0;
+        document.getElementById('created-events').textContent = stats.createdEvents || 0;
+        document.getElementById('upcoming-events').textContent = stats.upcomingEvents || 0;
+        document.getElementById('completed-events').textContent = stats.completedEvents || 0;
+    }
+
+    function renderMyEvents(events) {
+        const container = document.getElementById('my-events-list');
+        if (!container) return;
+
+        if (!events || events.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state text-center py-10">
+                    <i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i>
+                    <p class="text-xl text-gray-600">Belum ada event yang Anda buat.</p>
+                    <button class="btn btn-primary mt-4" onclick="showCreateEventModal()">
+                        <i class="fas fa-plus"></i> Buat Event Pertama
+                    </button>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = events.map(event => createEventCard(event)).join('');
+    }
+
+    function renderDiscoverEvents(events) {
+        const container = document.getElementById('discover-events-list');
+        if (!container) return;
+
+        if (!events || events.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state text-center py-10">
+                    <i class="fas fa-compass fa-3x text-gray-400 mb-4"></i>
+                    <p class="text-xl text-gray-600">Belum ada event yang tersedia.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = events.map(event => createDiscoverEventCard(event)).join('');
+    }
+
+    function renderUpcomingEvents(events) {
+        const container = document.getElementById('upcoming-events-list');
+        if (!container) return;
+
+        if (!events || events.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state text-center py-10">
+                    <i class="fas fa-calendar fa-3x text-gray-400 mb-4"></i>
+                    <p class="text-xl text-gray-600">Tidak ada event mendatang.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = events.map(event => createUpcomingEventCard(event)).join('');
+    }
+
+    function renderNotifications(notifications) {
+        const container = document.getElementById('notifications-list');
+        if (!container) return;
+
+        if (!notifications || notifications.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state text-center py-10">
+                    <i class="fas fa-bell fa-3x text-gray-400 mb-4"></i>
+                    <p class="text-xl text-gray-600">Tidak ada notifikasi.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = notifications.map(notification => createNotificationCard(notification)).join('');
+    }
+
+    // --- Helper Functions untuk Membuat Card ---
+    function createEventCard(event) {
+        return `
+            <div class="event-card" data-id="${event._id}">
+                <div class="event-image">
+                    <img src="${event.images?.[0] || '../../assets/image/default-event.jpg'}" alt="${event.title}">
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">${event.title}</h3>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar"></i> ${formatDate(event.date)}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                        <p><i class="fas fa-users"></i> ${event.currentParticipants}/${event.maxParticipants}</p>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-view" onclick="viewEventDetails('${event._id}')">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                        <button class="btn btn-edit" onclick="editEvent('${event._id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteEvent('${event._id}')">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function createDiscoverEventCard(event) {
+        return `
+            <div class="discover-event-card" data-id="${event._id}">
+                <div class="discover-event-img">
+                    <img src="${event.images?.[0] || '../../assets/image/default-event.jpg'}" alt="${event.title}">
+                </div>
+                <div class="discover-event-content">
+                    <span class="discover-event-date">${formatDate(event.date)}</span>
+                    <h3 class="discover-event-title">${event.title}</h3>
+                    <div class="discover-event-footer">
+                        <div class="discover-event-location">
+                            <i class="fas fa-map-marker-alt"></i> ${event.location}
+                        </div>
+                        <div class="discover-event-category">
+                            ${event.kategori}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function createUpcomingEventCard(event) {
+        const date = new Date(event.date);
+        return `
+            <div class="upcoming-event" data-id="${event._id}">
+                <div class="upcoming-event-date">
+                    <span class="upcoming-event-day">${date.getDate()}</span>
+                    <span class="upcoming-event-month">${date.toLocaleString('id-ID', { month: 'short' })}</span>
+                </div>
+                <div class="upcoming-event-info">
+                    <h3 class="upcoming-event-title">${event.title}</h3>
+                    <div class="upcoming-event-time">
+                        <i class="far fa-clock"></i> ${formatTime(event.date)}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function createNotificationCard(notification) {
+        return `
+            <div class="notification" data-id="${notification._id}">
+                <div class="notification-icon">
+                    <i class="fas ${getNotificationIcon(notification.type)}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <strong>${notification.title}</strong> ${notification.message}
+                    </div>
+                    <div class="notification-time">${formatTimeAgo(notification.createdAt)}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- Utility Functions ---
+    function formatDate(dateString) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
+    }
+
+    function formatTime(dateString) {
+        const options = { hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleTimeString('id-ID', options);
+    }
+
+    function formatTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) return 'Baru saja';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} menit yang lalu`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam yang lalu`;
+        return `${Math.floor(diffInSeconds / 86400)} hari yang lalu`;
+    }
+
+    function getNotificationIcon(type) {
+        const icons = {
+            'event_created': 'fa-calendar-plus',
+            'event_updated': 'fa-calendar-check',
+            'event_deleted': 'fa-calendar-times',
+            'event_reminder': 'fa-bell',
+            'participant_joined': 'fa-user-plus',
+            'participant_left': 'fa-user-minus',
+            'default': 'fa-bell'
+        };
+        return icons[type] || icons.default;
+    }
+
+    // Load initial dashboard data
+    loadDashboardData();
 });
