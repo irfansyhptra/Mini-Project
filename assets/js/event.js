@@ -1,6 +1,3 @@
-// File: events.js
-
-// Initialize AOS library for animations
 AOS.init({
     duration: 800,
     easing: 'ease-in-out',
@@ -34,7 +31,7 @@ if (!TOKEN) {
 // --- Main Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     if (TOKEN) { // Lanjutkan hanya jika terautentikasi
-        loadAndRenderAllEvents(); // Mengganti nama fungsi
+        loadAndRenderAllEvents();
         setupGlobalEventListeners();
     }
 });
@@ -58,11 +55,9 @@ function setupGlobalEventListeners() {
         }
     });
 
-    // Listener untuk search, filter, dan sort sekarang akan memanggil loadAndRenderAllEvents
     DOMElements.searchInput?.addEventListener('input', debounce(loadAndRenderAllEvents, 300));
     DOMElements.categoryFilter?.addEventListener('change', loadAndRenderAllEvents);
     DOMElements.sortSelect?.addEventListener('change', loadAndRenderAllEvents);
-
     DOMElements.logoutBtn?.addEventListener('click', handleLogout);
 }
 
@@ -83,11 +78,8 @@ async function loadAndRenderAllEvents() {
         const category = DOMElements.categoryFilter?.value || '';
         const sort = DOMElements.sortSelect?.value || 'newest';
 
-        // Fetch all events
         const response = await fetch(`${API_BASE_URL}/event/getAllEvents`, {
-            headers: {
-                'Authorization': `Bearer ${TOKEN}`
-            }
+            headers: { 'Authorization': `Bearer ${TOKEN}` }
         });
 
         if (!response.ok) {
@@ -102,7 +94,6 @@ async function loadAndRenderAllEvents() {
 
         let events = result.data;
 
-        // Terapkan filter client-side
         if (searchQuery) {
             events = events.filter(event =>
                 (event.title && event.title.toLowerCase().includes(searchQuery)) ||
@@ -114,7 +105,6 @@ async function loadAndRenderAllEvents() {
             events = events.filter(event => event.kategori === category);
         }
 
-        // Terapkan sorting client-side
         sortEvents(events, sort);
         renderEvents(events);
 
@@ -129,32 +119,24 @@ async function loadAndRenderAllEvents() {
 
 /**
  * Sorts an array of events in place.
- * @param {Array} events - The array of events to sort.
- * @param {String} sortBy - The sorting criteria ('newest', 'oldest', 'upcoming', 'title').
  */
 function sortEvents(events, sortBy) {
     events.sort((a, b) => {
         switch (sortBy) {
-            case 'newest':
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            case 'oldest':
-                return new Date(a.createdAt) - new Date(b.createdAt);
-            case 'upcoming':
-                return new Date(a.date) - new Date(b.date);
+            case 'newest': return new Date(b.createdAt) - new Date(a.createdAt);
+            case 'oldest': return new Date(a.createdAt) - new Date(b.createdAt);
+            case 'upcoming': return new Date(a.date) - new Date(b.date);
             case 'title':
-                // Pastikan title ada sebelum memanggil localeCompare
                 const titleA = a.title || '';
                 const titleB = b.title || '';
                 return titleA.localeCompare(titleB);
-            default:
-                return 0;
+            default: return 0;
         }
     });
 }
 
 /**
  * Renders the list of events into the DOM.
- * @param {Array} events - The array of events to render.
  */
 function renderEvents(events) {
     if (!DOMElements.eventList) return;
@@ -165,12 +147,18 @@ function renderEvents(events) {
                 <i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i>
                 <p class="text-xl text-gray-600">Tidak ada event yang tersedia saat ini.</p>
                 <p class="text-gray-500">Silakan cek kembali nanti atau coba ubah filter Anda.</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
 
-    DOMElements.eventList.innerHTML = events.map(event => `
+    // Ambil ID pengguna yang login untuk menentukan apakah tombol delete/edit harus ditampilkan
+    const userDataString = localStorage.getItem('user');
+    const loggedInUserId = userDataString ? JSON.parse(userDataString)?._id : null;
+
+    DOMElements.eventList.innerHTML = events.map(event => {
+        const isUserEvent = loggedInUserId && event.creatorID === loggedInUserId; // Asumsi field creatorID ada di objek event
+
+        return `
         <div class="event-card bg-white rounded-lg shadow-lg overflow-hidden transition-all hover:shadow-xl" data-aos="fade-up" data-id="${event._id}">
             <div class="event-image relative">
                 <img src="${event.images && event.images.length > 0 ? event.images[0] : DEFAULT_EVENT_IMAGE}" 
@@ -190,27 +178,37 @@ function renderEvents(events) {
                     <p><i class="fas fa-ticket-alt mr-2 text-purple-500"></i> ${event.ticket || 'Gratis'}</p>
                     <p><i class="fas fa-users mr-2 text-yellow-500"></i> ${event.currentParticipants || 0}/${event.maxParticipants || '∞'} Peserta</p>
                 </div>
-                <div class="event-actions flex space-x-2">
+                <div class="event-actions flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <button class="btn btn-view flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg text-sm" 
                             data-event-id="${event._id}" name="viewEventButton">
                         <i class="fas fa-eye mr-1"></i> Lihat Detail
                     </button>
                     <button class="btn btn-join flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg text-sm" 
                             data-event-id="${event._id}" name="joinEventButton"
-                            ${(event.currentParticipants || 0) >= (event.maxParticipants || Infinity) ? 'disabled' : ''}
-                            title="${(event.currentParticipants || 0) >= (event.maxParticipants || Infinity) ? 'Event sudah penuh' : 'Bergabung dengan event'}">
+                            ${(event.currentParticipants || 0) >= (event.maxParticipants || Infinity) || isUserEvent ? 'disabled' : ''}
+                            title="${isUserEvent ? 'Anda adalah pembuat event ini' : ((event.currentParticipants || 0) >= (event.maxParticipants || Infinity) ? 'Event sudah penuh' : 'Bergabung dengan event')}">
                         <i class="fas fa-user-plus mr-1"></i> Bergabung
                     </button>
+                    ${isUserEvent ? `
+                    <button class="btn btn-edit flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg text-sm"
+                            data-event-id="${event._id}" name="editEventButton">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                    <button class="btn btn-delete flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg text-sm"
+                            data-event-id="${event._id}" name="deleteEventButton">
+                        <i class="fas fa-trash-alt mr-1"></i> Hapus
+                    </button>
+                    ` : ''}
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 
     addEventListenersToEventCards();
 }
 
 /**
- * Adds event listeners to "View Detail" and "Join" buttons on event cards using event delegation.
+ * Adds event listeners to buttons on event cards using event delegation.
  */
 function addEventListenersToEventCards() {
     DOMElements.eventList?.addEventListener('click', (e) => {
@@ -224,55 +222,100 @@ function addEventListenersToEventCards() {
             viewEventDetails(eventId);
         } else if (targetButton.name === 'joinEventButton') {
             handleJoinEvent(eventId);
+        } else if (targetButton.name === 'deleteEventButton') {
+            handleDeleteEvent(eventId);
+        } else if (targetButton.name === 'editEventButton') {
+            // Nanti tambahkan fungsi untuk edit event
+            console.log('Edit event:', eventId);
+            showNotification('Fungsi edit belum diimplementasikan.', 'info');
+            // window.location.href = `editEvent.html?id=${eventId}`; // Contoh navigasi ke halaman edit
         }
     });
 }
 
 /**
  * Handles the logic for joining an event.
- * @param {String} eventId - The ID of the event to join.
  */
 async function handleJoinEvent(eventId) {
     if (!eventId) return;
     console.log(`Mencoba bergabung dengan event: ${eventId}`);
 
     try {
-        // Endpoint untuk join event, pastikan sesuai dengan router backend Anda
-        // Router Anda: router.post("/joinEvent", joinEvent);
-        // Controller Anda: const { eventId } = req.params;
-        // Ini berarti router Anda SEHARUSNYA: router.post("/joinEvent/:eventId", joinEvent);
-        // Frontend mengirim eventId di path, jadi backend harus mengharapkannya di path.
         const response = await fetch(`${API_BASE_URL}/event/joinEvent/${eventId}`, { 
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${TOKEN}`,
-                'Content-Type': 'application/json' // Umumnya baik untuk POST, bahkan jika body kosong
+                'Content-Type': 'application/json'
             },
-            // body: JSON.stringify({}) // Kirim body kosong jika backend memerlukan
         });
-
         const responseData = await response.json();
-
-        if (!response.ok) {
-            throw new Error(responseData.message || `Gagal bergabung dengan event. Status: ${response.status}`);
-        }
-
-        showNotification(responseData.message || 'Berhasil bergabung dengan event!', 'success');
-        loadAndRenderAllEvents(); // Muat ulang semua event untuk update jumlah peserta
+        if (!response.ok) throw new Error(responseData.message || `Gagal bergabung. Status: ${response.status}`);
+        showNotification(responseData.message || 'Berhasil bergabung!', 'success');
+        loadAndRenderAllEvents();
     } catch (error) {
         console.error('Error bergabung dengan event:', error);
-        showNotification(error.message || 'Gagal bergabung dengan event.', 'error');
+        showNotification(error.message || 'Gagal bergabung.', 'error');
     }
 }
 
 /**
+ * Handles the logic for deleting an event.
+ */
+async function handleDeleteEvent(eventId) {
+    if (!eventId) return;
+    
+    // Pertimbangkan menggunakan modal kustom daripada confirm() untuk UX yang lebih baik
+    if (!confirm('Apakah Anda yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.')) {
+        return;
+    }
+    console.log(`Mencoba menghapus event: ${eventId}`);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/event/deleteEvent/${eventId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            }
+        });
+
+        const responseData = await response.json(); // Coba parse JSON untuk mendapatkan pesan dari backend
+
+        if (!response.ok) {
+            throw new Error(responseData.message || `Gagal menghapus event. Status: ${response.status}`);
+        }
+        
+        // Backend seharusnya mengembalikan status 200 dan pesan sukses
+        showNotification(responseData.message || 'Event berhasil dihapus!', 'success');
+        
+        // Hapus kartu event dari DOM secara langsung untuk responsifitas
+        const eventCard = DOMElements.eventList.querySelector(`[data-id="${eventId}"]`);
+        if (eventCard) {
+            eventCard.remove(); // Hapus elemen
+        }
+
+        // Jika tidak ada event tersisa, tampilkan empty state
+        if (DOMElements.eventList.children.length === 0) {
+            DOMElements.eventList.innerHTML = `
+                <div class="empty-state text-center py-10" data-aos="fade-up">
+                    <i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i>
+                    <p class="text-xl text-gray-600">Tidak ada event yang tersisa.</p>
+                </div>`;
+        }
+        // Atau muat ulang semua event jika Anda ingin server yang menentukan daftar terbaru
+        // loadAndRenderAllEvents(); 
+
+    } catch (error) {
+        console.error('Error menghapus event:', error);
+        showNotification(error.message || 'Gagal menghapus event.', 'error');
+    }
+}
+
+
+/**
  * Navigates to the event detail page.
- * @param {String} eventId - The ID of the event.
  */
 function viewEventDetails(eventId) {
-    if (eventId) {
-        window.location.href = `eventDetail.html?id=${eventId}`; // Pastikan path ini benar
-    }
+    if (eventId) window.location.href = `eventDetail.html?id=${eventId}`;
 }
 
 /**
@@ -281,91 +324,47 @@ function viewEventDetails(eventId) {
 function handleLogout(e) {
     e.preventDefault();
     localStorage.removeItem('token');
-    localStorage.removeItem('user'); // Hapus data user juga
+    localStorage.removeItem('user');
     showNotification('Anda telah berhasil logout.', 'success');
-    setTimeout(() => {
-        window.location.href = '../auth/login.html'; // Pastikan path ini benar
-    }, 1500);
+    setTimeout(() => { window.location.href = '../auth/login.html'; }, 1500);
 }
 
 // --- Utility Functions ---
 function formatDate(dateString) {
     if (!dateString) return 'Tanggal tidak tersedia';
-    const options = {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit',
-    };
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     try {
-        // Coba parsing dengan asumsi UTC jika tidak ada info timezone, lalu format ke lokal
-        const dateObj = new Date(dateString);
-        return dateObj.toLocaleDateString('id-ID', options);
+        return new Date(dateString).toLocaleDateString('id-ID', options);
     } catch (e) {
         console.error("Error memformat tanggal:", dateString, e);
-        return dateString; // Fallback ke string asli jika error
+        return dateString;
     }
 }
 
 function getStatusClass(status) {
-    const statusClasses = { // Contoh menggunakan Tailwind CSS classes
-        'pending': 'bg-yellow-500', 
-        'approved': 'bg-green-500',
-        'rejected': 'bg-red-500', 
-        'cancelled': 'bg-gray-500'
-    };
-    return statusClasses[status] || 'bg-gray-400'; // Default class
+    const classes = { 'pending': 'bg-yellow-500', 'approved': 'bg-green-500', 'rejected': 'bg-red-500', 'cancelled': 'bg-gray-500' };
+    return classes[status] || 'bg-gray-400';
 }
 
 function getStatusText(status) {
-    const statusTexts = {
-        'pending': 'Menunggu Verifikasi', 
-        'approved': 'Terverifikasi',
-        'rejected': 'Ditolak', 
-        'cancelled': 'Dibatalkan'
-    };
-    return statusTexts[status] || 'Status Tidak Diketahui';
+    const texts = { 'pending': 'Menunggu Verifikasi', 'approved': 'Terverifikasi', 'rejected': 'Ditolak', 'cancelled': 'Dibatalkan' };
+    return texts[status] || 'Status Tidak Diketahui';
 }
 
 function showNotification(message, type = 'info') {
-    const notificationArea = document.getElementById('notification-area') || createNotificationArea();
-    const notification = document.createElement('div');
-    // Sesuaikan kelas dengan framework CSS Anda jika perlu
-    notification.className = `notification p-4 mb-2 rounded-md shadow-lg text-white ${getNotificationBackground(type)} transition-all duration-300 ease-in-out transform opacity-0 translate-y-2`;
-    notification.innerHTML = `
-        <div class="flex items-center justify-between">
-            <div class="flex items-center">
-                <i class="fas ${getNotificationIcon(type)} mr-3"></i>
-                <span>${message}</span>
-            </div>
-            <button class="notification-close text-xl leading-none hover:text-gray-200 focus:outline-none">&times;</button>
-        </div>`;
-    notificationArea.appendChild(notification);
-    
-    // Animate in
-    requestAnimationFrame(() => {
-        notification.classList.remove('opacity-0', 'translate-y-2');
-        notification.classList.add('opacity-100', 'translate-y-0');
-    });
-
-
-    const closeButton = notification.querySelector('.notification-close');
-    const removeNotification = () => {
-        notification.classList.remove('opacity-100', 'translate-y-0');
-        notification.classList.add('opacity-0', 'translate-y-2');
-        notification.addEventListener('transitionend', () => notification.remove(), { once: true });
-    };
-
-    closeButton.addEventListener('click', removeNotification);
-    
-    setTimeout(removeNotification, 5000); // Auto-dismiss
+    const area = document.getElementById('notification-area') || createNotificationArea();
+    const notif = document.createElement('div');
+    notif.className = `notification p-4 mb-2 rounded-md shadow-lg text-white ${getNotificationBackground(type)} transition-all duration-300 ease-in-out transform opacity-0 translate-y-2`;
+    notif.innerHTML = `<div class="flex items-center justify-between"><div class="flex items-center"><i class="fas ${getNotificationIcon(type)} mr-3"></i><span>${message}</span></div><button class="notification-close text-xl leading-none hover:text-gray-200 focus:outline-none">&times;</button></div>`;
+    area.appendChild(notif);
+    requestAnimationFrame(() => { notif.classList.remove('opacity-0', 'translate-y-2'); notif.classList.add('opacity-100', 'translate-y-0'); });
+    const removeNotif = () => { notif.classList.remove('opacity-100', 'translate-y-0'); notif.classList.add('opacity-0', 'translate-y-2'); notif.addEventListener('transitionend', () => notif.remove(), { once: true }); };
+    notif.querySelector('.notification-close').addEventListener('click', removeNotif);
+    setTimeout(removeNotif, 5000);
 }
 
 function getNotificationBackground(type) {
-    const backgrounds = { // Contoh Tailwind
-        'success': 'bg-green-600', 
-        'error': 'bg-red-600',
-        'warning': 'bg-yellow-500', 
-        'info': 'bg-blue-600'
-    };
+    const backgrounds = { 'success': 'bg-green-600', 'error': 'bg-red-600', 'warning': 'bg-yellow-500', 'info': 'bg-blue-600' };
     return backgrounds[type] || backgrounds.info;
 }
 
@@ -374,35 +373,21 @@ function createNotificationArea() {
     if (!area) {
         area = document.createElement('div');
         area.id = 'notification-area';
-        // Styling untuk area notifikasi
-        area.style.position = 'fixed'; 
-        area.style.top = '20px'; 
-        area.style.right = '20px';
-        area.style.zIndex = '1050'; // Pastikan di atas elemen lain
-        area.style.width = 'auto'; // Lebar otomatis atau set spesifik
-        area.style.maxWidth = '400px';
+        Object.assign(area.style, { position: 'fixed', top: '20px', right: '20px', zIndex: '1050', width: 'auto', maxWidth: '400px' });
         document.body.appendChild(area);
     }
     return area;
 }
 
 function getNotificationIcon(type) {
-    const icons = {
-        'success': 'fa-check-circle', 
-        'error': 'fa-exclamation-circle',
-        'warning': 'fa-exclamation-triangle', 
-        'info': 'fa-info-circle'
-    };
+    const icons = { 'success': 'fa-check-circle', 'error': 'fa-exclamation-circle', 'warning': 'fa-exclamation-triangle', 'info': 'fa-info-circle' };
     return icons[type] || icons.info;
 }
 
 function debounce(func, wait) {
     let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+    return (...args) => {
+        const later = () => { clearTimeout(timeout); func(...args); };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
