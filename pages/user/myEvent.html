@@ -16,47 +16,120 @@
 </head>
 
 <body>
-    <div class="dashboard-layout">
+    <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <a href="../../index.html" class="sidebar-logo-link">
-                    <i class="fas fa-calendar-check logo-icon"></i>
-                    <span class="logo-text">Eventory</span>
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventory</span>
                 </a>
             </div>
-            <nav class="sidebar-nav">
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="../../assets/image/default-avatar.png" alt="user-avatar" id="user-avatar-sidebar">
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="user-name-sidebar">Nama Pengguna</div>
+                    <div class="user-role">Pengguna</div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label">Menu Utama</div>
                 <ul>
-                    <li><a href="dashboardUser.html"><i class="fas fa-tachometer-alt nav-icon"></i> Dashboard</a></li>
-                    <li class="active"><a href="myEvent.html"><i class="fas fa-calendar-alt nav-icon"></i> Event
-                            Saya</a></li>
-                    <li><a href="allEvents.html"><i class="fas fa-compass nav-icon"></i> Jelajahi Event</a></li>
-                    <li><a href="profileUser.html"><i class="fas fa-user nav-icon"></i> Profil</a></li>
-                    <li><a href="#" id="logout-btn-sidebar"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a></li>
+                    <li>
+                        <a href="dashboardUser.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myEvent.html" class="active">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="menu-text">Event Saya</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="allEvents.html">
+                            <i class="fas fa-compass"></i>
+                            <span class="menu-text">Jelajahi Event</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">Tiket Saya</span>
+                        </a>
+                    </li>
                 </ul>
-            </nav>
+
+                <div class="menu-label">Lainnya</div>
+                <ul>
+                    <li>
+                        <a href="profileUser.html">
+                            <i class="fas fa-user"></i>
+                            <span class="menu-text">Profil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">Pengaturan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="menu-text">Bantuan</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="sidebar-footer">
-                <p>&copy; <span id="current-year"></span> Eventory. All rights reserved.</p>
+                <a href="#" id="logout-btn-sidebar">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
             </div>
         </aside>
 
-        <div class="main-content-wrapper">
-            <header class="top-nav">
-                <button id="menu-toggle" class="menu-toggle-btn" aria-label="Toggle Menu">
+        <div class="main-content">
+            <header class="dashboard-header">
+                <button class="menu-toggle" id="menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="top-nav-actions">
-                    <div class="user-profile-dropdown">
-                        <button id="user-dropdown-toggle" class="user-dropdown-toggle-btn" aria-expanded="false">
-                            <img src="../../assets/image/default-avatar.png" alt="User Avatar" class="user-avatar-nav"
-                                id="user-avatar-top-nav">
-                            <span class="user-name-nav" id="user-name-top-nav">Nama Pengguna</span>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </button>
-                        <div id="user-dropdown-menu" class="dropdown-menu-content">
-                            <a href="profileUser.html"><i class="fas fa-user-circle"></i> Profil Saya</a>
-                            <a href="settings.html"><i class="fas fa-cog"></i> Pengaturan Akun</a>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari event...">
+                </div>
+
+                <div class="header-actions">
+                    <button>
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+
+                    <div class="user-dropdown">
+                        <div class="dropdown-toggle" id="user-dropdown-toggle">
+                            <img src="../../assets/image/default-avatar.png" alt="User Avatar" id="user-avatar-header">
+                            <span id="user-name-header">Nama Pengguna</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+
+                        <div class="dropdown-menu" id="user-dropdown-menu">
+                            <a href="profileUser.html">
+                                <i class="fas fa-user"></i> Profil Saya
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" id="logout-btn-dropdown"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                            <a href="#" id="logout-btn-dropdown">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </a>
                         </div>
                     </div>
                 </div>
