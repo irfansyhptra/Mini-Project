@@ -12,9 +12,1103 @@
         rel="stylesheet">
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/dashboardUser.css">
+    <style>
+        :root {
+            --primary-color: #071739;
+            --secondary-color: #b71c1c;
+            --light-color: #778899;
+            --dark-color: #4b6382;
+            --white: #ffffff;
+            --light-grey: #f5f5f5;
+            --dark-grey: #333333;
+            --medium-grey: #757575;
+            --border-color: #e0e0e0;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark-grey);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: var(--white);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .sidebar-header .logo i {
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+            border: 2px solid var(--white);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+
+        .menu-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 10px;
+            margin: 15px 0 10px;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-footer a:hover {
+            opacity: 0.8;
+        }
+
+        .sidebar-footer a i {
+            margin-right: 10px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 0;
+            transition: margin-left 0.3s;
+        }
+
+        /* Header styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-grey);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-grey);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            color: var(--dark-grey);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .header-actions button:hover {
+            background-color: var(--light-grey);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 12px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-toggle:hover {
+            background-color: var(--light-grey);
+        }
+
+        .dropdown-toggle img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .dropdown-toggle span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dropdown-toggle i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 200px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: var(--dark-grey);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--light-grey);
+        }
+
+        .dropdown-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 5px 0;
+        }
+
+        /* Dashboard content styles */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-grey);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: var(--medium-grey);
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: var(--white);
+        }
+
+        .stat-card .icon-events {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+        }
+
+        .stat-card .icon-participants {
+            background: linear-gradient(135deg, #4E54C8, #8F94FB);
+        }
+
+        .stat-card .icon-upcoming {
+            background: linear-gradient(135deg, #11998E, #38EF7D);
+        }
+
+        .stat-card .icon-completed {
+            background: linear-gradient(135deg, #FF8008, #FFC837);
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: var(--medium-grey);
+            font-size: 14px;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark-grey);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-all {
+            font-size: 14px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .view-all:hover {
+            color: var(--dark-color);
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-grey);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--dark-grey);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-grey);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* My Events section */
+        .event-list {
+            margin-bottom: 20px;
+        }
+
+        .event-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-img {
+            width: 100px;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .event-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--dark-grey);
+        }
+
+        .event-date,
+        .event-location {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--medium-grey);
+            margin-bottom: 3px;
+        }
+
+        .event-date i,
+        .event-location i {
+            font-size: 12px;
+            margin-right: 5px;
+            width: 14px;
+        }
+
+        .event-status {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .status-upcoming {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-active {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-completed {
+            background-color: #fafafa;
+            color: #616161;
+        }
+
+        .status-pending {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        .event-actions button {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--white);
+            color: var(--dark-grey);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .event-actions button:hover {
+            background-color: var(--light-grey);
+        }
+
+        .event-actions .btn-view {
+            color: #1976d2;
+        }
+
+        .event-actions .btn-edit {
+            color: #ff9800;
+        }
+
+        .event-actions .btn-delete {
+            color: var(--primary-color);
+        }
+
+        /* Discover Events section */
+        .discover-events {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .discover-event-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .discover-event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .discover-event-img {
+            height: 120px;
+            overflow: hidden;
+        }
+
+        .discover-event-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .discover-event-card:hover .discover-event-img img {
+            transform: scale(1.1);
+        }
+
+        .discover-event-content {
+            padding: 15px;
+        }
+
+        .discover-event-date {
+            display: inline-block;
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .discover-event-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--dark-grey);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 40px;
+        }
+
+        .discover-event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--medium-grey);
+        }
+
+        .discover-event-location {
+            display: flex;
+            align-items: center;
+        }
+
+        .discover-event-location i {
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .discover-event-category {
+            background-color: var(--light-grey);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        /* Upcoming Events section */
+        .upcoming-event {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .upcoming-event:last-child {
+            border-bottom: none;
+        }
+
+        .upcoming-event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: var(--white);
+            border-radius: 10px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .upcoming-event-day {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .upcoming-event-month {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .upcoming-event-info {
+            flex: 1;
+        }
+
+        .upcoming-event-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--dark-grey);
+        }
+
+        .upcoming-event-time {
+            font-size: 13px;
+            color: var(--medium-grey);
+            display: flex;
+            align-items: center;
+        }
+
+        .upcoming-event-time i {
+            margin-right: 5px;
+            font-size: 12px;
+        }
+
+        /* Notification section */
+        .notification {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: flex-start;
+        }
+
+        .notification:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(229, 57, 53, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-text {
+            font-size: 14px;
+            color: var(--dark-grey);
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--medium-grey);
+        }
+
+        .notification-actions {
+            font-size: 12px;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .notification-actions:hover {
+            color: var(--dark-color);
+        }
+
+        /* Create event modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            max-width: 700px;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: modalFade 0.3s;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-grey);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--medium-grey);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark-grey);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .no-events {
+            text-align: center;
+            padding: 20px;
+            color: var(--medium-grey);
+            font-style: italic;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+                padding: 15px 0;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .sidebar .logo span,
+            .sidebar .user-details,
+            .sidebar-menu .menu-text,
+            .menu-label {
+                display: none;
+            }
+
+            .sidebar-header {
+                padding: 0 10px 15px;
+            }
+
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .sidebar-menu a i {
+                margin-right: 0;
+                font-size: 18px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-footer {
+                padding: 15px 0;
+                display: flex;
+                justify-content: center;
+            }
+
+            .sidebar-footer a span {
+                display: none;
+            }
+
+            .sidebar-footer a i {
+                margin-right: 0;
+            }
+
+            .user-info {
+                justify-content: center;
+                padding: 10px;
+            }
+
+            .user-avatar {
+                margin-right: 0;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+                cursor: pointer;
+            }
+
+            .sidebar {
+                left: -260px;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .event-item {
+                flex-direction: column;
+            }
+
+            .event-img {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .event-actions {
+                margin-top: 10px;
+                justify-content: flex-start;
+            }
+
+            .discover-events {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .dropdown-toggle span {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -31,7 +1125,6 @@
             <div class="user-info">
                 <div class="user-avatar">
                     <img src="../../assets/image/dev1.jpg" alt="user-avatar">
-
                 </div>
                 <div class="user-details">
                     <div class="user-name">Irfan</div>
@@ -55,13 +1148,13 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#Jelajahi-Event">
+                        <a href="#jelajahi-event">
                             <i class="fas fa-compass"></i>
                             <span class="menu-text">Jelajahi Event</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#tiket-saya">
                             <i class="fas fa-ticket-alt"></i>
                             <span class="menu-text">Tiket Saya</span>
                         </a>
@@ -128,13 +1221,12 @@
                         <div class="dropdown-menu" id="user-dropdown-menu">
                             <a href="../../pages/user/profileUser.html">
                                 <i class="fas fa-user"></i> Profil Saya
-
                             </a>
                             <a href="#">
                                 <i class="fas fa-cog"></i> Pengaturan
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#">
+                            <a href="../../index.html">
                                 <i class="fas fa-sign-out-alt"></i> Keluar
                             </a>
                         </div>
@@ -185,11 +1277,11 @@
                 </div>
 
                 <!-- Dashboard Sections -->
-                <div class="dashboard-sections" id="event-saya">
+                <div class="dashboard-sections">
                     <!-- Left Column -->
                     <div class="left-column">
                         <!-- My Events Section -->
-                        <div class="card" data-aos="fade-up">
+                        <div class="card" data-aos="fade-up" id="event-saya">
                             <div class="card-header">
                                 <h2 class="card-title">Event Saya</h2>
                                 <div class="card-actions">
@@ -202,10 +1294,9 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div id="event-list" class="event-container"></div>
-
-                            </div>
-
+                                <div id="event-list" class="event-list">
+                                    <!-- Event items will be loaded here -->
+                                </div>
                                 <div style="text-align: center; margin-top: 20px;">
                                     <a href="#" class="view-all">Lihat Semua Event Saya</a>
                                 </div>
@@ -213,7 +1304,7 @@
                         </div>
 
                         <!-- Discover Events Section -->
-                        <div class="card" data-aos="fade-up" id="Jelajahi-Event">
+                        <div class="card" data-aos="fade-up" id="jelajahi-event">
                             <div class="card-header">
                                 <h2 class="card-title">Jelajahi Event</h2>
                                 <div class="card-actions">
@@ -223,226 +1314,9 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="discover-events">
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event1.jpg" alt="Indonesia Music Festival">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">12-17 Mar 2025</span>
-                                            <h3 class="discover-event-title">Aceh Ramadhan Festival 2025</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festival
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event2.jpg" alt="Art Exhibition">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">10 Apr 2025</span>
-                                            <h3 class="discover-event-title">Aceh Culinary Festival</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Kuliner
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event4.jpeg" alt="Food Festival">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">8 Jun 2025</span>
-                                            <h3 class="discover-event-title"> Festival Kupi</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Kuliner
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event5.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">26 Desember 2024</span>
-                                            <h3 class="discover-event-title">Peringatan Tsunami Aceh</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event6.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">18 Juni 2025</span>
-                                            <h3 class="discover-event-title">HMM Fest 2025</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event7.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">20 Feb - 20 Mar 2025</span>
-                                            <h3 class="discover-event-title">Duta Kebudayan Aceh 2025</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event8.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date"> Maret 2025</span>
-                                            <h3 class="discover-event-title">VOICE: Victims of Injustice Challenging
-                                                Equality</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Kompetisi
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event9.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">3 Maret 2025</span>
-                                            <h3 class="discover-event-title">Blue Fest 2025</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event10.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">17 Mei 2025</span>
-                                            <h3 class="discover-event-title">S.O.S Sound of Soul</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event11.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">21-23 Maret 2025</span>
-                                            <h3 class="discover-event-title">Fest Memulian Bulan Emas</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event12.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">2-23 Maret 2025</span>
-                                            <h3 class="discover-event-title">Content Creator QRIS Challange</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Online
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Challange
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="discover-event-card">
-                                        <div class="discover-event-img">
-                                            <img src="../../assets/image/event13.jpeg" alt="Marathon">
-                                        </div>
-                                        <div class="discover-event-content">
-                                            <span class="discover-event-date">12 Februari 2024</span>
-                                            <h3 class="discover-event-title">Car Free Day</h3>
-                                            <div class="discover-event-footer">
-                                                <div class="discover-event-location">
-                                                    <i class="fas fa-map-marker-alt"></i> Banda Aceh
-                                                </div>
-                                                <div class="discover-event-category">
-                                                    Festifal
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                <div class="discover-events" id="discover-events">
+                                    <!-- Discover events will be loaded here -->
                                 </div>
-
                                 <div style="text-align: center; margin-top: 20px;">
                                     <a href="#" class="view-all">Jelajahi Lebih Banyak Event</a>
                                 </div>
@@ -459,43 +1333,8 @@
                                 <a href="#" class="view-all">Lihat Semua</a>
                             </div>
                             <div class="card-body">
-                                <div class="upcoming-event">
-                                    <div class="upcoming-event-date">
-                                        <span class="upcoming-event-day">8</span>
-                                        <span class="upcoming-event-month">Jun</span>
-                                    </div>
-                                    <div class="upcoming-event-info">
-                                        <h3 class="upcoming-event-title">Festival Kupi 2025</h3>
-                                        <div class="upcoming-event-time">
-                                            <i class="far fa-clock"></i> 09:00 - 17:00
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="upcoming-event">
-                                    <div class="upcoming-event-date">
-                                        <span class="upcoming-event-day">10</span>
-                                        <span class="upcoming-event-month">Apr</span>
-                                    </div>
-                                    <div class="upcoming-event-info">
-                                        <h3 class="upcoming-event-title">Digital Marketing Workshop</h3>
-                                        <div class="upcoming-event-time">
-                                            <i class="far fa-clock"></i> 13:00 - 16:00
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="upcoming-event">
-                                    <div class="upcoming-event-date">
-                                        <span class="upcoming-event-day">15</span>
-                                        <span class="upcoming-event-month">May</span>
-                                    </div>
-                                    <div class="upcoming-event-info">
-                                        <h3 class="upcoming-event-title">Indonesia Music Festival</h3>
-                                        <div class="upcoming-event-time">
-                                            <i class="far fa-clock"></i> 14:00 - 23:00
-                                        </div>
-                                    </div>
+                                <div id="upcoming-events">
+                                    <!-- Upcoming events will be loaded here -->
                                 </div>
                             </div>
                         </div>
@@ -507,41 +1346,8 @@
                                 <a href="#" class="view-all">Tandai Semua Dibaca</a>
                             </div>
                             <div class="card-body">
-                                <div class="notification">
-                                    <div class="notification-icon">
-                                        <i class="fas fa-bell"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">
-                                            <strong>Event Baru:</strong> Informatic Festival 2025 telah ditambahkan.
-                                        </div>
-                                        <div class="notification-time">5 menit yang lalu</div>
-                                    </div>
-                                </div>
-
-                                <div class="notification">
-                                    <div class="notification-icon">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">
-                                            <strong>Pengingat:</strong> Festival Kupi akan dimulai dalam 45 hari.
-                                        </div>
-                                        <div class="notification-time">1 jam yang lalu</div>
-                                    </div>
-                                </div>
-
-                                <div class="notification">
-                                    <div class="notification-icon">
-                                        <i class="fas fa-user-plus"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">
-                                            <strong>Pendaftaran:</strong> 5 peserta baru mendaftar di event Informatics
-                                            Festival Anda.
-                                        </div>
-                                        <div class="notification-time">2 jam yang lalu</div>
-                                    </div>
+                                <div id="notifications">
+                                    <!-- Notifications will be loaded here -->
                                 </div>
                             </div>
                         </div>
@@ -553,13 +1359,13 @@
                             </div>
                             <div class="card-body">
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                    <button class="btn btn-outline" style="width: 100%;">
+                                    <button class="btn btn-outline" style="width: 100%;" id="quick-create-event">
                                         <i class="fas fa-plus"></i> Buat Event
                                     </button>
                                     <button class="btn btn-outline" style="width: 100%;">
                                         <i class="fas fa-search"></i> Jelajahi
                                     </button>
-                                    <button class="btn btn-outline" style="width: 100%;">
+                                    <button class="btn btn-outline" style="width: 100%;" id="tiket-saya">
                                         <i class="fas fa-ticket-alt"></i> Tiket Saya
                                     </button>
                                     <button class="btn btn-outline" style="width: 100%;">
@@ -574,116 +1380,628 @@
         </div>
     </div>
 
-<div class="modal" id="create-event-modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Buat Event Baru</h2>
-            <button class="modal-close" id="close-event-modal-btn">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="create-event-form">
-                <div class="form-group">
-                    <label class="form-label" for="event-name">Nama Event <span class="text-red-500">*</span></label>
-                    <input type="text" id="event-name" class="form-control" placeholder="Masukkan nama event" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="event-description">Deskripsi Event <span
-                            class="text-red-500">*</span></label>
-                    <textarea id="event-description" class="form-control" rows="3"
-                        placeholder="Masukkan deskripsi event" required></textarea>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group flex-1"> <label class="form-label" for="event-date">Tanggal <span
-                                class="text-red-500">*</span></label>
-                        <input type="date" id="event-date" class="form-control" required>
+    <!-- Create Event Modal -->
+    <div class="modal" id="create-event-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Buat Event Baru</h2>
+                <button class="modal-close" id="close-event-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="create-event-form">
+                    <div class="form-group">
+                        <label class="form-label" for="event-name">Nama Event <span
+                                style="color: #b71c1c;">*</span></label>
+                        <input type="text" id="event-name" class="form-control" placeholder="Masukkan nama event"
+                            required>
                     </div>
-                    <div class="form-group flex-1">
-                        <label class="form-label" for="event-time">Waktu <span class="text-red-500">*</span></label>
-                        <input type="time" id="event-time" class="form-control" required>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event-description">Deskripsi Event <span
+                                style="color: #b71c1c;">*</span></label>
+                        <textarea id="event-description" class="form-control" rows="3"
+                            placeholder="Masukkan deskripsi event" required></textarea>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="event-location">Lokasi <span class="text-red-500">*</span></label>
-                    <input type="text" id="event-location" class="form-control" placeholder="Masukkan lokasi event"
-                        required>
-                </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="event-date">Tanggal <span
+                                    style="color: #b71c1c;">*</span></label>
+                            <input type="date" id="event-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="event-time">Waktu <span
+                                    style="color: #b71c1c;">*</span></label>
+                            <input type="time" id="event-time" class="form-control" required>
+                        </div>
+                    </div>
 
-                <div class="form-row">
-                    <div class="form-group flex-1">
-                        <label class="form-label" for="event-category">Kategori <span
-                                class="text-red-500">*</span></label>
-                        <select id="event-category" class="form-control" required>
-                            <option value="">Pilih kategori</option>
-                            <option value="Konferensi">Konferensi</option>
-                            <option value="Workshop">Workshop</option>
-                            <option value="Seminar">Seminar</option>
-                            <option value="Pameran">Pameran</option>
-                            <option value="Konser">Konser</option>
-                            <option value="Festival">Festival</option>
-                            <option value="Olahraga">Olahraga</option>
-                            <option value="Networking">Networking</option>
+                    <div class="form-group">
+                        <label class="form-label" for="event-location">Lokasi <span
+                                style="color: #b71c1c;">*</span></label>
+                        <input type="text" id="event-location" class="form-control" placeholder="Masukkan lokasi event"
+                            required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="event-category">Kategori <span
+                                    style="color: #b71c1c;">*</span></label>
+                            <select id="event-category" class="form-control" required>
+                                <option value="">Pilih kategori</option>
+                                <option value="Konferensi">Konferensi</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Seminar">Seminar</option>
+                                <option value="Pameran">Pameran</option>
+                                <option value="Konser">Konser</option>
+                                <option value="Festival">Festival</option>
+                                <option value="Olahraga">Olahraga</option>
+                                <option value="Networking">Networking</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="event-capacity">Kapasitas <span
+                                    style="color: #b71c1c;">*</span></label>
+                            <input type="number" id="event-capacity" class="form-control" placeholder="Jumlah peserta"
+                                min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event-image">Gambar Event <span
+                                style="color: #b71c1c;">*</span></label>
+                        <input type="file" id="event-image" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event-tickets">Jenis Tiket <span
+                                style="color: #b71c1c;">*</span></label>
+                        <select id="event-tickets" class="form-control" required>
+                            <option value="Gratis">Gratis</option>
+                            <option value="Berbayar">Berbayar</option>
                         </select>
                     </div>
-                    <div class="form-group flex-1">
-                        <label class="form-label" for="event-capacity">Kapasitas <span
-                                class="text-red-500">*</span></label>
-                        <input type="number" id="event-capacity" class="form-control" placeholder="Jumlah peserta"
-                            min="1" required>
+
+                    <div class="form-group" id="ticket-price-group" style="display: none;">
+                        <label class="form-label" for="ticket-price">Harga Tiket (Rp) <span
+                                style="color: #b71c1c;">*</span></label>
+                        <input type="number" id="ticket-price" class="form-control"
+                            placeholder="Masukkan harga tiket (misal: 50000)" min="0">
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="event-image">Gambar Event <span class="text-red-500">*</span></label>
-                    <input type="file" id="event-image" class="form-control" accept="image/*" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="event-tickets">Jenis Tiket <span
-                            class="text-red-500">*</span></label>
-                    <select id="event-tickets" class="form-control" required>
-                        <option value="Gratis">Gratis</option>
-                        <option value="Berbayar">Berbayar</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="ticket-price-group" style="display: none;"> <label class="form-label"
-                        for="ticket-price">Harga Tiket (Rp) <span class="text-red-500">*</span></label>
-                    <input type="number" id="ticket-price" class="form-control"
-                        placeholder="Masukkan harga tiket (misal: 50000)" min="0">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline" id="cancel-event-btn">Batal</button> <button type="submit"
-                class="btn btn-primary" id="save-event" form="create-event-form">Simpan Event</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancel-event-btn">Batal</button>
+                <button type="submit" class="btn btn-primary" id="save-event" form="create-event-form">Simpan
+                    Event</button>
+            </div>
         </div>
     </div>
-</div>
-
-<div id="success-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-    <h3 class="text-2xl font-bold text-gray-800 mb-2">Event Berhasil Dibuat!</h3>
-    <p class="text-gray-600 mb-6">Event Anda telah berhasil dibuat dan akan segera ditinjau.</p> <button
-        id="success-close-btn"
-        class="bg-gradient-to-r from-blue-800 to-blue-600 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
-        Tutup
-    </button>
-</div>
-
-<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-    <h3 class="text-2xl font-bold text-gray-800 mb-2">Membuat Event...</h3>
-    <p class="text-gray-600">Mohon tunggu sebentar, event Anda sedang diproses.</p>
-</div>
 
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script src="../../assets/js/dashboardUser.js"></script>
-    <script src="../../assets/js/createEvent.js"></script>
-    <script src="../../assets/js/main.js"></script>
-    <script src="../../assets/js/event.js"></script>
+    <script>
+        // Initialize AOS
+        document.addEventListener('DOMContentLoaded', function () {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
 
+            // Initialize components
+            initializeSidebar();
+            initializeDropdown();
+            initializeModal();
+            loadEvents();
+            loadDiscoverEvents();
+            loadUpcomingEvents();
+            loadNotifications();
+        });
+
+        // Sidebar functionality
+        function initializeSidebar() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('show');
+                });
+            }
+        }
+
+        // Dropdown functionality
+        function initializeDropdown() {
+            const dropdownToggle = document.getElementById('user-dropdown-toggle');
+            const dropdownMenu = document.getElementById('user-dropdown-menu');
+
+            if (dropdownToggle && dropdownMenu) {
+                dropdownToggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!dropdownToggle.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        }
+
+        // Modal functionality
+        function initializeModal() {
+            const createEventBtn = document.getElementById('create-event-btn');
+            const quickCreateEventBtn = document.getElementById('quick-create-event');
+            const closeEventModalBtn = document.getElementById('close-event-modal-btn');
+            const cancelEventBtn = document.getElementById('cancel-event-btn');
+            const createEventModal = document.getElementById('create-event-modal');
+            const eventTicketsSelect = document.getElementById('event-tickets');
+            const ticketPriceGroup = document.getElementById('ticket-price-group');
+            const saveEventBtn = document.getElementById('save-event');
+            const createEventForm = document.getElementById('create-event-form');
+
+            if (createEventBtn && closeEventModalBtn && cancelEventBtn && createEventModal) {
+                // Open modal function
+                function openModal() {
+                    createEventModal.classList.add('show');
+                }
+
+                // Close modal function
+                function closeModal() {
+                    createEventModal.classList.remove('show');
+                    createEventForm.reset();
+                }
+
+                createEventBtn.addEventListener('click', openModal);
+
+                if (quickCreateEventBtn) {
+                    quickCreateEventBtn.addEventListener('click', openModal);
+                }
+
+                closeEventModalBtn.addEventListener('click', closeModal);
+                cancelEventBtn.addEventListener('click', closeModal);
+
+                // Show/hide ticket price based on ticket type
+                if (eventTicketsSelect && ticketPriceGroup) {
+                    eventTicketsSelect.addEventListener('change', function () {
+                        if (this.value === 'Berbayar') {
+                            ticketPriceGroup.style.display = 'block';
+                            document.getElementById('ticket-price').setAttribute('required', 'required');
+                        } else {
+                            ticketPriceGroup.style.display = 'none';
+                            document.getElementById('ticket-price').removeAttribute('required');
+                        }
+                    });
+                }
+
+                // Form submission
+                if (saveEventBtn && createEventForm) {
+                    createEventForm.addEventListener('submit', function (e) {
+                        e.preventDefault();
+
+                        // Get form data and create new event
+                        const eventData = {
+                            name: document.getElementById('event-name').value,
+                            description: document.getElementById('event-description').value,
+                            date: document.getElementById('event-date').value,
+                            time: document.getElementById('event-time').value,
+                            location: document.getElementById('event-location').value,
+                            category: document.getElementById('event-category').value,
+                            capacity: document.getElementById('event-capacity').value,
+                            ticketType: document.getElementById('event-tickets').value,
+                            ticketPrice: document.getElementById('event-tickets').value === 'Berbayar'
+                                ? document.getElementById('ticket-price').value
+                                : 0
+                        };
+
+                        // Save the new event
+                        saveEvent(eventData);
+
+                        // Close modal
+                        closeModal();
+                    });
+                }
+            }
+        }
+
+        // Save event function
+        function saveEvent(eventData) {
+            // In a real application, this would send data to a server
+            // For now, we'll just add it to our local event list
+            const newEvent = {
+                id: Math.floor(Math.random() * 1000),
+                name: eventData.name,
+                description: eventData.description,
+                date: formatDate(eventData.date),
+                time: eventData.time,
+                location: eventData.location,
+                category: eventData.category,
+                status: 'pending',
+                image: '../../assets/image/event' + (Math.floor(Math.random() * 13) + 1) + '.jpg'
+            };
+
+            // Add to events list in DOM
+            addEventToList(newEvent);
+        }
+
+        // Format date function
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        // Load events from data
+        function loadEvents() {
+            const eventListElement = document.getElementById('event-list');
+
+            if (!eventListElement) return;
+
+            // Clear existing content
+            eventListElement.innerHTML = '';
+
+            // Sample events data
+            const events = [
+                {
+                    id: 1,
+                    name: 'Informatics Festival 2025',
+                    description: 'Festival teknologi informatika tahunan',
+                    date: '15 Mar 2025',
+                    time: '09:00',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    status: 'upcoming',
+                    image: '../../assets/image/event1.jpg'
+                },
+                {
+                    id: 2,
+                    name: 'Digital Marketing Workshop',
+                    description: 'Workshop tentang digital marketing',
+                    date: '10 Apr 2025',
+                    time: '13:00',
+                    location: 'Banda Aceh',
+                    category: 'Workshop',
+                    status: 'active',
+                    image: '../../assets/image/event2.jpg'
+                },
+                {
+                    id: 3,
+                    name: 'Aceh Culinary Festival',
+                    description: 'Festival kuliner khas Aceh',
+                    date: '5 Feb 2025',
+                    time: '10:00',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    status: 'completed',
+                    image: '../../assets/image/event4.jpeg'
+                }
+            ];
+
+            // Check if there are events
+            if (events.length === 0) {
+                eventListElement.innerHTML = '<div class="no-events">Anda belum memiliki event. Silakan buat event baru.</div>';
+                return;
+            }
+
+            // Add events to list
+            events.forEach(event => {
+                addEventToList(event);
+            });
+        }
+
+        // Add event to list function
+        function addEventToList(event) {
+            const eventListElement = document.getElementById('event-list');
+
+            if (!eventListElement) return;
+
+            // Create event item element
+            const eventItem = document.createElement('div');
+            eventItem.className = 'event-item';
+
+            // Status label text
+            let statusText = '';
+            switch (event.status) {
+                case 'upcoming':
+                    statusText = 'Akan Datang';
+                    break;
+                case 'active':
+                    statusText = 'Aktif';
+                    break;
+                case 'completed':
+                    statusText = 'Selesai';
+                    break;
+                case 'pending':
+                    statusText = 'Menunggu Persetujuan';
+                    break;
+                default:
+                    statusText = 'Tidak Diketahui';
+            }
+
+            // Set event item HTML
+            eventItem.innerHTML = `
+                <div class="event-img">
+                    <img src="${event.image}" alt="${event.name}">
+                </div>
+                <div class="event-info">
+                    <h3 class="event-title">${event.name}</h3>
+                    <div class="event-date">
+                        <i class="far fa-calendar-alt"></i> ${event.date}
+                    </div>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i> ${event.location}
+                    </div>
+                    <span class="event-status status-${event.status}">${statusText}</span>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-view" title="Lihat Detail">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn-edit" title="Edit Event">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-delete" title="Hapus Event">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+
+            // Add event item to list
+            eventListElement.appendChild(eventItem);
+
+            // Add event listeners to buttons
+            const viewBtn = eventItem.querySelector('.btn-view');
+            const editBtn = eventItem.querySelector('.btn-edit');
+            const deleteBtn = eventItem.querySelector('.btn-delete');
+
+            viewBtn.addEventListener('click', () => viewEvent(event.id));
+            editBtn.addEventListener('click', () => editEvent(event.id));
+            deleteBtn.addEventListener('click', () => deleteEvent(event.id, eventItem));
+        }
+
+        // View event function
+        function viewEvent(eventId) {
+            console.log('View event:', eventId);
+            // In a real application, this would open the event details page
+            alert('Melihat detail event ID: ' + eventId);
+        }
+
+        // Edit event function
+        function editEvent(eventId) {
+            console.log('Edit event:', eventId);
+            // In a real application, this would open the edit event form
+            alert('Mengedit event ID: ' + eventId);
+        }
+
+        // Delete event function
+        function deleteEvent(eventId, eventElement) {
+            console.log('Delete event:', eventId);
+            // In a real application, this would show a confirmation dialog and delete the event
+            if (confirm('Apakah Anda yakin ingin menghapus event ini?')) {
+                // Remove event from DOM
+                eventElement.remove();
+            }
+        }
+
+        // Load discover events function
+        function loadDiscoverEvents() {
+            const discoverEventsElement = document.getElementById('discover-events');
+
+            if (!discoverEventsElement) return;
+
+            // Clear existing content
+            discoverEventsElement.innerHTML = '';
+
+            // Sample discover events data
+            const discoverEvents = [
+                {
+                    id: 101,
+                    name: 'Aceh Ramadhan Festival 2025',
+                    date: '12-17 Mar 2025',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    image: '../../assets/image/event1.jpg'
+                },
+                {
+                    id: 102,
+                    name: 'Aceh Culinary Festival',
+                    date: '10 Apr 2025',
+                    location: 'Banda Aceh',
+                    category: 'Kuliner',
+                    image: '../../assets/image/event2.jpg'
+                },
+                {
+                    id: 103,
+                    name: 'Festival Kupi',
+                    date: '8 Jun 2025',
+                    location: 'Banda Aceh',
+                    category: 'Kuliner',
+                    image: '../../assets/image/event4.jpeg'
+                },
+                {
+                    id: 104,
+                    name: 'Peringatan Tsunami Aceh',
+                    date: '26 Des 2024',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    image: '../../assets/image/event5.jpeg'
+                },
+                {
+                    id: 105,
+                    name: 'HMM Fest 2025',
+                    date: '18 Jun 2025',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    image: '../../assets/image/event6.jpeg'
+                },
+                {
+                    id: 106,
+                    name: 'Duta Kebudayaan Aceh 2025',
+                    date: '20 Feb - 20 Mar 2025',
+                    location: 'Banda Aceh',
+                    category: 'Festival',
+                    image: '../../assets/image/event7.jpeg'
+                }
+            ];
+
+            // Add discover events to grid
+            discoverEvents.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'discover-event-card';
+                eventCard.innerHTML = `
+                    <div class="discover-event-img">
+                        <img src="${event.image}" alt="${event.name}">
+                    </div>
+                    <div class="discover-event-content">
+                        <span class="discover-event-date">${event.date}</span>
+                        <h3 class="discover-event-title">${event.name}</h3>
+                        <div class="discover-event-footer">
+                            <div class="discover-event-location">
+                                <i class="fas fa-map-marker-alt"></i> ${event.location}
+                            </div>
+                            <div class="discover-event-category">
+                                ${event.category}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                discoverEventsElement.appendChild(eventCard);
+
+                // Add click event to card
+                eventCard.addEventListener('click', () => viewDiscoverEvent(event.id));
+            });
+        }
+
+        // View discover event function
+        function viewDiscoverEvent(eventId) {
+            console.log('View discover event:', eventId);
+            // In a real application, this would open the event details page
+            alert('Melihat detail event ID: ' + eventId);
+        }
+
+        // Load upcoming events function
+        function loadUpcomingEvents() {
+            const upcomingEventsElement = document.getElementById('upcoming-events');
+
+            if (!upcomingEventsElement) return;
+
+            // Clear existing content
+            upcomingEventsElement.innerHTML = '';
+
+            // Sample upcoming events data
+            const upcomingEvents = [
+                {
+                    id: 201,
+                    name: 'Festival Kupi 2025',
+                    date: '8 Jun 2025',
+                    time: '09:00 - 17:00',
+                    day: '8',
+                    month: 'Jun'
+                },
+                {
+                    id: 202,
+                    name: 'Digital Marketing Workshop',
+                    date: '10 Apr 2025',
+                    time: '13:00 - 16:00',
+                    day: '10',
+                    month: 'Apr'
+                },
+                {
+                    id: 203,
+                    name: 'Indonesia Music Festival',
+                    date: '15 May 2025',
+                    time: '14:00 - 23:00',
+                    day: '15',
+                    month: 'May'
+                }
+            ];
+
+            // Add upcoming events to list
+            upcomingEvents.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'upcoming-event';
+                eventElement.innerHTML = `
+                    <div class="upcoming-event-date">
+                        <span class="upcoming-event-day">${event.day}</span>
+                        <span class="upcoming-event-month">${event.month}</span>
+                    </div>
+                    <div class="upcoming-event-info">
+                        <h3 class="upcoming-event-title">${event.name}</h3>
+                        <div class="upcoming-event-time">
+                            <i class="far fa-clock"></i> ${event.time}
+                        </div>
+                    </div>
+                `;
+
+                upcomingEventsElement.appendChild(eventElement);
+
+                // Add click event
+                eventElement.addEventListener('click', () => viewUpcomingEvent(event.id));
+            });
+        }
+
+        // View upcoming event function
+        function viewUpcomingEvent(eventId) {
+            console.log('View upcoming event:', eventId);
+            // In a real application, this would open the event details page
+            alert('Melihat detail event ID: ' + eventId);
+        }
+
+        // Load notifications function
+        function loadNotifications() {
+            const notificationsElement = document.getElementById('notifications');
+
+            if (!notificationsElement) return;
+
+            // Clear existing content
+            notificationsElement.innerHTML = '';
+
+            // Sample notifications data
+            const notifications = [
+                {
+                    id: 301,
+                    icon: 'fas fa-bell',
+                    text: '<strong>Event Baru:</strong> Informatic Festival 2025 telah ditambahkan.',
+                    time: '5 menit yang lalu'
+                },
+                {
+                    id: 302,
+                    icon: 'fas fa-envelope',
+                    text: '<strong>Pengingat:</strong> Festival Kupi akan dimulai dalam 45 hari.',
+                    time: '1 jam yang lalu'
+                },
+                {
+                    id: 303,
+                    icon: 'fas fa-user-plus',
+                    text: '<strong>Pendaftaran:</strong> 5 peserta baru mendaftar di event Informatics Festival Anda.',
+                    time: '2 jam yang lalu'
+                }
+            ];
+
+            // Add notifications to list
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement('div');
+                notificationElement.className = 'notification';
+                notificationElement.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="${notification.icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            ${notification.text}
+                        </div>
+                        <div class="notification-time">${notification.time}</div>
+                    </div>
+                `;
+
+                notificationsElement.appendChild(notificationElement);
+            });
+        }
+    </script>
 </body>
+
 </html>
