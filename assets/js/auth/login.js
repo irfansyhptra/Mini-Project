@@ -35,24 +35,8 @@ function showSuccess(message) {
 const onLogin = () => {
   const loginForm = document.getElementById("login-form");
   const loginButton = document.getElementById("login-button");
-  const passwordToggle = document.getElementById("toggle-password");
-  const passwordInput = document.getElementById("login-password");
-  const emailInput = document.getElementById("login-email");
-
-  // Password visibility toggle
-  if (passwordToggle && passwordInput) {
-    passwordToggle.addEventListener("click", () => {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-
-      // Change icon
-      const icon = passwordToggle.querySelector("i");
-      if (icon) {
-        icon.classList.toggle("fa-eye");
-        icon.classList.toggle("fa-eye-slash");
-      }
-    });
-  }
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
   // Handle form submission
   if (loginForm) {
@@ -84,38 +68,34 @@ const onLogin = () => {
         console.log("Login response:", res);
 
         if (res.status === 200) {
-          // Simpan token dan data user yang DITERIMA DARI BACKEND
+          // Simpan data sesi dengan validasi
+          if (!res.token || !res.user || !res.user.userId) {
+            throw new Error('Data respons tidak lengkap');
+          }
+
+          // Hapus data sesi lama jika ada
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('userId');
+
+          // Simpan data sesi baru
           localStorage.setItem("token", res.token);
-          localStorage.setItem("user", JSON.stringify(res.user)); // Simpan data user lengkap
-          localStorage.setItem("userId", res.user.userId); // Simpan ID user secara terpisah
+          localStorage.setItem("user", JSON.stringify(res.user));
+          localStorage.setItem("userId", res.user.userId);
 
-          // Dapatkan data user dari respons untuk cek role
-          // Asumsi: res.data adalah objek user langsung.
-          // Jika res.data adalah { data: { user: {...} } } atau sejenisnya, sesuaikan lagi di sini.
-          const userData = res.data;
-
-          // Pastikan properti role ada dan sesuai dengan backend
-          // Jika role di backend adalah string "admin" atau "user", gunakan perbandingan string
-          // Contoh: if (userData.role === "admin")
-          if (userData.role === true) {
-            // Jika role di backend adalah boolean true
+          // Redirect berdasarkan role
+          if (res.user.role === true) {
             showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
             setTimeout(() => {
-              console.log("Redirecting to admin dashboard...");
-              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/dashboardAdmin.html"
-              window.location.href = window.location.origin + "/page/dashboardAdmin.html";
+              window.location.href = "/pages/admin/dashboardAdmin.html";
             }, 1500);
           } else {
-            // Pengguna biasa
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
-              console.log("Redirecting to user dashboard...");
-              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/berandaUser.html"
-              window.location.href = window.location.origin + "/page/berandaUser.html";
+              window.location.href = "/pages/user/dashboardUser.html";
             }, 1500);
           }
         } else {
-          // Jika login gagal, tampilkan pesan error dari backend
           showError(res.message || "Login gagal. Silakan coba lagi.");
         }
       } catch (error) {
@@ -124,7 +104,7 @@ const onLogin = () => {
       } finally {
         if (loginButton) {
           loginButton.disabled = false;
-          loginButton.innerHTML = "Masuk";
+          loginButton.innerHTML = 'Login';
         }
       }
     });

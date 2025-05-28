@@ -5,46 +5,77 @@ const API_BASE_URL_DASH = 'https://back-end-eventory.vercel.app';
 let currentToken;
 let currentUserId;
 
-document.addEventListener('DOMContentLoaded', function () {
-    // --- PENGAMBILAN TOKEN DAN CEK AUTENTIKASI ---
+// Fungsi untuk validasi sesi
+function validateSession() {
     const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Sesi Anda tidak valid atau telah berakhir. Silakan login kembali.');
-        window.location.href = 'login.html'; // Sesuaikan path
-        return;
+    const userData = localStorage.getItem('user');
+    
+    if (!token || !userData) {
+        handleInvalidSession('Sesi Anda tidak valid atau telah berakhir. Silakan login kembali.');
+        return false;
     }
-    currentToken = token;
 
-    let userId = localStorage.getItem('userId'); // Coba ambil 'userId' secara langsung
-
-    if (!userId) {
-        // Fallback: Jika 'userId' tidak ada, coba ambil dari objek 'user' di localStorage
-        console.warn("'userId' tidak ditemukan langsung di localStorage. Mencoba fallback dari objek 'user'.");
-        const userDataString = localStorage.getItem('user');
-        if (userDataString) {
-            try {
-                const userData = JSON.parse(userDataString);
-                if (userData && userData._id) {
-                    userId = userData._id;
-                    // Opsional & Direkomendasikan: Simpan sebagai 'userId' untuk konsistensi ke depan
-                    localStorage.setItem('userId', userId);
-                    console.log("Berhasil mendapatkan UserID dari objek 'user' dan menyimpannya sebagai 'userId'.");
-                }
-            } catch (e) {
-                console.error("Gagal mem-parsing data 'user' dari localStorage:", e);
-            }
+    try {
+        const user = JSON.parse(userData);
+        if (!user || !user.userId) {
+            handleInvalidSession('Data pengguna tidak lengkap. Silakan login kembali.');
+            return false;
         }
+        
+        currentToken = token;
+        currentUserId = user.userId;
+        return true;
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        handleInvalidSession('Terjadi kesalahan saat memvalidasi sesi. Silakan login kembali.');
+        return false;
     }
+}
 
-    // Cek ulang setelah fallback
-    if (!userId) {
-        alert('ID Pengguna tidak ditemukan. Sesi mungkin tidak lengkap atau rusak. Silakan login kembali.');
-        localStorage.removeItem('token'); // Hapus token karena sesi tidak lengkap
-        localStorage.removeItem('user');  // Hapus juga objek user jika ada
-        window.location.href = 'login.html'; // Sesuaikan path
+// Fungsi untuk menangani sesi tidak valid
+function handleInvalidSession(message) {
+    // Hapus semua data sesi
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+    
+    // Tampilkan pesan dan redirect
+    alert(message);
+    window.location.href = '../../index.html';
+}
+
+// Fungsi untuk memeriksa token
+async function checkTokenValidity() {
+    try {
+        const response = await fetch(`${API_BASE_URL_DASH}/auth/verify-token`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Token tidak valid');
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Token validation error:', error);
+        handleInvalidSession('Sesi Anda telah berakhir. Silakan login kembali.');
+        return false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    // Validasi sesi saat halaman dimuat
+    if (!validateSession()) {
         return;
     }
-    currentUserId = userId;
+
+    // Verifikasi token dengan backend
+    if (!await checkTokenValidity()) {
+        return;
+    }
 
     // Initialize AOS
     if (typeof AOS !== 'undefined') {
