@@ -881,18 +881,6 @@
         // Update tahun di footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Contoh dasar untuk toggle menu sidebar (jika belum ada di file JS terpisah)
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const mainContentWrapper = document.querySelector('.main-content-wrapper');
-
-        if (menuToggle && sidebar && mainContentWrapper) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                mainContentWrapper.classList.toggle('expanded');
-            });
-        }
-
         // Contoh dasar untuk user dropdown (jika belum ada di file JS terpisah)
         const userDropdownToggle = document.getElementById('user-dropdown-toggle');
         const userDropdownMenu = document.getElementById('user-dropdown-menu');
@@ -924,7 +912,6 @@
         }
 
         // Menghubungkan tombol logout
-        const logoutSidebar = document.getElementById('logout-btn-sidebar');
         const logoutDropdown = document.getElementById('logout-btn-dropdown');
 
         function handleLogoutAction(e) {
@@ -939,10 +926,7 @@
                 // localStorage.removeItem('user');
                 // window.location.href = '../auth/login.html';
             }
-        }
-
-        if (logoutSidebar) logoutSidebar.addEventListener('click', handleLogoutAction);
-        if (logoutDropdown) logoutDropdown.addEventListener('click', handleLogoutAction);
+        };
 
     </script>
 </body>
