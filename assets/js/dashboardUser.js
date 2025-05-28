@@ -1,28 +1,50 @@
-// dashboardUser.js (Optimized with new token handling)
+// dashboardUser.js (Dengan fallback untuk userId)
 
-// --- KONFIGURASI & KONSTANTA GLOBAL (jika ada yang tidak bergantung pada DOM) ---
+// --- KONFIGURASI & KONSTANTA GLOBAL ---
 const API_BASE_URL_DASH = 'https://back-end-eventory.vercel.app';
-let currentToken; // Akan diinisialisasi di DOMContentLoaded
-let currentUserId; // Akan diinisialisasi di DOMContentLoaded
+let currentToken;
+let currentUserId;
 
 document.addEventListener('DOMContentLoaded', function () {
-    // --- PENGAMBILAN TOKEN DAN CEK AUTENTIKASI (sesuai permintaan Anda) ---
+    // --- PENGAMBILAN TOKEN DAN CEK AUTENTIKASI ---
     const token = localStorage.getItem('token');
     if (!token) {
         alert('Sesi Anda tidak valid atau telah berakhir. Silakan login kembali.');
-        window.location.href = 'login.html'; // Sesuaikan path ke halaman login Anda
-        return; // Hentikan eksekusi skrip lebih lanjut
+        window.location.href = 'login.html'; // Sesuaikan path
+        return;
     }
-    currentToken = token; // Simpan token yang valid untuk digunakan di seluruh skrip
+    currentToken = token;
 
-    const userId = localStorage.getItem('_id');
+    let userId = localStorage.getItem('userId'); // Coba ambil 'userId' secara langsung
+
+    if (!userId) {
+        // Fallback: Jika 'userId' tidak ada, coba ambil dari objek 'user' di localStorage
+        console.warn("'userId' tidak ditemukan langsung di localStorage. Mencoba fallback dari objek 'user'.");
+        const userDataString = localStorage.getItem('user');
+        if (userDataString) {
+            try {
+                const userData = JSON.parse(userDataString);
+                if (userData && userData._id) {
+                    userId = userData._id;
+                    // Opsional & Direkomendasikan: Simpan sebagai 'userId' untuk konsistensi ke depan
+                    localStorage.setItem('userId', userId);
+                    console.log("Berhasil mendapatkan UserID dari objek 'user' dan menyimpannya sebagai 'userId'.");
+                }
+            } catch (e) {
+                console.error("Gagal mem-parsing data 'user' dari localStorage:", e);
+            }
+        }
+    }
+
+    // Cek ulang setelah fallback
     if (!userId) {
         alert('ID Pengguna tidak ditemukan. Sesi mungkin tidak lengkap atau rusak. Silakan login kembali.');
-        localStorage.removeItem('token'); // Hapus token yang mungkin tidak valid/lengkap
+        localStorage.removeItem('token'); // Hapus token karena sesi tidak lengkap
+        localStorage.removeItem('user');  // Hapus juga objek user jika ada
         window.location.href = 'login.html'; // Sesuaikan path
-        return; // Hentikan eksekusi
+        return;
     }
-    currentUserId = userId; // Simpan userId yang valid
+    currentUserId = userId;
 
     // Initialize AOS
     if (typeof AOS !== 'undefined') {
@@ -32,10 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
             once: true
         });
     } else {
-        console.warn('AOS library not found. Animations will not work.');
+        console.warn('AOS library not found.');
     }
 
-    // --- ELEMEN DOM (sekarang aman untuk diambil karena DOM sudah ready) ---
+    // --- ELEMEN DOM ---
     const eventListContainerDash = document.getElementById('event-list');
     const menuToggleDash = document.getElementById('menu-toggle');
     const sidebarDash = document.getElementById('sidebar');
@@ -54,7 +76,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- STATE APLIKASI ---
     let myEventsCacheDash = [];
 
-    // --- FUNGSI UTILITAS GLOBAL (Dapat diakses oleh createEvent.js via window) ---
+    // --- FUNGSI UTILITAS GLOBAL ---
+    // (Salin semua fungsi window.formatDashboardDate, window.showGlobalNotification, dll. dari versi sebelumnya ke sini)
+    // ... (Semua fungsi utilitas yang sudah ada sebelumnya) ...
     window.formatDashboardDate = (dateString, options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) => {
         if (!dateString) return 'N/A'; try { return new Date(dateString).toLocaleDateString('id-ID', options); }
         catch (e) { console.warn("Invalid date for formatDashboardDate:", dateString, e); return "Format Tanggal Salah"; }
@@ -73,26 +97,26 @@ document.addEventListener('DOMContentLoaded', function () {
             return `${Math.floor(diffInSeconds / 86400)} hari lalu`;
         } catch (e) { console.warn("Invalid date for formatDashboardTimeAgo:", dateString, e); return "Format Waktu Salah"; }
     };
-    window.getDashboardStatusClass = (status) => { /* ... implementasi dari versi sebelumnya ... */ 
+    window.getDashboardStatusClass = (status) => { 
         const s = { p: 'pending', a: 'approved', r: 'rejected', c: 'cancelled', co: 'completed', ac: 'active' };
         const sc = { [s.p]: 'status-pending', [s.a]: 'status-approved', [s.r]: 'status-rejected', [s.c]: 'status-cancelled', [s.co]: 'status-completed', [s.ac]: 'status-active' };
         return sc[String(status).toLowerCase()] || 'status-default';
     };
-    window.getDashboardStatusText = (status) => { /* ... implementasi dari versi sebelumnya ... */ 
+    window.getDashboardStatusText = (status) => { 
         const s = { p: 'pending', a: 'approved', r: 'rejected', c: 'cancelled', co: 'completed', ac: 'active' };
         const st = { [s.p]: 'Menunggu Verifikasi', [s.a]: 'Terverifikasi', [s.r]: 'Ditolak', [s.c]: 'Dibatalkan', [s.co]: 'Selesai', [s.ac]: 'Sedang Berlangsung' };
         return st[String(status).toLowerCase()] || status || 'Tidak Diketahui';
     };
-    window.getDashboardNotificationIcon = (type) => { /* ... implementasi dari versi sebelumnya ... */ 
+    window.getDashboardNotificationIcon = (type) => { 
         const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle', event_created: 'fa-calendar-plus', default: 'fa-info-circle' };
         return icons[type] || icons.default;
     };
-    function createGlobalNotificationAreaInternalDash() { /* ... implementasi dari versi sebelumnya ... */ 
+    function createGlobalNotificationAreaInternalDash() { 
         let area = document.getElementById('global-notification-area');
         if (!area) { area = document.createElement('div'); area.id = 'global-notification-area'; document.body.appendChild(area); }
         return area;
     }
-    window.showGlobalNotification = (message, type = 'info', duration = 5000) => { /* ... implementasi dari versi sebelumnya ... */ 
+    window.showGlobalNotification = (message, type = 'info', duration = 5000) => { 
         const notificationArea = createGlobalNotificationAreaInternalDash();
         const n = document.createElement('div'); n.className = `custom-notification custom-notification-${type}`;
         n.innerHTML = `<div class="custom-notification-icon"><i class="fas ${window.getDashboardNotificationIcon(type)}"></i></div><div class="custom-notification-message">${message}</div><button class="custom-notification-close">&times;</button>`;
@@ -103,15 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // --- PEMANGGILAN API ---
-    async function fetchApiDashboardInternal(endpoint, options = {}) {
+    async function fetchApiDashboardInternal(endpoint, options = {}) { /* ... implementasi dari versi sebelumnya, gunakan currentToken ... */
         try {
             const response = await fetch(`${API_BASE_URL_DASH}${endpoint}`, {
-                headers: {
-                    'Authorization': `Bearer ${currentToken}`, // Menggunakan currentToken yang sudah divalidasi
-                    'Content-Type': 'application/json',
-                    ...options.headers,
-                },
-                ...options,
+                headers: { 'Authorization': `Bearer ${currentToken}`, 'Content-Type': 'application/json', ...options.headers, }, ...options,
             });
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: `Server Error: ${response.status}` }));
@@ -119,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) return response.json();
-            return response.text(); // Handle respons non-JSON jika ada
+            return response.text();
         } catch (error) {
             console.error(`API call to ${API_BASE_URL_DASH}${endpoint} failed:`, error);
             window.showGlobalNotification(error.message || 'Kesalahan jaringan saat mengambil data.', 'error');
@@ -128,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- RENDER "MY EVENTS" ---
-    function renderMyEventsListInternal(events) { /* ... implementasi dari versi sebelumnya, pastikan menggunakan window.utilityFunctions ... */ 
+    function renderMyEventsListInternal(events) { /* ... implementasi dari versi sebelumnya ... */ 
         if (!eventListContainerDash) return;
         if (!events || events.length === 0) {
             eventListContainerDash.innerHTML = `<div class="empty-state col-span-full text-center py-10" data-aos="fade-up"><i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i><p class="text-xl text-gray-600">Anda belum memiliki event.</p><a href="createEvent.html" class="btn btn-primary mt-6 inline-block"> <i class="fas fa-plus mr-2"></i>Buat Event</a></div>`;
@@ -144,17 +163,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- MEMUAT DATA DASHBOARD ---
-    async function loadMyEventsDataInternal() {
+    async function loadMyEventsDataInternal() { /* ... implementasi dari versi sebelumnya, gunakan currentUserId ... */
         if (!eventListContainerDash && !currentUserId) return;
         try {
-            // Tampilkan placeholder loading jika perlu
             if(eventListContainerDash) eventListContainerDash.innerHTML = `<p class="col-span-full text-center py-10">Memuat event Anda...</p>`;
-            const response = await fetchApiDashboardInternal(`/event/getByCreatorID/${currentUserId}`); // Menggunakan currentUserId
+            const response = await fetchApiDashboardInternal(`/event/getByCreatorID/${currentUserId}`);
             myEventsCacheDash = response.data || [];
             renderMyEventsListInternal(myEventsCacheDash);
         } catch (error) {
             if (eventListContainerDash) renderMyEventsListInternal([]);
-            // Notifikasi error sudah ditangani oleh fetchApiDashboardInternal
         }
     }
     async function loadDashboardStatsDataInternal() { /* ... implementasi seperti sebelumnya ... */ 
@@ -227,10 +244,10 @@ document.addEventListener('DOMContentLoaded', function () {
     async function handleLogoutUserInternal(e) { /* ... implementasi seperti sebelumnya ... */ 
         e.preventDefault(); window.showGlobalNotification('Logout...', 'info', null);
         localStorage.removeItem('token'); localStorage.removeItem('userId'); localStorage.removeItem('user');
-        currentToken = null; currentUserId = null; // Bersihkan variabel global juga
+        currentToken = null; currentUserId = null;
         setTimeout(() => { window.location.href = '../auth/login.html'; }, 1500);
     }
-    function handleMyEventsActionsInternal(e) { /* ... implementasi seperti sebelumnya, gunakan currentUserId jika perlu ... */ 
+    function handleMyEventsActionsInternal(e) { /* ... implementasi seperti sebelumnya ... */ 
         const button = e.target.closest('button.btn-view, button.btn-edit, button.btn-delete');
         if (!button) return;
         const action = button.dataset.action; const eventId = button.dataset.eventId;
@@ -239,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (action === 'edit') window.location.href = `editEvent.html?id=${eventId}`;
         else if (action === 'delete') confirmDeleteMyEventInternal(eventId, button.closest('.event-card'));
     }
-    async function confirmDeleteMyEventInternal(eventId, eventElement) { /* ... implementasi seperti sebelumnya, gunakan currentToken ... */ 
+    async function confirmDeleteMyEventInternal(eventId, eventElement) { /* ... implementasi seperti sebelumnya ... */ 
         if (!confirm('Yakin hapus event ini?')) return;
         window.showGlobalNotification('Menghapus...', 'info', null);
         try {
@@ -252,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
             loadDashboardStatsDataInternal();
         } catch (error) { /* error sudah ditangani fetchApi */ }
     }
-    function handleGeneralDashboardClicksInternal(e) { /* ... implementasi seperti sebelumnya ... */ 
+     function handleGeneralDashboardClicksInternal(e) { /* ... implementasi seperti sebelumnya ... */ 
         const discoverCard = e.target.closest('.discover-event-card[data-action="view-discover-event"]');
         if (discoverCard) { window.location.href = `eventDetail.html?id=${discoverCard.dataset.id}`; return; }
         const upcomingWidgetEvent = e.target.closest('.upcoming-event[data-action="view-upcoming-widget-event"]');
@@ -272,33 +289,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- INISIALISASI DASHBOARD ---
     function initializeUserDashboardInternal() {
-        // Cek autentikasi sudah dilakukan di awal DOMContentLoaded
         setupDashboardEventListenersInternal();
         Promise.allSettled([
-            loadMyEventsDataInternal(),
-            loadDashboardStatsDataInternal(),
-            loadDiscoverEventsDataInternal(),
-            loadUpcomingEventsWidgetDataInternal(),
+            loadMyEventsDataInternal(), loadDashboardStatsDataInternal(),
+            loadDiscoverEventsDataInternal(), loadUpcomingEventsWidgetDataInternal(),
             loadNotificationsDataInternal()
         ]).then(results => {
             results.forEach(result => {
-                if (result.status === 'rejected') {
-                    console.warn('Satu atau lebih pemuatan data dashboard gagal:', result.reason);
-                }
+                if (result.status === 'rejected') console.warn('Sebagian data dashboard gagal dimuat:', result.reason);
             });
             console.log('Dashboard pengguna selesai diinisialisasi.');
             if (typeof AOS !== 'undefined') AOS.refresh();
         });
     }
 
-    // Jalankan inisialisasi dashboard utama
     initializeUserDashboardInternal();
 
-    // Ekspos fungsi untuk di panggil oleh createEvent.js (jika createEvent.js masih terpisah)
+    // Ekspos fungsi untuk di panggil oleh createEvent.js
     window.refreshDashboardData = () => {
         console.log('Memperbarui data dashboard dari panggilan eksternal...');
         loadMyEventsDataInternal();
         loadDashboardStatsDataInternal();
-        // Opsional: refresh bagian lain jika perlu
     };
 });
