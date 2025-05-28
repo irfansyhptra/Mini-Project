@@ -99,12 +99,12 @@ const onLogin = () => {
           if (userData.role === true) {
             showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
             setTimeout(() => {
-              window.location.href = "/page/user/dashboardUser.html";
+              window.location.href = "/page/dashboardUser.html";
             }, 1500);
           } else {
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
-              window.location.href = "/page/admin/berandaAdmin.html";
+              window.location.href = "/page/berandaAdmin.html";
             }, 1500);
           }
         } else {
