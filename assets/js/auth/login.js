@@ -4,12 +4,14 @@ function showErrorLogin(message) {
   const container = document.getElementById("message-container");
   if (container) {
     container.textContent = message;
-    container.className = "message error"; // Pastikan ada style CSS untuk .message.error
+    // Pastikan Anda memiliki style CSS untuk kelas .message dan .error
+    // Contoh: .message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    container.className = "message error";
     container.classList.remove("hidden");
     setTimeout(() => container.classList.add("hidden"), 5000);
   } else {
-    console.error("Login Error (no container):", message);
-    alert(`Error: ${message}`);
+    console.error("Login Error (message-container not found):", message);
+    alert(`Error: ${message}`); // Fallback
   }
 }
 
@@ -17,12 +19,14 @@ function showSuccessLogin(message) {
   const container = document.getElementById("message-container");
   if (container) {
     container.textContent = message;
-    container.className = "message success"; // Pastikan ada style CSS untuk .message.success
+    // Pastikan Anda memiliki style CSS untuk kelas .message dan .success
+    // Contoh: .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    container.className = "message success";
     container.classList.remove("hidden");
     setTimeout(() => container.classList.add("hidden"), 3000);
   } else {
-    console.log("Login Success (no container):", message);
-    alert(`Success: ${message}`);
+    console.log("Login Success (message-container not found):", message);
+    alert(`Success: ${message}`); // Fallback
   }
 }
 
@@ -34,7 +38,12 @@ const onLogin = () => {
   const emailInput = document.getElementById("login-email");
 
   if (!loginForm || !loginButton || !passwordInput || !emailInput) {
-      console.error("Satu atau lebih elemen form login tidak ditemukan!");
+      console.error("Satu atau lebih elemen form login tidak ditemukan di login.js!");
+      // Nonaktifkan fungsionalitas jika elemen penting tidak ada
+      if(loginForm) loginForm.onsubmit = () => {
+          showErrorLogin("Formulir login tidak dapat diproses saat ini.");
+          return false;
+      };
       return;
   }
 
@@ -67,40 +76,44 @@ const onLogin = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const backendResponse = await response.json(); // Simpan hasil parsing json
+      const backendResponse = await response.json();
       console.log("Login backend response:", backendResponse);
 
-      // Menggunakan backendResponse untuk pengecekan
-      if (response.ok && backendResponse.token && backendResponse.data && backendResponse.data._id) {
+      // Pengecekan respons dari backend
+      if (response.ok && backendResponse.status === 200 && backendResponse.token && backendResponse.data && backendResponse.data._id) {
+          // Simpan token
           localStorage.setItem("token", backendResponse.token);
-          // Menyimpan objek user dari backendResponse.data
+          // Simpan seluruh objek user (dari backendResponse.data)
           localStorage.setItem("user", JSON.stringify(backendResponse.data));
-          localStorage.setItem("userId", backendResponse.data._id); // Ini adalah CreatorID
+          // Simpan _id user secara terpisah sebagai userId (untuk CreatorID/ID Pelapor)
+          localStorage.setItem("userId", backendResponse.data._id);
 
-          // Penentuan role (sesuaikan dengan field 'role' di objek user dari backend Anda)
-          // Contoh: jika backendResponse.data.role adalah string "admin" atau "user"
-          // Atau backendResponse.data.role adalah boolean dimana true = user (sesuai register.js)
-          const isAdmin = backendResponse.data.role === false || String(backendResponse.data.role).toLowerCase() === "false";
-          // Jika di register.js role diset "true" untuk user, maka "false" atau tidak "true" adalah admin.
-          // Anda mungkin perlu menyesuaikan logika ini berdasarkan implementasi role di backend Anda.
+          // Logika penentuan peran (role)
+          // Sesuaikan ini dengan bagaimana 'role' direpresentasikan di objek 'user' (backendResponse.data.role)
+          // Contoh: jika role adalah string "admin" atau "user"
+          // Atau jika 'role' adalah boolean true/false seperti di register.js Anda
+          const userRole = backendResponse.data.role; // Ambil nilai role
+          const isAdmin = String(userRole).toLowerCase() === "false"; // Asumsi "false" (string atau boolean) adalah admin
 
           showSuccessLogin("Login berhasil! Mengalihkan...");
           setTimeout(() => {
               if (isAdmin) {
                   console.log("Redirecting to admin dashboard...");
-                  window.location.href = "dashboardAdmin.html"; // Sesuaikan path
+                  // Pastikan path ini benar relatif terhadap halaman login.html
+                  window.location.href = "dashboardAdmin.html";
               } else {
                   console.log("Redirecting to user dashboard...");
-                  window.location.href = "dashboardUser.html"; // Sesuaikan path
+                  // Pastikan path ini benar relatif terhadap halaman login.html
+                  window.location.href = "dashboardUser.html";
               }
           }, 1500);
 
       } else {
-          showErrorLogin(backendResponse.message || "Login gagal. Periksa email dan kata sandi Anda.");
+          showErrorLogin(backendResponse.message || "Login gagal. Periksa kembali email dan kata sandi Anda.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      showErrorLogin("Terjadi kesalahan teknis saat login. Silakan coba lagi.");
+      showErrorLogin("Terjadi kesalahan teknis saat proses login. Silakan coba lagi nanti.");
     } finally {
       loginButton.disabled = false;
       loginButton.innerHTML = "Masuk";

@@ -1,68 +1,73 @@
-// assets/js/dashboardUser.js (Optimized - Token & CreatorID Focus)
+// assets/js/dashboardUser.js (Optimized - Consistent CreatorID/ID Pelapor Usage)
 
 document.addEventListener('DOMContentLoaded', async function () {
-    // --- KONFIGURASI & KONSTANTA GLOBAL ---
     const API_BASE_URL_DASH = 'https://back-end-eventory.vercel.app';
     let currentToken;
-    let currentUserId; // Ini akan menjadi CreatorID
+    let currentUserId; // Ini akan menjadi CreatorID (ID Pelapor)
     let currentUserData;
     let myEventsCacheDash = [];
 
-    // --- PENGAMBILAN TOKEN DAN USER DATA, CEK AUTENTIKASI ---
+    // 1. --- PENGAMBILAN TOKEN DAN INFORMASI PENGGUNA ---
     currentToken = localStorage.getItem('token');
+    currentUserId = localStorage.getItem('userId'); // Langsung ambil userId (CreatorID)
     const userDataString = localStorage.getItem('user');
-    currentUserId = localStorage.getItem('userId'); // Ambil userId yang disimpan saat login
 
+    // Validasi Token
     if (!currentToken || currentToken === "null" || currentToken === "undefined" || currentToken.trim() === "") {
-        alert('Sesi Anda tidak valid atau telah berakhir (Token Error). Silakan login kembali.');
+        alert('Sesi Anda tidak valid atau telah berakhir (Token Bermasalah). Silakan login kembali.');
         localStorage.clear();
-        window.location.href = 'login.html'; // Sesuaikan path ke halaman login
+        window.location.href = 'login.html'; // Sesuaikan path jika perlu
         return;
     }
 
+    // Validasi CreatorID (userId)
+    if (!currentUserId || currentUserId === "null" || currentUserId === "undefined" || currentUserId.trim() === "") {
+        alert('ID Pengguna (ID Pelapor) tidak ditemukan. Sesi mungkin tidak valid. Silakan login kembali.');
+        localStorage.clear();
+        window.location.href = 'login.html'; // Sesuaikan path jika perlu
+        return;
+    }
+
+    // Validasi dan Parsing User Data
     if (!userDataString) {
         alert('Data pengguna tidak ditemukan di localStorage. Silakan login kembali.');
         localStorage.clear();
         window.location.href = 'login.html'; // Sesuaikan path
         return;
     }
-
     try {
         currentUserData = JSON.parse(userDataString);
-        // Pastikan currentUserId (CreatorID) benar-benar ada dan valid
-        if (!currentUserId) {
-            // Jika userId tidak ada di localStorage, coba ambil dari objek user
-            if (currentUserData && currentUserData._id) {
-                currentUserId = currentUserData._id;
-                localStorage.setItem('userId', currentUserId); // Simpan untuk konsistensi
-            } else {
-                throw new Error("ID Pengguna (CreatorID) tidak valid atau tidak ditemukan.");
-            }
+        // Verifikasi apakah _id di currentUserData sesuai dengan currentUserId jika perlu
+        if (currentUserData && currentUserData._id !== currentUserId) {
+            console.warn("Ketidaksesuaian antara userId di localStorage dan _id dalam objek user. Menggunakan userId dari localStorage.");
+            // Bisa jadi ada kasus dimana objek 'user' di-update tapi 'userId' tidak.
+            // Untuk konsistensi, kita bisa update objek 'user' jika _id nya beda:
+            // currentUserData._id = currentUserId;
+            // localStorage.setItem('user', JSON.stringify(currentUserData));
         }
     } catch (e) {
-        console.error("Error parsing user data atau mendapatkan CreatorID:", e);
-        alert('Data pengguna rusak atau CreatorID bermasalah. Silakan login kembali.');
+        console.error("Error parsing user data:", e);
+        alert('Data pengguna di localStorage rusak. Silakan login kembali.');
         localStorage.clear();
         window.location.href = 'login.html'; // Sesuaikan path
         return;
     }
 
+
     if (typeof AOS !== 'undefined') {
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
     }
 
-    // --- ELEMEN DOM ---
-    // (Pastikan semua ID elemen HTML Anda sudah benar dan sesuai)
+    // --- ELEMEN DOM (Pastikan ID sesuai dengan HTML Anda) ---
     const eventListContainerDash = document.getElementById('event-list');
     const menuToggleDash = document.getElementById('menu-toggle');
     const sidebarDash = document.getElementById('sidebar');
     const userDropdownToggleDash = document.getElementById('user-dropdown-toggle');
     const userDropdownMenuDash = document.getElementById('user-dropdown-menu');
-    const logoutBtnDropdown = userDropdownMenuDash?.querySelector('a[href*="index.html"]');
-    const logoutBtnSidebar = document.getElementById('logout-btn-sidebar');
+    const logoutBtnDropdown = userDropdownMenuDash?.querySelector('a[href*="index.html"]'); // Atau path login yg benar
+    const logoutBtnSidebar = document.getElementById('logout-btn-sidebar'); // Untuk myEvent.html
 
-    const statsCreatedEventsElDash = document.getElementById('created-events'); // Total event dibuat user
-    // ... elemen statistik lainnya jika ada ...
+    const statsCreatedEventsElDash = document.getElementById('created-events'); // Elemen untuk "Event Dibuat"
 
     const createEventModalEl = document.getElementById('create-event-modal');
     const createEventFormEl = document.getElementById('create-event-form');
@@ -83,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const ticketPriceGroupEl = document.getElementById('ticket-price-group');
     const ticketPriceInputEl = document.getElementById('ticket-price');
 
-    // --- FUNGSI UTILITAS GLOBAL (Sama seperti sebelumnya) ---
+    // --- FUNGSI UTILITAS (Sama seperti sebelumnya: format Tanggal, Status, Notifikasi) ---
     window.formatDashboardDate = (dateString, options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) => { if (!dateString) return 'N/A'; try { return new Date(dateString).toLocaleDateString('id-ID', options); } catch (e) { console.warn("Invalid date for format:", dateString); return "Format Salah"; }};
     window.getDashboardStatusClass = (status) => { const s = { pending: 'pending', approved: 'approved', rejected: 'rejected', cancelled: 'cancelled', completed: 'completed', active: 'active', default: 'default' }; const sc = { [s.pending]: 'status-pending', [s.approved]: 'status-approved', [s.rejected]: 'status-rejected', [s.cancelled]: 'status-cancelled', [s.completed]: 'status-completed', [s.active]: 'status-active' }; return sc[String(status).toLowerCase()] || s.default; };
     window.getDashboardStatusText = (status) => { const s = { pending: 'pending', approved: 'approved', rejected: 'rejected', cancelled: 'cancelled', completed: 'completed', active: 'active' }; const st = { [s.pending]: 'Menunggu Verifikasi', [s.approved]: 'Terverifikasi', [s.rejected]: 'Ditolak', [s.cancelled]: 'Dibatalkan', [s.completed]: 'Selesai', [s.active]: 'Sedang Berlangsung' }; return st[String(status).toLowerCase()] || status || 'Tidak Diketahui'; };
@@ -91,14 +96,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     function createGlobalNotificationAreaInternalDash() { let area = document.getElementById('global-notification-area'); if (!area) { area = document.createElement('div'); area.id = 'global-notification-area'; Object.assign(area.style, { position: 'fixed', top: '20px', right: '20px', zIndex: '2000', width: 'auto', maxWidth: '400px' }); document.body.appendChild(area); } return area; }
     window.showGlobalNotification = (message, type = 'info', duration = 5000) => { const area = createGlobalNotificationAreaInternalDash(); const n = document.createElement('div'); const bgColor = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#17a2b8'; n.style.cssText = `padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; color: white; background-color: ${bgColor}; box-shadow: 0 2px 10px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; display: flex; align-items: center; transform: translateX(100%);`; n.innerHTML = `<i class="fas ${window.getDashboardNotificationIcon(type)}" style="margin-right: 10px; font-size: 1.2em;"></i><span style="flex-grow: 1;">${message}</span><button style="background:none; border:none; color:white; font-size:1.4em; line-height:1; cursor:pointer; margin-left:10px;">&times;</button>`; area.prepend(n); requestAnimationFrame(() => { n.style.opacity = '1';  n.style.transform = 'translateX(0)'; }); const dismiss = () => { n.style.opacity = '0'; n.style.transform = 'translateX(100%)'; setTimeout(() => n.remove(), 300); }; n.querySelector('button').addEventListener('click', dismiss); if (duration) setTimeout(dismiss, duration); };
 
-    // --- PEMANGGILAN API ---
+
+    // 2. --- PEMANGGILAN API ---
     async function fetchApiDashboardInternal(endpoint, options = {}) {
-        if (!currentToken || currentToken === "null" || currentToken === "undefined" || currentToken.trim() === "") {
-            console.error("API call aborted: Token is missing or invalid for endpoint", endpoint);
-            window.showGlobalNotification("Sesi Anda tidak valid. Silakan login kembali.", 'error');
-            localStorage.clear();
-            window.location.href = 'login.html'; // Sesuaikan path
-            throw new Error("Token tidak valid untuk panggilan API.");
+        // Token sudah divalidasi di awal, namun double check tidak ada salahnya
+        if (!currentToken) {
+            console.error("CRITICAL: Token hilang sebelum panggilan API ke", endpoint);
+            window.showGlobalNotification("Sesi berakhir. Harap login ulang.", 'error');
+            localStorage.clear(); window.location.href = 'login.html';
+            throw new Error("Token tidak ada untuk panggilan API.");
         }
 
         const headers = { 'Authorization': `Bearer ${currentToken}`, ...options.headers };
@@ -109,32 +115,30 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             const response = await fetch(`${API_BASE_URL_DASH}${endpoint}`, { ...options, headers });
             if (response.status === 401) {
-                console.error("API call failed with 401 (Unauthorized) to", endpoint);
-                window.showGlobalNotification("Akses ditolak. Sesi Anda mungkin telah berakhir.", 'error');
-                localStorage.clear();
-                window.location.href = 'login.html'; // Sesuaikan path
-                throw new Error("Unauthorized: Token tidak valid atau kadaluarsa.");
+                window.showGlobalNotification("Akses ditolak (401). Sesi Anda mungkin telah berakhir.", 'error');
+                localStorage.clear(); window.location.href = 'login.html';
+                throw new Error("Unauthorized (401): Token tidak valid atau kadaluarsa.");
             }
             const responseData = await response.json().catch(() => ({ success: false, message: `Respons server tidak valid (Status: ${response.status})` }));
             if (!response.ok) {
-                throw new Error(responseData.message || `Gagal memproses request. Status: ${response.status}`);
+                throw new Error(responseData.message || `Gagal memproses. Status: ${response.status}`);
             }
             return responseData;
         } catch (error) {
-            console.error(`API call to ${API_BASE_URL_DASH}${endpoint} failed:`, error.message);
-            if (error.message.indexOf("Unauthorized") === -1 && error.message.indexOf("Token tidak valid") === -1) {
-                 window.showGlobalNotification(error.message || 'Terjadi kesalahan pada server atau jaringan.', 'error');
+            console.error(`API call to ${API_BASE_URL_DASH}${endpoint} error:`, error.message);
+            if (!error.message.toLowerCase().includes("unauthorized") && !error.message.toLowerCase().includes("token")) {
+                 window.showGlobalNotification(error.message || 'Terjadi kesalahan server/jaringan.', 'error');
             }
             throw error;
         }
     }
 
-    // --- FUNGSI MODAL CREATE EVENT ---
+    // 3. --- FUNGSI MODAL CREATE EVENT ---
     function openCreateEventModalInternal() {
         if (createEventModalEl) {
             createEventFormEl?.reset();
             toggleTicketPriceVisibilityInternal();
-            createEventModalEl.classList.add('show'); // Sesuai CSS di dashboardUser.html
+            createEventModalEl.classList.add('show');
         }
     }
     function closeCreateEventModalInternal() { createEventModalEl?.classList.remove('show'); }
@@ -150,8 +154,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!dateString) return null;
         try {
             const date = new Date(dateString);
-            if (isNaN(date.getTime())) return null;
-            return date.toISOString();
+            return isNaN(date.getTime()) ? null : date.toISOString();
         } catch (e) { console.error("Error formatting date:", e); return null; }
     }
 
@@ -160,12 +163,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!createEventFormEl || !saveEventButtonEl) return;
 
         const requiredInputs = [eventNameInputEl, eventDescriptionInputEl, eventDateInputEl, eventLocationInputEl, eventCategoryInputEl, eventCapacityInputEl, eventImageInputEl, eventTicketsSelectEl];
-        if (requiredInputs.some(input => !input)) {
-            window.showGlobalNotification("Beberapa elemen form penting tidak ditemukan. Periksa ID di HTML Anda.", 'error');
-            return;
-        }
-        if (eventTicketsSelectEl.value === 'Berbayar' && !ticketPriceInputEl) {
-            window.showGlobalNotification("Elemen input harga tiket tidak ditemukan.", 'error');
+        if (requiredInputs.some(input => !input) || (eventTicketsSelectEl?.value === 'Berbayar' && !ticketPriceInputEl)) {
+            window.showGlobalNotification("Beberapa elemen form tidak ditemukan. Periksa ID di HTML.", 'error');
             return;
         }
 
@@ -188,7 +187,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             const formData = new FormData();
-            formData.append('CreatorID', currentUserId); // Menggunakan currentUserId sebagai CreatorID
+            // Menggunakan currentUserId yang sudah divalidasi sebagai CreatorID (ID Pelapor)
+            formData.append('CreatorID', currentUserId);
             formData.append('title', eventNameInputEl.value.trim());
             formData.append('description', eventDescriptionInputEl.value.trim());
             formData.append('date', dateForAPI);
@@ -212,17 +212,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         } catch (error) {
             console.error("Error saat membuat event:", error.message);
-            window.showGlobalNotification(error.message || 'Gagal membuat event. Pastikan semua field terisi.', 'error');
+            window.showGlobalNotification(error.message || 'Gagal membuat event.', 'error');
         } finally {
             saveEventButtonEl.disabled = false;
         }
     }
 
-    // --- RENDER "MY EVENTS" ---
+    // 4. --- RENDER "MY EVENTS" ---
     function renderMyEventsListInternal(events) {
         if (!eventListContainerDash) return;
         if (!events || events.length === 0) {
-            eventListContainerDash.innerHTML = `<div class="no-events col-span-full text-center py-10"><i class="fas fa-calendar-day fa-3x text-gray-400 mb-4"></i><p class="text-xl text-gray-600">Anda belum membuat event.</p><button id="create-first-event-empty-btn" class="btn btn-primary mt-6 inline-flex items-center"><i class="fas fa-plus mr-2"></i>Buat Event Baru</button></div>`;
+            eventListContainerDash.innerHTML = `<div class="no-events col-span-full text-center py-10"><i class="fas fa-calendar-day fa-3x text-gray-400 mb-4"></i><p class="text-xl text-gray-600">Anda belum memiliki event.</p><button id="create-first-event-empty-btn" class="btn btn-primary mt-6 inline-flex items-center"><i class="fas fa-plus mr-2"></i>Buat Event Baru</button></div>`;
             document.getElementById('create-first-event-empty-btn')?.addEventListener('click', openCreateEventModalInternal);
             return;
         }
@@ -246,52 +246,42 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    // --- MEMUAT DATA DASHBOARD ---
+    // 5. --- MEMUAT DATA DASHBOARD ---
     async function loadMyEventsDataInternal() {
-        if (!eventListContainerDash) {
-            console.warn("Elemen #event-list tidak ditemukan.");
-            return;
-        }
+        if (!eventListContainerDash) { return; }
+        // currentUserId sudah divalidasi di awal
         if (!currentUserId) {
-            window.showGlobalNotification("Gagal memuat event: CreatorID tidak ditemukan.", 'error');
+            window.showGlobalNotification("Gagal memuat event: ID Pelapor (CreatorID) tidak tersedia.", 'error');
             renderMyEventsListInternal([]);
             return;
         }
         try {
             eventListContainerDash.innerHTML = `<p class="col-span-full text-center py-10 text-gray-500">Memuat event Anda...</p>`;
-            // Endpoint ini mengharapkan CreatorID sebagai path parameter
+            // Endpoint ini membutuhkan CreatorID (ID Pelapor) sebagai path parameter
             const response = await fetchApiDashboardInternal(`/event/getByCreatorID/${currentUserId}`);
             myEventsCacheDash = response.data || [];
             renderMyEventsListInternal(myEventsCacheDash);
         } catch (error) {
-            // Error sudah ditangani di fetchApiDashboardInternal, cukup render state kosong
             renderMyEventsListInternal([]);
         }
     }
 
     async function loadDashboardStatsDataInternal() {
-        // Hanya panggil jika elemen statistik ada di halaman
-        if (!statsCreatedEventsElDash && !document.getElementById('total-events-joined-stat') /* contoh ID lain */) return;
-        
+        if (!statsCreatedEventsElDash /* && elemen stats lain */) return;
         if (!currentUserId) {
-            console.warn("Tidak dapat memuat statistik: CreatorID tidak ditemukan.");
+            console.warn("Tidak bisa memuat statistik: CreatorID (ID Pelapor) tidak ada.");
             if(statsCreatedEventsElDash) statsCreatedEventsElDash.textContent = '0';
-            // Set elemen stats lain ke 0 jika ada
             return;
         }
         try {
-            // Pastikan endpoint `/event/getUserStats/${currentUserId}` ada dan mengembalikan data yang diharapkan
-            const response = await fetchApiDashboardInternal(`/event/getUserStats/${currentUserId}`);
+            const response = await fetchApiDashboardInternal(`/event/getUserStats/${currentUserId}`); // Ganti dengan endpoint stats Anda
             const stats = response.data;
             if (stats) {
                 if (statsCreatedEventsElDash) statsCreatedEventsElDash.textContent = stats.totalEventsCreated || 0;
-                // Update elemen statistik lainnya sesuai data dari API
-                // Contoh: document.getElementById('total-events-joined-stat').textContent = stats.totalEventsJoined || 0;
-            } else {
-                if(statsCreatedEventsElDash) statsCreatedEventsElDash.textContent = '0';
-            }
+                // Update elemen statistik lain
+            } else { if(statsCreatedEventsElDash) statsCreatedEventsElDash.textContent = '0';}
         } catch (error) {
-            console.error('Gagal memuat statistik dashboard:', error.message);
+            console.error('Gagal memuat statistik:', error.message);
             if(statsCreatedEventsElDash) statsCreatedEventsElDash.textContent = '0';
         }
     }
@@ -300,18 +290,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     function handleSidebarToggleDashInternal() { sidebarDash?.classList.toggle('show'); }
     function handleUserDropdownToggleDashInternal(e) { e.stopPropagation(); userDropdownMenuDash?.classList.toggle('show'); }
     function handleClickOutsideDropdownDashInternal(e) { if (userDropdownMenuDash?.classList.contains('show') && !userDropdownToggleDash?.contains(e.target) && !userDropdownMenuDash.contains(e.target)) { userDropdownMenuDash.classList.remove('show'); } }
-    function handleLogoutUserInternal(e) { e.preventDefault(); window.showGlobalNotification('Anda berhasil logout...', 'info', 2000); localStorage.clear(); setTimeout(() => { window.location.href = 'login.html'; }, 1500); }
+    function handleLogoutUserInternal(e) { e.preventDefault(); window.showGlobalNotification('Anda berhasil logout.', 'info', 2000); localStorage.clear(); setTimeout(() => { window.location.href = 'login.html'; }, 1500); }
 
-    function handleMyEventsActionsInternal(e) {
+    function handleMyEventsActionsInternal(e) { /* ... (Sama seperti sebelumnya) ... */
         const button = e.target.closest('button[data-action]');
         if (!button) return;
         const action = button.dataset.action; const eventId = button.dataset.eventId;
         if (!action || !eventId) return;
-        if (action === 'view') window.location.href = `detail-event.html?id=${eventId}`; // Sesuaikan path
-        else if (action === 'edit') window.location.href = `editEvent.html?id=${eventId}`; // Sesuaikan path
+        if (action === 'view') window.location.href = `detail-event.html?id=${eventId}`;
+        else if (action === 'edit') window.location.href = `editEvent.html?id=${eventId}`;
         else if (action === 'delete') confirmDeleteMyEventInternal(eventId, button.closest('.event-item'));
     }
-    async function confirmDeleteMyEventInternal(eventId, eventElement) {
+    async function confirmDeleteMyEventInternal(eventId, eventElement) { /* ... (Sama seperti sebelumnya) ... */
         if (!confirm('Apakah Anda yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.')) return;
         window.showGlobalNotification('Menghapus event...', 'info', null);
         try {
@@ -333,14 +323,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             loadDashboardStatsDataInternal();
         } catch (error) {/* error sudah ditangani */}
     }
-    function updateUserInfoInUI() {
+    function updateUserInfoInUI() { /* ... (Sama seperti sebelumnya, pastikan currentUserData dan selector HTML benar) ... */
         if (currentUserData) {
             const fullName = currentUserData.fullName || 'Pengguna Eventory';
-            // Default avatar jika tidak ada di data pengguna
-            const avatar = (currentUserData.images && currentUserData.images.length > 0) ? currentUserData.images[0] : '../../assets/image/dev1.jpg';
+            const avatar = (currentUserData.images && currentUserData.images.length > 0) ? currentUserData.images[0] : '../../assets/image/dev1.jpg'; // Ganti default
 
-
-            // Update elemen di myEvent.html (jika ini dashboardUser.js, mungkin elemen ini tidak ada)
+            // Untuk myEvent.html atau struktur serupa
             const userNameSidebarMyEvent = document.getElementById('user-name-sidebar');
             const userAvatarSidebarMyEvent = document.getElementById('user-avatar-sidebar');
             const userNameHeaderMyEvent = document.getElementById('user-name-header');
@@ -351,13 +339,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (userNameHeaderMyEvent) userNameHeaderMyEvent.textContent = fullName;
             if (userAvatarHeaderMyEvent) userAvatarHeaderMyEvent.src = avatar;
 
-            // Update elemen umum di dashboardUser.html
-             // Lebih spesifik untuk dashboardUser.html jika struktur berbeda
-            const dashboardUserFullNameEl = document.querySelector('.user-info .user-name'); // Sesuaikan selector jika perlu
-            const dashboardUserAvatarEl = document.querySelector('.user-info .user-avatar img'); // Sesuaikan selector
-            const dashboardHeaderAvatarEl = document.querySelector('.dropdown-toggle img');
+            // Untuk dashboardUser.html
+            const dashboardUserFullNameEl = document.querySelector('.dashboard-container .user-info .user-name');
+            const dashboardUserAvatarEl = document.querySelector('.dashboard-container .user-info .user-avatar img');
+            const dashboardHeaderAvatarEl = document.querySelector('.dashboard-header .dropdown-toggle img');
             const dashboardHeaderNameEl = userDropdownToggleDash?.querySelector('span');
-
 
             if(dashboardUserFullNameEl) dashboardUserFullNameEl.textContent = fullName;
             if(dashboardUserAvatarEl) dashboardUserAvatarEl.src = avatar;
@@ -368,12 +354,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
     // --- SETUP EVENT LISTENERS ---
-    function setupDashboardEventListenersInternal() {
+    function setupDashboardEventListenersInternal() { /* ... (Sama seperti sebelumnya) ... */
         menuToggleDash?.addEventListener('click', handleSidebarToggleDashInternal);
         userDropdownToggleDash?.addEventListener('click', handleUserDropdownToggleDashInternal);
         document.addEventListener('click', handleClickOutsideDropdownDashInternal);
         if(logoutBtnDropdown) logoutBtnDropdown.addEventListener('click', handleLogoutUserInternal);
-        if(logoutBtnSidebar) logoutBtnSidebar.addEventListener('click', handleLogoutUserInternal); // Untuk myEvent.html
+        if(logoutBtnSidebar) logoutBtnSidebar.addEventListener('click', handleLogoutUserInternal);
 
         eventListContainerDash?.addEventListener('click', handleMyEventsActionsInternal);
 
@@ -386,7 +372,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // --- INISIALISASI DASHBOARD ---
-    function initializeUserDashboardInternal() {
+    function initializeUserDashboardInternal() { /* ... (Sama seperti sebelumnya) ... */
         updateUserInfoInUI();
         setupDashboardEventListenersInternal();
         toggleTicketPriceVisibilityInternal();
