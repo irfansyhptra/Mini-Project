@@ -96,7 +96,7 @@ const onLogin = () => {
           // Pastikan properti role ada dan sesuai dengan backend
           // Jika role di backend adalah string "admin" atau "user", gunakan perbandingan string
           // Contoh: if (userData.role === "admin")
-          if (userData.role === true) {
+          if (userData.role == true) {
             // Admin user
             showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
             setTimeout(() => {
