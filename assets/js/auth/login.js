@@ -101,14 +101,14 @@ const onLogin = () => {
             showSuccess("Login berhasil! Mengalihkan ke halaman user...");
             setTimeout(() => {
               console.log("Redirecting to user dashboard...");
-              window.location.href = `${window.location.origin}/page/user/dashboardUser.html`;
+              window.location.href = window.location.origin + "/page/user/dashboardUser.html";
             }, 1500);
           } else {
             // Regular user
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
               console.log("Redirecting to user dashboard...");
-              window.location.href = `${window.location.origin}/page/dashboardAdmin.html`;
+              window.location.href = window.location.origin + "/page/dashboardAdmin.html";
             }, 1500);
           }
         } else {
