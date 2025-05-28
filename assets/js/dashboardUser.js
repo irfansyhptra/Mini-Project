@@ -19,10 +19,6 @@ function handleInvalidSession(message) {
 
 
 document.addEventListener('DOMContentLoaded', async function () {
-    // Validasi sesi saat halaman dimuat
-    if (!validateSession()) {
-        return;
-    }
 
     // Verifikasi token dengan backend
     if (!await checkTokenValidity()) {
