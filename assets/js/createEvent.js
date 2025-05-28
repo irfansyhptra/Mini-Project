@@ -7,7 +7,7 @@ const initializeCreateEventForm = () => {
         return;
     }
 
-    const submitButton = form.querySelector('button[type="submit"][id="save-event"]'); // Pastikan ID tombol submit benar
+    const submitButton = document.getElementById('save-name'); // Pastikan ID tombol submit benar
     const loadingOverlay = document.getElementById("loading-overlay-create"); // ID overlay loading khusus create
     const successOverlay = document.getElementById("success-overlay-create"); // ID overlay sukses khusus create
     // const successCloseButton = document.getElementById("success-close-btn-create"); // Tombol tutup overlay sukses
