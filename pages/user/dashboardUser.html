@@ -1409,11 +1409,6 @@
                                     style="color: #b71c1c;">*</span></label>
                             <input type="date" id="event-date" class="form-control" required>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="event-time">Waktu <span
-                                    style="color: #b71c1c;">*</span></label>
-                            <input type="time" id="event-time" class="form-control" required>
-                        </div>
                     </div>
 
                     <div class="form-group">
@@ -1582,49 +1577,97 @@
                     createEventForm.addEventListener('submit', function (e) {
                         e.preventDefault();
 
-                        // Get form data and create new event
-                        const eventData = {
-                            name: document.getElementById('event-name').value,
-                            description: document.getElementById('event-description').value,
-                            date: document.getElementById('event-date').value,
-                            time: document.getElementById('event-time').value,
-                            location: document.getElementById('event-location').value,
-                            category: document.getElementById('event-category').value,
-                            capacity: document.getElementById('event-capacity').value,
-                            ticketType: document.getElementById('event-tickets').value,
-                            ticketPrice: document.getElementById('event-tickets').value === 'Berbayar'
-                                ? document.getElementById('ticket-price').value
-                                : 0
-                        };
+                        // Show loading overlay
+                        document.getElementById('global-loading-overlay').style.display = 'flex';
 
-                        // Save the new event
-                        saveEvent(eventData);
+                        // Simulate form submission
+                        setTimeout(() => {
+                            const eventId = document.getElementById('event-id-modal').value;
+                            const isEdit = !!eventId;
 
-                        // Close modal
-                        closeModal();
+                            // Get form data
+                            const eventData = {
+                                name: document.getElementById('event-name').value,
+                                description: document.getElementById('event-description').value,
+                                date: document.getElementById('event-date').value,
+                                location: document.getElementById('event-location').value,
+                                category: document.getElementById('event-category').value,
+                                capacity: document.getElementById('event-capacity').value,
+                                ticketType: document.getElementById('event-tickets').value,
+                                ticketPrice: document.getElementById('event-tickets').value === 'Berbayar'
+                                    ? document.getElementById('ticket-price').value
+                                    : 0
+                            };
+
+                            document.getElementById('global-loading-overlay').style.display = 'none';
+
+                            // Show success message
+                            const successTitle = document.getElementById('global-success-title');
+                            const successMessage = document.getElementById('global-success-message');
+
+                            if (isEdit) {
+                                successTitle.textContent = 'Event Berhasil Diperbarui!';
+                                successMessage.textContent = 'Perubahan pada event Anda telah berhasil disimpan.';
+                            } else {
+                                successTitle.textContent = 'Event Berhasil Dibuat!';
+                                successMessage.textContent = 'Event baru Anda telah berhasil disimpan dan akan diproses oleh admin.';
+
+                                // Save the new event (for demonstration, add to list)
+                                saveEvent(eventData);
+                            }
+
+                            document.getElementById('global-success-overlay').style.display = 'flex';
+
+                            // Close the modal
+                            closeModal('create-event-modal');
+
+                            // Reset form for next use
+                            createEventForm.reset();
+
+                            // Reload events after a delay (only if not editing, or handle edit display separately)
+                            if (!isEdit) {
+                                setTimeout(() => {
+                                    loadEvents(); // Reload the list to show the new event
+                                    document.getElementById('global-success-overlay').style.display = 'none';
+                                }, 2000);
+                            } else {
+                                // If editing, you might update the card directly or reload after a shorter delay
+                                setTimeout(() => {
+                                    document.getElementById('global-success-overlay').style.display = 'none';
+                                    loadEvents(); // Reload to show updated event
+                                }, 1000);
+                            }
+
+
+                        }, 1500);
                     });
                 }
             }
         }
 
-        // Save event function
+        // Save event function (for demonstration)
         function saveEvent(eventData) {
             // In a real application, this would send data to a server
-            // For now, we'll just add it to our local event list
+            // For now, we'll just create a sample event object and add it to the list
             const newEvent = {
-                id: Math.floor(Math.random() * 1000),
+                id: 'temp-' + Date.now(), // Temporary ID
                 name: eventData.name,
                 description: eventData.description,
-                date: formatDate(eventData.date),
-                time: eventData.time,
+                date: eventData.date, // Keep original date string for internal use
+                time: '', // No time field
                 location: eventData.location,
                 category: eventData.category,
-                status: 'pending',
-                image: '../../assets/image/event' + (Math.floor(Math.random() * 13) + 1) + '.jpg'
+                status: 'pending', // Newly created events are usually pending
+                image: '../../assets/image/event' + (Math.floor(Math.random() * 6) + 1) + '.jpg', // Random sample image
+                participants: 0,
+                maxParticipants: parseInt(eventData.capacity)
             };
 
-            // Add to events list in DOM
-            addEventToList(newEvent);
+            // In a real app, you'd send newEvent to backend
+            console.log('Simulating saving new event:', newEvent);
+
+            // Add to events list in DOM (for demonstration)
+            addEventToList(newEvent); // Add the new event card to the list
         }
 
         // Format date function
@@ -1646,34 +1689,40 @@
             // Sample events data
             const events = [
                 {
-                    id: 1,
-                    name: 'Informatics Festival 2025',
+                    id: '1',
+                    title: 'Informatics Festival 2025',
                     description: 'Festival teknologi informatika tahunan',
-                    date: '15 Mar 2025',
+                    date: '2025-03-15', // Use consistent date format
                     time: '09:00',
                     location: 'Banda Aceh',
+                    participants: 35,
+                    maxParticipants: 50,
                     category: 'Festival',
                     status: 'upcoming',
                     image: '../../assets/image/event1.jpg'
                 },
                 {
-                    id: 2,
-                    name: 'Digital Marketing Workshop',
+                    id: '2',
+                    title: 'Digital Marketing Workshop',
                     description: 'Workshop tentang digital marketing',
-                    date: '10 Apr 2025',
+                    date: '2025-04-10', // Use consistent date format
                     time: '13:00',
                     location: 'Banda Aceh',
+                    participants: 120,
+                    maxParticipants: 200,
                     category: 'Workshop',
                     status: 'active',
                     image: '../../assets/image/event2.jpg'
                 },
                 {
-                    id: 3,
-                    name: 'Aceh Culinary Festival',
+                    id: '3',
+                    title: 'Aceh Culinary Festival',
                     description: 'Festival kuliner khas Aceh',
-                    date: '5 Feb 2025',
+                    date: '2025-02-05', // Use consistent date format
                     time: '10:00',
                     location: 'Banda Aceh',
+                    participants: 0,
+                    maxParticipants: 0, // Assuming 0 for completed/past events if not tracked
                     category: 'Festival',
                     status: 'completed',
                     image: '../../assets/image/event4.jpeg'
@@ -1686,7 +1735,7 @@
                 return;
             }
 
-            // Add events to list
+            // Add events to list (replace with pagination logic if needed)
             events.forEach(event => {
                 addEventToList(event);
             });
@@ -1729,7 +1778,7 @@
                 <div class="event-info">
                     <h3 class="event-title">${event.name}</h3>
                     <div class="event-date">
-                        <i class="far fa-calendar-alt"></i> ${event.date}
+                        <i class="far fa-calendar-alt"></i> ${formatDate(event.date)}
                     </div>
                     <div class="event-location">
                         <i class="fas fa-map-marker-alt"></i> ${event.location}
