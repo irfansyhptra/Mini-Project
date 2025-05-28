@@ -1,170 +1,134 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // --- Pemilihan Elemen DOM ---
+// Helper function to show error messages (Pastikan ini ada di file Anda)
+function showError(message) {
+  const previousErrors = document.querySelectorAll(".bg-red-100");
+  previousErrors.forEach((el) => el.remove());
+
+  const errorDiv = document.createElement("div");
+  errorDiv.className = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4";
+  errorDiv.textContent = message;
+
+  // Pastikan ini menargetkan form atau container yang sesuai di halaman login Anda
+  const form = document.querySelector("form");
+  if (form) {
+    form.prepend(errorDiv);
+    setTimeout(() => errorDiv.remove(), 5000);
+  }
+}
+
+// Helper function to show success messages (Pastikan ini ada di file Anda)
+function showSuccess(message) {
+  const previousSuccess = document.querySelectorAll(".bg-green-100");
+  previousSuccess.forEach((el) => el.remove());
+
+  const successDiv = document.createElement("div");
+  successDiv.className = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4";
+  successDiv.textContent = message;
+
+  // Pastikan ini menargetkan form atau container yang sesuai di halaman login Anda
+  const form = document.querySelector("form");
+  if (form) {
+    form.prepend(successDiv);
+    setTimeout(() => successDiv.remove(), 5000);
+  }
+}
+
+const onLogin = () => {
   const loginForm = document.getElementById("login-form");
-  const emailInput = document.getElementById("login-email");
-  const passwordInput = document.getElementById("login-password");
   const loginButton = document.getElementById("login-button");
   const passwordToggle = document.getElementById("toggle-password");
-  const messageContainer = document.getElementById("message-container"); // Direkomendasikan: tambahkan <div id="message-container"></div> di HTML Anda
+  const passwordInput = document.getElementById("login-password");
+  const emailInput = document.getElementById("login-email");
 
-  // Simpan teks tombol asli
-  const originalButtonText = loginButton ? loginButton.textContent : "Masuk";
-
-  // --- Fungsi Bantuan (Helper Functions) ---
-
-  /**
-   * Menampilkan pesan (error atau success) di container.
-   * @param {string} message - Pesan yang akan ditampilkan.
-   * @param {'error' | 'success'} type - Tipe pesan ('error' atau 'success').
-   */
-  function showMessage(message, type = 'error') {
-    // Jika container tidak ada, gunakan alert sebagai fallback
-    if (!messageContainer) {
-      alert(message);
-      return;
-    }
-
-    messageContainer.innerHTML = message;
-    messageContainer.className = `message ${type}`; // Atur kelas untuk styling (misal: 'message error' atau 'message success')
-    messageContainer.classList.remove("hidden");
-
-    // Sembunyikan setelah beberapa detik (opsional)
-    setTimeout(() => {
-        if (messageContainer) {
-            messageContainer.classList.add("hidden");
-            messageContainer.innerHTML = '';
-        }
-    }, 5000);
-  }
-
-  /**
-   * Mengatur status loading pada tombol.
-   * @param {boolean} isLoading - Apakah sedang loading atau tidak.
-   */
-  function setLoading(isLoading) {
-    if (!loginButton) return;
-
-    if (isLoading) {
-      loginButton.disabled = true;
-      loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-    } else {
-      loginButton.disabled = false;
-      loginButton.innerHTML = originalButtonText;
-    }
-  }
-
-  // --- Fungsi Toggle Password ---
-  function setupPasswordToggle() {
-    if (!passwordToggle || !passwordInput) return;
-
+  // Password visibility toggle
+  if (passwordToggle && passwordInput) {
     passwordToggle.addEventListener("click", () => {
-      const isPassword = passwordInput.getAttribute("type") === "password";
-      passwordInput.setAttribute("type", isPassword ? "text" : "password");
+      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
 
+      // Change icon
       const icon = passwordToggle.querySelector("i");
       if (icon) {
-        icon.classList.toggle("fa-eye", !isPassword);
-        icon.classList.toggle("fa-eye-slash", isPassword);
-        passwordToggle.setAttribute("aria-label", isPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
+        icon.classList.toggle("fa-eye");
+        icon.classList.toggle("fa-eye-slash");
       }
     });
   }
 
-  // --- Fungsi Penanganan Login ---
-  async function handleLogin(event) {
-    event.preventDefault(); // Mencegah submit form bawaan
-
-    if (!emailInput || !passwordInput) {
-        showMessage("Elemen form tidak ditemukan.", 'error');
-        return;
-    }
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    // Validasi input dasar
-    if (!email || !password) {
-      showMessage("Email dan kata sandi tidak boleh kosong.", 'error');
-      return;
-    }
-
-    setLoading(true);
-    if (messageContainer) messageContainer.classList.add("hidden"); // Sembunyikan pesan lama
-
-    // !!! PERINGATAN KEAMANAN: HAPUS BAGIAN INI DI PRODUKSI !!!
-    if (email === "admin@gmail.com" && password === "admin") {
-      console.warn("LOGIN ADMIN HARDCODED DIGUNAKAN! HANYA UNTUK DEVELOPMENT!");
-      localStorage.setItem("token", "admin-token-placeholder-dev-only");
-      localStorage.setItem("user", JSON.stringify({ email: "admin@gmail.com", role: true, name: "Administrator" }));
-      showMessage("Login admin berhasil! Mengalihkan...", 'success');
-      setTimeout(() => {
-        window.location.href = window.location.origin + "/SILAPOR-FrontEnd/page/dashboardAdmin.html";
-      }, 1500);
-      // Tidak perlu setLoading(false) karena akan redirect
-      return; 
-    }
-    // !!! AKHIR BAGIAN BERBAHAYA !!!
-
-    try {
-      const response = await fetch("https://back-end-eventory.vercel.app/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({ email, password }), // Gunakan shorthand
-      });
-
-      const result = await response.json();
-      console.log("Login response:", result);
-
-      if (response.ok) { // Gunakan response.ok untuk mengecek status HTTP 2xx
-        localStorage.setItem("token", result.token);
-        // Pastikan result.data ada sebelum menyimpannya
-        if (result.data) {
-            localStorage.setItem("user", JSON.stringify(result.data));
-        } else {
-            console.warn("Data user tidak ditemukan dalam respons API.");
-            // Simpan data minimal jika diperlukan
-            localStorage.setItem("user", JSON.stringify({ email: email, role: false })); // Asumsi default role jika data tidak ada
-        }
-        
-        const userData = result.data || {}; // Ambil data user, atau objek kosong jika tidak ada
-
-        // Cek role dengan === (lebih aman)
-        if (userData.role === false) {
-          showMessage("Login berhasil! Mengalihkan ke halaman admin...", 'success');
-          setTimeout(() => {
-            window.location.href = "admin/dashboardAdmin.html"; 
-          }, 1500);
-        } else {
-          showMessage("Login berhasil! Mengalihkan ke halaman pengguna...", 'success');
-          setTimeout(() => {
-            window.location.href = "user/dashboardUser.html";
-          }, 1500);
-        }
-      } else {
-        // Tampilkan pesan error dari API jika ada, atau pesan default
-        showMessage(result.message || `Login gagal (${response.status}). Silakan coba lagi.`, 'error');
-        setLoading(false); // Set loading false karena tidak redirect
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      showMessage("Terjadi kesalahan jaringan atau server. Silakan coba lagi nanti.", 'error');
-      setLoading(false); // Set loading false karena error
-    } 
-    // Tidak perlu finally jika setLoading(false) sudah ditangani di path error
-    // dan path success akan redirect. Tapi jika ingin_pasti_ kembali, gunakan finally.
-    // Jika path sukses *tidak* redirect, Anda perlu setLoading(false) di sana atau di finally.
-  }
-
-  // --- Inisialisasi ---
+  // Handle form submission
   if (loginForm) {
-    loginForm.addEventListener("submit", handleLogin);
-  } else {
-    console.error("Form login (#login-form) tidak ditemukan!");
-  }
-  
-  setupPasswordToggle();
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-}); // Akhir dari DOMContentLoaded
+      if (loginButton) {
+        loginButton.disabled = true;
+        loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+      }
+
+      try {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // Lakukan permintaan login ke backend API
+        const response = await fetch("https://back-end-eventory.vercel.app/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+
+        const res = await response.json();
+        console.log("Login response:", res);
+
+        if (res.status === 200) {
+          // Simpan token dan data user yang DITERIMA DARI BACKEND
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("user", JSON.stringify(res.data)); // res.data harus berisi objek user
+
+          // Dapatkan data user dari respons untuk cek role
+          // Asumsi: res.data adalah objek user langsung.
+          // Jika res.data adalah { data: { user: {...} } } atau sejenisnya, sesuaikan lagi di sini.
+          const userData = res.data;
+
+          // Pastikan properti role ada dan sesuai dengan backend
+          // Jika role di backend adalah string "admin" atau "user", gunakan perbandingan string
+          // Contoh: if (userData.role === "admin")
+          if (userData.role === true) {
+            // Jika role di backend adalah boolean true
+            showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
+            setTimeout(() => {
+              console.log("Redirecting to admin dashboard...");
+              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/dashboardAdmin.html"
+              window.location.href = window.location.origin + "/page/dashboardAdmin.html";
+            }, 1500);
+          } else {
+            // Pengguna biasa
+            showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
+            setTimeout(() => {
+              console.log("Redirecting to user dashboard...");
+              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/berandaUser.html"
+              window.location.href = window.location.origin + "/page/berandaUser.html";
+            }, 1500);
+          }
+        } else {
+          // Jika login gagal, tampilkan pesan error dari backend
+          showError(res.message || "Login gagal. Silakan coba lagi.");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showError("Terjadi kesalahan saat login. Silakan coba lagi.");
+      } finally {
+        if (loginButton) {
+          loginButton.disabled = false;
+          loginButton.innerHTML = "Masuk";
+        }
+      }
+    });
+  }
+};
+
+// Initialize login functionality
+document.addEventListener("DOMContentLoaded", onLogin);
