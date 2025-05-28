@@ -104,7 +104,6 @@
                             name: document.getElementById('event-name').value,
                             description: document.getElementById('event-description').value,
                             date: document.getElementById('event-date').value,
-                            time: document.getElementById('event-time').value,
                             location: document.getElementById('event-location').value,
                             category: document.getElementById('event-category').value,
                             capacity: document.getElementById('event-capacity').value,
