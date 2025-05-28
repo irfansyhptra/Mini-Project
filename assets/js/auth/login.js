@@ -97,20 +97,18 @@ const onLogin = () => {
           // Jika role di backend adalah string "admin" atau "user", gunakan perbandingan string
           // Contoh: if (userData.role === "admin")
           if (userData.role === true) {
-            // Jika role di backend adalah boolean true
+            // Admin user
             showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
             setTimeout(() => {
               console.log("Redirecting to admin dashboard...");
-              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/dashboardAdmin.html"
-              window.location.href = window.location.origin + "/page/dashboardAdmin.html";
+              window.location.href = `${window.location.origin}/page/dashboardAdmin.html`;
             }, 1500);
           } else {
-            // Pengguna biasa
+            // Regular user
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
               console.log("Redirecting to user dashboard...");
-              // Menggunakan path yang sudah Anda gunakan: window.location.origin + "/page/berandaUser.html"
-              window.location.href = window.location.origin + "/page/berandaUser.html";
+              window.location.href = `${window.location.origin}/page/user/dashboardUser.html`;
             }, 1500);
           }
         } else {
