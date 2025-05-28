@@ -87,7 +87,7 @@ const onLogin = () => {
           // Simpan token dan data user yang DITERIMA DARI BACKEND
           localStorage.setItem("token", res.token);
           localStorage.setItem("user", JSON.stringify(res.user)); // Simpan data user lengkap
-          localStorage.setItem("userId", res.user.userID); // Simpan ID user secara terpisah
+          localStorage.setItem("userId", res.user.userId); // Simpan ID user secara terpisah
 
           // Dapatkan data user dari respons untuk cek role
           // Asumsi: res.data adalah objek user langsung.
