@@ -20,11 +20,6 @@ function handleInvalidSession(message) {
 
 document.addEventListener('DOMContentLoaded', async function () {
 
-    // Verifikasi token dengan backend
-    if (!await checkTokenValidity()) {
-        return;
-    }
-
     // Initialize AOS
     if (typeof AOS !== 'undefined') {
         AOS.init({
