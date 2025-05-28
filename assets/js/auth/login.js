@@ -1,11 +1,9 @@
-// assets/js/auth/login.js
-
 // Helper function to show error messages
 function showError(message) {
   const container = document.getElementById("message-container");
   if (container) {
     container.textContent = message;
-    container.className = "message error"; // Pastikan ada style untuk .message.error
+    container.className = "error"; // Pastikan ada style untuk .error
     container.classList.remove("hidden");
     setTimeout(() => container.classList.add("hidden"), 5000);
   } else {
@@ -18,9 +16,9 @@ function showSuccess(message) {
   const container = document.getElementById("message-container");
   if (container) {
     container.textContent = message;
-    container.className = "message success"; // Pastikan ada style untuk .message.success
+    container.className = "success"; // Pastikan ada style untuk .success
     container.classList.remove("hidden");
-    setTimeout(() => container.classList.add("hidden"), 3000);
+    setTimeout(() => container.classList.add("hidden"), 3000); // Waktu lebih singkat untuk sukses
   } else {
     alert(`Success: ${message}`);
   }
@@ -34,10 +32,11 @@ const onLogin = () => {
   const emailInput = document.getElementById("login-email");
 
   if (!loginForm || !loginButton || !passwordInput || !emailInput) {
-      console.error("Elemen form login tidak ditemukan di login.js!");
+      console.error("Elemen form login tidak ditemukan!");
       return;
   }
 
+  // Password visibility toggle
   passwordToggle?.addEventListener("click", () => {
     const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
     passwordInput.setAttribute("type", type);
@@ -46,9 +45,11 @@ const onLogin = () => {
     icon?.classList.toggle("fa-eye-slash");
   });
 
+  // Handle form submission
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Validasi Sederhana
     if (!emailInput.value.trim() || !passwordInput.value.trim()) {
         showError("Email dan Kata Sandi wajib diisi.");
         return;
@@ -72,22 +73,25 @@ const onLogin = () => {
 
       if (response.ok && res.token && res.user && res.user._id) {
           localStorage.setItem("token", res.token);
-          localStorage.setItem("user", JSON.stringify(res.user)); // Menyimpan seluruh objek user
-          localStorage.setItem("userId", res.user._id); // Menyimpan _id secara terpisah untuk kemudahan akses
+          localStorage.setItem("user", JSON.stringify(res.user));
+          localStorage.setItem("userId", res.user._id); // Pastikan ini tersimpan
 
-          // Menentukan role. Sesuaikan dengan struktur data 'role' dari API Anda.
-          // Contoh: jika API mengembalikan `user.role: "admin"` atau `user.role: "user"`
-          // Atau jika boolean `user.isAdmin: true`
-          const isAdmin = res.user.role === "admin"; // Ganti "admin" dengan nilai peran admin dari API Anda
+          // Cek role pengguna (sesuaikan 'role' dengan respons API)
+          // Asumsi: 'role' adalah boolean atau string 'admin'/'user'
+          // Jika 'role' di backend adalah string 'true'/'false', sesuaikan.
+          // Jika 'role' adalah boolean, gunakan `res.user.role === true` (user) atau `res.user.role === false` (admin).
+          // **PENTING**: Verifikasi struktur `res.user.role` dari API Anda.
+          // Berdasarkan `register.js`, role diset "true", jadi kita asumsikan "true" adalah user.
+          const isAdmin = res.user.role === "false" || res.user.role === false; // Contoh asumsi
 
           showSuccess("Login berhasil! Mengalihkan...");
           setTimeout(() => {
               if (isAdmin) {
                   console.log("Redirecting to admin dashboard...");
-                  window.location.href = "dashboardAdmin.html"; // Sesuaikan path jika perlu
+                  window.location.href = window.location.origin + "/pages/dashboardAdmin.html";
               } else {
                   console.log("Redirecting to user dashboard...");
-                  window.location.href = "dashboardUser.html"; // Sesuaikan path jika perlu
+                  window.location.href = window.location.origin + "/pages/dashboardUser.html";
               }
           }, 1500);
 
@@ -96,7 +100,7 @@ const onLogin = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      showError("Terjadi kesalahan teknis saat login. Silakan coba lagi.");
+      showError("Terjadi kesalahan teknis. Silakan coba lagi.");
     } finally {
       loginButton.disabled = false;
       loginButton.innerHTML = "Masuk";
