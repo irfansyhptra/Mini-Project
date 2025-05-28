@@ -98,17 +98,17 @@ const onLogin = () => {
           // Contoh: if (userData.role === "admin")
           if (userData.role === true) {
             // Admin user
-            showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
-            setTimeout(() => {
-              console.log("Redirecting to admin dashboard...");
-              window.location.href = `${window.location.origin}/page/dashboardAdmin.html`;
-            }, 1500);
-          } else {
-            // Regular user
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
               console.log("Redirecting to user dashboard...");
               window.location.href = `${window.location.origin}/page/dashboardUser.html`;
+            }, 1500);
+          } else {
+            // Regular user
+            showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
+            setTimeout(() => {
+              console.log("Redirecting to admin dashboard...");
+              window.location.href = `${window.location.origin}/page/dashboardAdmin.html`;
             }, 1500);
           }
         } else {
