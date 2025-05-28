@@ -97,17 +97,17 @@ const onLogin = () => {
           // Jika role di backend adalah string "admin" atau "user", gunakan perbandingan string
           // Contoh: if (userData.role === "admin")
           if (userData.role === true) {
-            // Admin user
-            showSuccess("Login berhasil! Mengalihkan ke halaman user...");
-            setTimeout(() => {
-              console.log("Redirecting to user dashboard...");
-              window.location.href = window.location.origin + "/page/user/dashboardUser.html";
-            }, 1500);
-          } else {
-            // Regular user
+            // User with role true
             showSuccess("Login berhasil! Mengalihkan ke halaman pengguna...");
             setTimeout(() => {
               console.log("Redirecting to user dashboard...");
+              window.location.href = window.location.origin + "/page/dashboardUser.html";
+            }, 1500);
+          } else {
+            // Other roles (assuming admin based on previous context)
+            showSuccess("Login berhasil! Mengalihkan ke halaman admin...");
+            setTimeout(() => {
+              console.log("Redirecting to admin dashboard...");
               window.location.href = window.location.origin + "/page/dashboardAdmin.html";
             }, 1500);
           }
