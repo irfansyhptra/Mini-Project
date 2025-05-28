@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     currentToken = token; // Simpan token yang valid untuk digunakan di seluruh skrip
 
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('_id');
     if (!userId) {
         alert('ID Pengguna tidak ditemukan. Sesi mungkin tidak lengkap atau rusak. Silakan login kembali.');
         localStorage.removeItem('token'); // Hapus token yang mungkin tidak valid/lengkap
