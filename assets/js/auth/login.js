@@ -84,10 +84,10 @@ const onLogin = () => {
         console.log("Login response:", res);
 
         if (res.status === 200) {
-          // Simpan token dan data user yang DITERIMA DARI BACKEND
-          localStorage.setItem("token", res.token);
-          localStorage.setItem("user", JSON.stringify(res.data)); // res.data harus berisi objek user
-
+            localStorage.setItem("token", res.token);
+            localStorage.setItem("user", JSON.stringify(res.user)); // res.user dari backend Anda
+            localStorage.setItem("userId", res.user._id);         // Menyimpan _id sebagai userId
+    
           // Dapatkan data user dari respons untuk cek role
           // Asumsi: res.data adalah objek user langsung.
           // Jika res.data adalah { data: { user: {...} } } atau sejenisnya, sesuaikan lagi di sini.
