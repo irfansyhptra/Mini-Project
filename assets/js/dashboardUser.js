@@ -5,33 +5,6 @@ const API_BASE_URL_DASH = 'https://back-end-eventory.vercel.app';
 let currentToken;
 let currentUserId;
 
-// Fungsi untuk validasi sesi
-function validateSession() {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
-    if (!token || !userData) {
-        handleInvalidSession('Sesi Anda tidak valid atau telah berakhir. Silakan login kembali.');
-        return false;
-    }
-
-    try {
-        const user = JSON.parse(userData);
-        if (!user || !user.userId) {
-            handleInvalidSession('Data pengguna tidak lengkap. Silakan login kembali.');
-            return false;
-        }
-        
-        currentToken = token;
-        currentUserId = user.userId;
-        return true;
-    } catch (error) {
-        console.error('Error parsing user data:', error);
-        handleInvalidSession('Terjadi kesalahan saat memvalidasi sesi. Silakan login kembali.');
-        return false;
-    }
-}
-
 // Fungsi untuk menangani sesi tidak valid
 function handleInvalidSession(message) {
     // Hapus semua data sesi
