@@ -44,27 +44,6 @@ function handleInvalidSession(message) {
     window.location.href = '../../index.html';
 }
 
-// Fungsi untuk memeriksa token
-async function checkTokenValidity() {
-    try {
-        const response = await fetch(`${API_BASE_URL_DASH}/auth/verify-token`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${currentToken}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Token tidak valid');
-        }
-
-        return true;
-    } catch (error) {
-        console.error('Token validation error:', error);
-        handleInvalidSession('Sesi Anda telah berakhir. Silakan login kembali.');
-        return false;
-    }
-}
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Validasi sesi saat halaman dimuat
